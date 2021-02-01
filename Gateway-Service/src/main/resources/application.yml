@@ -1,0 +1,38 @@
+server:
+  port: ${GATEWAY_PORT:8080}
+
+spring:
+  application:
+    name: gateway-service
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8081/eureka/
+
+zuul:
+  routes:
+    auth:                     # Authentication Service: Used to holds Trec Accounts and use them
+      path: /auth/**
+      serviceId: auth-service
+      strip-prefix: false
+    resources:                 # Resources used in Falsehoods and other Services
+      path: /resources/**
+      strip-prefix: false
+      serviceId: resource-service
+    falsehoods_search:          # Search Service
+      path: /falsehood-search/**
+      strip-prefix: false
+      serviceId: falsehood-search-service
+    falsehoods:                 # Falsehoods Service (Requires Authentication)
+      path: /falsehoods/**
+      strip-prefix: false
+      serviceId: falsehood-service
+    pictures:                   # Manages Pictures
+      path: /pictures/**
+      strip-prefix: false
+      serviceId: picture-service
+    adverts:                    # Manages Advertisments
+      path: /ads/**
+      strip-prefix: false
+      serviceId: ad-service
