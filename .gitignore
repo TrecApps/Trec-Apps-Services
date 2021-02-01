@@ -1,0 +1,10 @@
+
+# Project files and Gradle 
+**/gradle
+**/.gradle
+**/build
+**/.idea
+
+# Take care of Gradlew
+**/gradlew*
+

@@ -1,0 +1,63 @@
+plugins {
+    // Apply the java plugin to add support for Java
+    id 'java'
+
+    // Apply the application plugin to add support for building a CLI application.
+    id 'application'
+
+    // Apply the java-library plugin to add support for Java Library
+    id 'java-library'
+    id 'org.springframework.boot' version '2.2.6.RELEASE'
+    // Test Coverage
+    id 'jacoco'
+}
+apply plugin: 'java'
+apply plugin: 'java-library'
+apply plugin: 'org.springframework.boot'
+apply plugin: 'jacoco'
+
+group 'com.trecapps'
+version '0.0.1-SNAPSHOT'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+
+    // Spring Boot Support
+    implementation 'org.springframework.boot:spring-boot-starter-web:+'
+    implementation 'org.springframework.boot:spring-boot-starter-actuator:+'
+    // Make this a Discover Service
+    implementation 'org.springframework.cloud:spring-cloud-starter-eureka:+'
+    implementation 'org.springframework.cloud:spring-cloud-starter-eureka-server:+'
+
+
+    testCompile group: 'junit', name: 'junit', version: '4.12'
+}
+
+jacoco {
+    toolVersion = '0.8.5'
+}
+
+jacocoTestReport {
+    def buildDir = "$buildDir".toString()
+    reports {
+        xml.setEnabled(true)
+        xml.destination file(buildDir + "/jacoco/jacoco.xml")
+        csv.setEnabled(false)
+        html.setEnabled(true)
+    }
+}
+test {
+    useJUnitPlatform()
+}
+
+// Make sure Jacoco Test report runs
+test.finalizedBy(project.tasks.jacocoTestReport)
+
+
+application {
+    // Define the main class for the application.
+    mainClassName = 'com.trecapps.discover.Driver'
+}
