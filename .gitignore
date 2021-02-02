@@ -4,7 +4,13 @@
 **/.gradle
 **/build
 **/.idea
+**/bin
+**/.classpath
+**/.project
+**/.settings*
+
 
 # Take care of Gradlew
 **/gradlew*
 
+/.metadata/
