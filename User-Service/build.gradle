@@ -1,0 +1,84 @@
+plugins {
+    // Apply the java plugin to add support for Java
+    id 'java'
+
+    // Apply the application plugin to add support for building a CLI application.
+    id 'application'
+
+    id 'jacoco'
+    id "org.sonarqube" version "2.7"
+
+    id 'org.springframework.boot' version '2.0.5.RELEASE'
+    id 'io.spring.dependency-management' version '1.0.7.RELEASE'
+}
+
+repositories {
+    // Use jcenter for resolving dependencies.
+    // You can declare any Maven/Ivy/file repository here.
+    jcenter()
+
+}
+
+dependencies {
+    implementation 'javax.xml.bind:jaxb-api:2.3.0'
+    implementation 'javax.activation:activation:1.1'
+    implementation 'org.glassfish.jaxb:jaxb-runtime:2.3.0'
+
+
+
+
+    // This is needed so that multiple DataSources can be supported on Java 11
+    implementation 'org.javassist:javassist:3.23.1-GA'
+
+    // This dependency is used by the application.
+    implementation 'com.google.guava:guava:28.0-jre'
+
+    // Use JWT for token generation and verification
+    implementation 'com.auth0:java-jwt:+'
+
+    implementation 'org.bouncycastle:bcpkix-jdk15on:1.66'
+
+    // Use JUnit test framework
+    testImplementation 'junit:junit:4.12'
+
+    implementation 'org.springframework.boot:spring-boot-dependencies:2.0.5.RELEASE'
+    implementation 'org.springframework.boot:spring-boot-starter'
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.springframework.boot:spring-boot-devtools'
+
+
+    implementation 'org.hibernate:hibernate-core'
+    implementation 'org.hibernate:hibernate-entitymanager'
+    implementation 'javax.validation:validation-api'
+
+    // To-Do: Add Database Driver Jar here
+    implementation fileTree(dir: "app/libs", includes: ['*.jar']) // Oracle
+    implementation 'mysql:mysql-connector-java:+' // mySQL
+
+
+    implementation 'org.springframework.boot:spring-boot-starter-security'
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    implementation 'org.springframework.boot:spring-boot-starter-mail'
+    // https://mvnrepository.com/artifact/org.springframework.security.oauth/spring-security-oauth2
+    //implementation group: 'org.springframework.security.oauth', name: 'spring-security-oauth2', version: '2.4.0.RELEASE'
+
+
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+
+    components {
+        withModule('org.springframework:spring-beans') {
+            allVariants {
+                withDependencyConstraints {
+                    // Need to patch constraints because snakeyaml is an optional dependency
+                    it.findAll { it.name == 'snakeyaml' }.each { it.version { strictly '1.19' } }
+                }
+            }
+        }
+    }
+}
+
+
+application {
+    // Define the main class for the application.
+    mainClassName = 'com.trecapps.userservice.Driver'
+}
