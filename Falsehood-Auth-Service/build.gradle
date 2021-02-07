@@ -42,6 +42,7 @@ dependencies {
     // Spring Boot features
     implementation 'org.springframework.boot:spring-boot-starter-web:+'
     implementation 'org.springframework.boot:spring-boot-starter-actuator:+'
+    implementation 'org.springframework.boot:spring-boot-starter-mail:+'
 
     // DB Support
     implementation 'org.hibernate:hibernate-core:5.4.11.Final'
@@ -88,5 +89,5 @@ test.finalizedBy(project.tasks.jacocoTestReport)
 
 application {
     // Define the main class for the application.
-    mainClassName = 'com.trecapps.falsehoodsearch.Driver'
+    mainClassName = 'com.trecapps.falsehoodauth.Driver'
 }
