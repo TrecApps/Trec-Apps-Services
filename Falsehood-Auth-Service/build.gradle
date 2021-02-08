@@ -30,8 +30,7 @@ group = 'com.trecapps'
 dependencies {
     // Enable Discovery
     implementation 'org.springframework.cloud:spring-cloud-starter-eureka:+'
-    // Use JWT to verify user
-    implementation 'com.auth0:java-jwt:+'
+
 
     // Used for writing files
     // AWS S3
@@ -43,6 +42,12 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-web:+'
     implementation 'org.springframework.boot:spring-boot-starter-actuator:+'
     implementation 'org.springframework.boot:spring-boot-starter-mail:+'
+
+    // Security Features
+    implementation 'org.springframework.boot:spring-boot-starter-security:+'        // Make this use Spring Security
+    implementation 'org.springframework.boot:spring-boot-starter-oauth2-client:+'   // Make this an Oauth Client
+    implementation 'com.auth0:java-jwt:+'                   // Use JWT to verify user
+    implementation 'org.webjars:js-cookie:2.1.0'            // Enables the Logout cookie
 
     // DB Support
     implementation 'org.hibernate:hibernate-core:5.4.11.Final'

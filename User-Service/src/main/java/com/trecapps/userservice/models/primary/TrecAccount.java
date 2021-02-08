@@ -1,17 +1,17 @@
 package com.trecapps.userservice.models.primary;
 
 import java.sql.Date;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Collection;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.SequenceGenerator;
-import javax.persistence.Table;
+import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
+import com.trecapps.userservice.models.TrecAuthority;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
 // import com.trecapps.userservice.security.TrecAuthority;
@@ -19,8 +19,18 @@ import org.springframework.stereotype.Component;
 @Component
 @Table
 @Entity
-public class TrecAccount // implements UserDetails
+public class TrecAccount implements UserDetails // implements UserDetails
 {
+
+	@Transient
+	private static final int MINUTE_LENGTH = 100000;
+	@Transient
+	private static final int HOUR_LENGTH = 60;
+	@Transient
+	private static final int DAY_LENGTH = 24;
+	@Transient
+	private static final int MONTH_LENGTH = 30;
+
 	/**
 	 * 
 	 */
@@ -246,9 +256,58 @@ public class TrecAccount // implements UserDetails
 	public void setLastName(String lastName) {
 		this.lastName = lastName;
 	}
+
+	@Override
+	public Collection<? extends GrantedAuthority> getAuthorities() {
+		return new ArrayList<TrecAuthority>();
+	}
+
+	@Override
+	public String getPassword() {
+		return this.token;
+	}
+
 	public String getUsername() {
 		return username;
 	}
+
+	@Override
+	public boolean isAccountNonExpired() {
+		return false;
+	}
+
+	@Override
+	public boolean isAccountNonLocked() {
+		if(lockInit == null)
+			return true;
+
+		// Currently seen as locked,
+		Date now = new Date(Calendar.getInstance().getTime().getTime());
+		long diff = now.getTime() - lockInit.getTime();
+
+		if(diff < (lockTime * 600000))
+			return false;
+
+		lockInit = null;
+		return true;
+	}
+
+	@Override
+	public boolean isCredentialsNonExpired() {
+		if(passwordMonthReset == 0)
+			return true;
+
+		Date now = new Date(Calendar.getInstance().getTime().getTime());
+		long diff = now.getTime() - this.passwordChanged.getTime();
+
+		return diff < (this.passwordMonthReset * MINUTE_LENGTH * HOUR_LENGTH * DAY_LENGTH * MONTH_LENGTH);
+	}
+
+	@Override
+	public boolean isEnabled() {
+		return false;
+	}
+
 	public void setUsername(String username) {
 		this.username = username;
 	}
@@ -300,32 +359,5 @@ public class TrecAccount // implements UserDetails
 	public void setValidationToken(String validationToken) {
 		this.validationToken = validationToken;
 	}
-//	@Override
-//	public Collection<? extends GrantedAuthority> getAuthorities() {
-//		List<TrecAuthority> ret = new ArrayList<>();
-//		ret.add(new TrecAuthority("USER"));
-//		return ret;
-//	}
-//	@Override
-//	public String getPassword() {
-//		return token;
-//	}
-//	@Override
-//	public boolean isAccountNonExpired() {
-//		return false;
-//	}
-//	@Override
-//	public boolean isAccountNonLocked() {
-//		return false;
-//	}
-//	@Override
-//	public boolean isCredentialsNonExpired() {
-//		return false;
-//	}
-//	@Override
-//	public boolean isEnabled() {
-//		return isValidated != 0;
-//	}
-	
-	
+
 }

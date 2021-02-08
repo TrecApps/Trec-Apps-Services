@@ -25,7 +25,7 @@ public class TrecOauthClientService // implements ClientDetailsService
 	
 	public TrecOauthClient loadClientByClientId(String clientId) 
 	{
-		return oauthRepo.getOne(clientId);
+		return oauthRepo.existsById(clientId) ? oauthRepo.getOne(clientId) : null;
 	}
 	
 	public String createNewClient(String name, int type, TrecAccount owner)

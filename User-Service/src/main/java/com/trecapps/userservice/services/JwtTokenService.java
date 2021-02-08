@@ -24,6 +24,10 @@ import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.auth0.jwt.interfaces.Claim;
 import com.auth0.jwt.interfaces.DecodedJWT;
 
+import com.trecapps.userservice.models.primary.TrecOauthClient;
+import com.trecapps.userservice.models.primary.TrecOauthClientOne;
+import com.trecapps.userservice.models.secondary.InvalidSession;
+import com.trecapps.userservice.repositories.secondary.InvalidSessionRepo;
 import org.bouncycastle.asn1.pkcs.PrivateKeyInfo;
 import org.bouncycastle.openssl.PEMParser;
 import org.bouncycastle.openssl.jcajce.JcaPEMKeyConverter;
@@ -54,6 +58,29 @@ public class JwtTokenService {
 	
 	@Autowired
 	TrecAccountRepo accountRepo;
+
+	@Autowired
+	InvalidSessionRepo invalidSessionRepo;
+
+	@Autowired
+	TrecOauthClientService clientService;
+
+	// chose a Character random from this String
+	final String AlphaNumericString = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+			+ "0123456789"
+			+ "abcdefghijklmnopqrstuvxyz";
+	final int RANDOM_STRING_LENGTH = 10;
+
+	private String generateRandomString()
+	{
+		StringBuilder sb = new StringBuilder();
+		for(int c = 0; c < RANDOM_STRING_LENGTH; c++)
+		{
+			int ch = (int) (Math.random() * AlphaNumericString.length());
+			sb.append(AlphaNumericString.charAt(ch));
+		}
+		return sb.toString();
+	}
 	
 	private static final long TEN_MINUTES = 600_000;
 	
@@ -126,6 +153,57 @@ public class JwtTokenService {
 		return privateKey != null && publicKey != null;
 	}
 
+	public String generateSession(TrecAccount account, TrecOauthClient clientId, String currentSessionId)
+	{
+		if(currentSessionId != null)
+		{
+			if(currentSessionId.length() != 10)
+				throw new IllegalArgumentException("CurrentSessionId must be null or contain 10 characters");
+		}
+
+		if(!setKeys())
+			return null;
+
+		if(!verifyUnlocked(account))
+			return null;
+
+		Date now = new Date(Calendar.getInstance().getTime().getTime());
+		Date exp = new Date(now.getTime() + TEN_MINUTES);
+
+		String sessionId;
+		InvalidSession iSession;
+		if(invalidSessionRepo.existsById(account.getAccountId()))
+		{
+			iSession = invalidSessionRepo.getOne(account.getAccountId());
+		}
+		else
+		{
+			iSession = invalidSessionRepo.save(new InvalidSession(account.getAccountId(), null, null));
+		}
+
+		if(currentSessionId == null)
+		{
+			do {
+
+				sessionId = generateRandomString();
+			} while(iSession.hasSession(sessionId));
+		}
+		else
+		{
+			if(iSession.hasSession(currentSessionId))
+				throw new IllegalArgumentException("Current Session is Expired!");
+			sessionId = currentSessionId;
+		}
+
+		return JWT.create().withIssuer("Trec-Apps-User-Service")
+				.withClaim("ID", account.getAccountId())
+				.withClaim("sessionId", sessionId)
+				.withClaim("Client", (clientId == null ? "Trec-Apps-User-Service" : clientId.getName()))
+				.withExpiresAt(exp)
+				.withIssuedAt(now)
+				.sign(Algorithm.RSA512(publicKey, privateKey));
+	}
+
 	public String generateToken(TrecAccount account)
 	{
 		if(account == null)
@@ -181,7 +259,30 @@ public class JwtTokenService {
 		
 
 	}
-	
+
+	public String getSessionId(String token)
+	{
+		if(!setKeys())
+			return null;
+
+		DecodedJWT decodedJwt = null;
+		try
+		{
+			decodedJwt = JWT.require(Algorithm.RSA512(publicKey,privateKey))
+					.build()
+					.verify(token);
+		}
+		catch(JWTVerificationException e)
+		{
+			e.printStackTrace();
+			return null;
+		}
+
+		Claim idClaim = decodedJwt.getClaim("sessionId");
+
+		return idClaim.asString();
+	}
+
 	public TrecAccount verifyToken(String token)
 	{
 		
@@ -212,7 +313,58 @@ public class JwtTokenService {
 		
 		return accountService.getAccountById(idLong);
 	}
-	
+
+	String generateAuthToken(TrecAccount account, TrecOauthClient client)
+	{
+		return JWT.create()
+				.withIssuedAt(Calendar.getInstance().getTime())
+				.withClaim("account", account.getAccountId())
+				.withClaim("client", client.getClientId())
+				.withClaim("clients", client.getClientSecret())
+				.withIssuer("Trec-Apps-User-Service")
+				.sign(Algorithm.RSA512(publicKey, privateKey));
+	}
+
+	String verifyAuthToken(String token)
+	{
+		DecodedJWT decodedJwt = null;
+		try
+		{
+			decodedJwt = JWT.require(Algorithm.RSA512(publicKey,privateKey))
+					.build()
+					.verify(token);
+		}
+		catch(JWTVerificationException e)
+		{
+			e.printStackTrace();
+			return null;
+		}
+
+		// Make sure it references a proper account
+		Claim claim = decodedJwt.getClaim("account");
+		Long idLong = claim.asLong();
+
+		TrecAccount account =null;
+		if(idLong == null && (account = accountService.getAccountById(idLong))== null)
+			return null;
+
+		if(!account.isCredentialsNonExpired() || !account.isAccountNonLocked())
+			return null;
+
+		claim = decodedJwt.getClaim("client");
+		String clientStr = claim.asString();
+
+		TrecOauthClient client = clientService.loadClientByClientId(clientStr);
+
+		claim = decodedJwt.getClaim("clients");
+		clientStr = claim.asString();
+		if(client == null || !client.getClientSecret().equals(clientStr))
+			return null;
+
+		// All Checks have passed.
+		return generateToken(account);
+	}
+
 	boolean verifyUnlocked(TrecAccount account)
 	{
 		Date locked = account.getLockInit();

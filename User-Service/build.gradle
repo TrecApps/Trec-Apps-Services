@@ -25,8 +25,6 @@ dependencies {
     implementation 'org.glassfish.jaxb:jaxb-runtime:2.3.0'
 
 
-
-
     // This is needed so that multiple DataSources can be supported on Java 11
     implementation 'org.javassist:javassist:3.23.1-GA'
 

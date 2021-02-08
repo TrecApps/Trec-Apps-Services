@@ -1,12 +1,13 @@
 package com.trecapps.userservice.services;
 
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Service;
 
 import com.trecapps.userservice.models.NewUser;
 import com.trecapps.userservice.models.primary.TrecAccount;
 
 @Service
-public interface TrecAccountService {
+public interface TrecAccountService extends UserDetailsService {
 
 	TrecAccount getAccountById(long id);
 	TrecAccount getAccountByUserName(String username);
