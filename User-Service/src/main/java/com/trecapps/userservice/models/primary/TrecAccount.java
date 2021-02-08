@@ -62,8 +62,17 @@ public class TrecAccount implements UserDetails // implements UserDetails
 	int isValidated;
 	String color;
 	String validationToken;
-	
-	
+
+	int oauthUse;
+
+	public int getOauthUse() {
+		return oauthUse;
+	}
+
+	public void setOauthUse(int oauthUse) {
+		this.oauthUse = oauthUse;
+	}
+
 	// Security Attributes
 	byte passwordMonthReset; // How many months before Password needs to be Changed
 	Date passwordChanged; // When the Password was last set
@@ -107,6 +116,9 @@ public class TrecAccount implements UserDetails // implements UserDetails
 		this.failedLoginAttempts=failedLoginAttempts;
 		this.lockTime=lockTime;
 		this.lockInit=lockInit;
+
+		// Used to aid in generating one time codes
+		oauthUse = 0;
 	}
 	public TrecAccount() {
 		super();

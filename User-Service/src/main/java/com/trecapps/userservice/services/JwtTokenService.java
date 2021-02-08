@@ -24,6 +24,7 @@ import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.auth0.jwt.interfaces.Claim;
 import com.auth0.jwt.interfaces.DecodedJWT;
 
+import com.trecapps.userservice.models.OauthToken;
 import com.trecapps.userservice.models.primary.TrecOauthClient;
 import com.trecapps.userservice.models.primary.TrecOauthClientOne;
 import com.trecapps.userservice.models.secondary.InvalidSession;
@@ -65,6 +66,25 @@ public class JwtTokenService {
 	@Autowired
 	TrecOauthClientService clientService;
 
+	private DecodedJWT decodeJWT(String token)
+	{
+		if(!setKeys())
+			return null;
+		DecodedJWT ret = null;
+		try
+		{
+			ret = JWT.require(Algorithm.RSA512(publicKey,privateKey))
+					.build()
+					.verify(token);
+		}
+		catch(JWTVerificationException e)
+		{
+			e.printStackTrace();
+			return null;
+		}
+		return ret;
+	}
+
 	// chose a Character random from this String
 	final String AlphaNumericString = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
 			+ "0123456789"
@@ -83,7 +103,9 @@ public class JwtTokenService {
 	}
 	
 	private static final long TEN_MINUTES = 600_000;
-	
+
+	private static final long ONE_MINUTE = 60_000;
+
 	private boolean setKeys()
 	{
 		if(publicKey == null)
@@ -285,22 +307,7 @@ public class JwtTokenService {
 
 	public TrecAccount verifyToken(String token)
 	{
-		
-		if(!setKeys())
-			return null;
-		
-		DecodedJWT decodedJwt = null;
-		try
-		{
-			decodedJwt = JWT.require(Algorithm.RSA512(publicKey,privateKey))
-					.build()
-					.verify(token);
-		}
-		catch(JWTVerificationException e)
-		{
-			e.printStackTrace();
-			return null;
-		}
+		DecodedJWT decodedJwt = decodeJWT(token);
 		
 		Claim idClaim = decodedJwt.getClaim("ID");
 		
@@ -314,7 +321,7 @@ public class JwtTokenService {
 		return accountService.getAccountById(idLong);
 	}
 
-	String generateAuthToken(TrecAccount account, TrecOauthClient client)
+	public String generateAuthToken(TrecAccount account, TrecOauthClient client)
 	{
 		return JWT.create()
 				.withIssuedAt(Calendar.getInstance().getTime())
@@ -325,20 +332,10 @@ public class JwtTokenService {
 				.sign(Algorithm.RSA512(publicKey, privateKey));
 	}
 
-	String verifyAuthToken(String token)
+	public String verifyAuthToken(String token)
 	{
-		DecodedJWT decodedJwt = null;
-		try
-		{
-			decodedJwt = JWT.require(Algorithm.RSA512(publicKey,privateKey))
-					.build()
-					.verify(token);
-		}
-		catch(JWTVerificationException e)
-		{
-			e.printStackTrace();
-			return null;
-		}
+		DecodedJWT decodedJwt = decodeJWT(token);
+
 
 		// Make sure it references a proper account
 		Claim claim = decodedJwt.getClaim("account");
@@ -363,6 +360,72 @@ public class JwtTokenService {
 
 		// All Checks have passed.
 		return generateToken(account);
+	}
+
+	public String generateOneTimeCode(TrecAccount account, TrecOauthClient client)
+	{
+		int oauthTime = account.getOauthUse();
+		account.setOauthUse(oauthTime + 1);
+		account = accountRepo.save(account);
+
+		return JWT.create()
+				.withIssuer("Trec-Apps-User-Service")
+				.withClaim("account", account.getAccountId())
+				.withClaim("client", client.getClientId())
+				.withClaim("one", oauthTime)
+				.withExpiresAt(new Date(Calendar.getInstance().getTime().getTime() + ONE_MINUTE))
+				.sign(Algorithm.RSA512(publicKey, privateKey));
+	}
+
+	public OauthToken verifyOneTimeCode(String token, String client, String clientSec)
+	{
+		DecodedJWT decodedJwt = decodeJWT(token);
+
+		// One-time code Expired (presumed cause of null value here)
+		if(decodedJwt == null)
+			return null;
+
+		Claim claim = decodedJwt.getClaim("account");
+		Long tId = claim.asLong();
+		TrecAccount account = null;
+
+		// If the Account ID was not provided, or it references a nonexistent account, then code is invalid
+		if(tId == null || (account = accountService.getAccountById(tId)) == null)
+			return null;
+
+		// Make sure that this code had not previously been used
+		claim = decodedJwt.getClaim("one");
+		Integer oTime = claim.asInt();
+
+		if(oTime == null || account.getOauthUse() != (oTime + 1))
+			return null;
+
+		// Make sure that once the code was used, it cannot be used again
+		account.setOauthUse(account.getOauthUse() + 1);
+		accountService.updateUser(account);
+
+		// Now Make sure the Client info is up to date
+		claim = decodedJwt.getClaim("client");
+
+		TrecOauthClient clientObj = null;
+		String clientStr = claim.asString();
+
+		if(clientStr == null || (clientObj = clientService.loadClientByClientId(clientStr)) == null)
+			return null;
+
+		if( clientStr.equals(client) && clientObj.getClientSecret().equals(clientSec))
+		{
+			OauthToken ret = new OauthToken();
+			if(account.getTimeForValidToken() > 0)
+			{
+				ret.setExpires_in((int)account.getTimeForValidToken() * (int)TEN_MINUTES);
+			}
+			ret.setAccess_token(generateToken(account));
+			ret.setToken_type("Bearer");
+			ret.setRefresh_token(generateAuthToken(account, clientObj));
+			return ret;
+		}
+		return null;
 	}
 
 	boolean verifyUnlocked(TrecAccount account)

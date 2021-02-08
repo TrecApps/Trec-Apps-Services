@@ -3,19 +3,18 @@ package com.trecapps.userservice.controllers;
 import com.trecapps.userservice.models.OauthToken;
 import com.trecapps.userservice.models.primary.TrecAccount;
 import com.trecapps.userservice.models.primary.TrecOauthClient;
+import com.trecapps.userservice.security.TrecAuthentication;
 import com.trecapps.userservice.services.JwtTokenService;
 import com.trecapps.userservice.services.TrecAccountService;
 import com.trecapps.userservice.services.TrecOauthClientService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.RequestEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.util.MultiValueMap;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.Cookie;
@@ -112,38 +111,78 @@ public class Oauth2Controller {
         response.addHeader("Location", String.format("/auth/oauth2/authorize?client_id=%s&redirect_url=%s",
                 URLEncoder.encode(clientId, StandardCharsets.UTF_8),
                 URLEncoder.encode(redirectUrl, StandardCharsets.UTF_8)));
+        response.setStatus(HttpServletResponse.SC_FOUND);
     }
 
     @GetMapping("/authorize")
-    public void doAuthorize(@RequestParam Map<String, String> params, HttpServletResponse response)
+    public void doAuthorize(@RequestParam Map<String, String> params, HttpServletResponse response, Authentication user)
     {
+        TrecAccount account = ((TrecAuthentication)user).getAccount();
+
         String clientId = params.get("client_id");
         String redirectUrl = URLDecoder.decode(params.get("redirect_url"), StandardCharsets.UTF_8);
         TrecOauthClient client = validateClient(clientId, redirectUrl, null, false);
 
-        String codeParam = redirectUrl.indexOf('?') == -1 ?
+        String code = jwtService.generateOneTimeCode(account, client);
+        if(code == null)
+        {
+            // To-Do: Handle Error
+            return;
+        }
 
-        response.addHeader("Location", String.format("%s%s", redirectUrl)));
+        char appender = redirectUrl.indexOf('?') == -1 ? '?' : '&';
 
+        response.addHeader("Location", String.format("%s%ccode=%s", redirectUrl, appender, code));
+        response.setStatus(HttpServletResponse.SC_FOUND);
     }
 
     @PostMapping(value = "/token", consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
-    public OauthToken getToken(RequestEntity<MultiValueMap<String, String>> request)
+    public OauthToken getToken(@RequestBody MultiValueMap<String, String> request)
     {
-
-        return null;
+        OauthToken ret = jwtService.verifyOneTimeCode(
+                request.getFirst("code"),
+                request.getFirst("client_id"),
+                request.getFirst("client_secret"));
+        if(ret == null)
+        {
+            // handle error
+        }
+        return ret;
     }
 
     @GetMapping("/userinfo")
     public TrecAccount getUserInfo(HttpServletRequest req)
     {
-        return null;
+        String auth = req.getHeader("Authorization");
+        if(auth.startsWith("Bearer"))
+            auth = auth.substring(6).trim();
+        TrecAccount acc = jwtService.verifyToken(auth);
+        if(acc == null)
+            return null;
+
+        // Scrub any sensitive information
+        acc.setLockTime((byte)0);
+        acc.setOauthUse((byte)0);
+        acc.setFailedLoginAttempts((byte)0);
+        acc.setLockInit(null);
+        acc.setPasswordChanged(null);
+        acc.setPasswordMonthReset((byte)0);
+        acc.setRecentFailedLogin(null);
+        acc.setTimeForValidToken((byte)0);
+        acc.setToken(null);
+        acc.setMaxLoginAttempts((byte)0);
+        acc.setValidationToken(null);
+        acc.setValidTimeFromActivity((byte)0);
+        return acc;
     }
 
     @GetMapping("/logout")
     public void doLogOut(@RequestParam Map<String, String> params, HttpServletResponse response)
     {
-
+        Cookie cook = new Cookie("JSESSIONID", "");
+        cook.setMaxAge(0);
+        cook.setHttpOnly(true);
+        response.addCookie(cook);
     }
 
 }
