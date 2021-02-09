@@ -32,6 +32,8 @@ dependencies {
     implementation 'org.springframework.cloud:spring-cloud-starter-eureka:+'
     // Use JWT to verify user
     implementation 'com.auth0:java-jwt:+'
+    implementation 'org.springframework.boot:spring-boot-starter-security:+'
+    implementation 'org.springframework.boot:spring-boot-starter-oauth2-client:+'
 
     // Used for writing files
     // AWS S3
