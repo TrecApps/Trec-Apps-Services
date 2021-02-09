@@ -1,0 +1,46 @@
+<div class="container">
+    <div id="messageJumbo" class="jumbotron">Create Trec Account</div>
+    
+    <div width="100%" class="form">
+
+        <h4 *ngIf="updateFail" color="red">Failed To Update</h4>
+        <h4 *ngIf="needsFields" color="red">Required Fields still needed</h4>
+        <h4 *ngIf="!usernameFree" color="red">Username is taken</h4>
+
+        <label>Username: </label>
+        <input type="text" (input)="checkForUserName()" [(ngModel)]="user.username"><br>
+
+        <label>First Name: </label>
+        <input type="text" [(ngModel)]="user.firstName"><br>
+
+        <label>Last Name: </label>
+        <input type="text" [(ngModel)]="user.lastName"><br>
+
+        <label>Main Email: </label>
+        <input type="email" [(ngModel)]="user.mainEmail"><br>
+
+        <label>Backup Email: </label>
+        <input type="email" [(ngModel)]="user.backupEmail"><br>
+
+        <label>Password: </label>
+        <input type="password" [(ngModel)]="user.password"><br>
+
+        <label>Birthday: </label>
+        <input type="text" [(ngModel)]="user.birthday"><br>
+
+        <label>Months until Password Reset (0 for no reset requirement): </label>
+        <input type="number" [(ngModel)]="user.passwordMonthReset"><br>
+
+        <label>Time for Valid Tokens (): </label>
+        <input type="number" [(ngModel)]="user.timeForValidToken"><br>
+
+        <label>Max Login Attempts per hour (0 for no restriction): </label>
+        <input type="number" [(ngModel)]="user.maxLoginAttempts"><br>
+       
+        <label>Time to lock Account (if necessary)</label>
+        <input type="number" [(ngModel)]="user.lockTime"><br>
+
+        <input type="button" class="btn btn-submit" value="Submit" (click)="create()">
+    </div>
+
+</div>

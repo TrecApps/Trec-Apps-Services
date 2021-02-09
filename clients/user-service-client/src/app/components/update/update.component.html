@@ -1,0 +1,58 @@
+<div class="container">
+    <div id="messageJumbo" class="jumbotron">Trec Account Update</div>
+    
+    <div width="100%" class="form" *ngIf="updateMode">
+
+        <h4 *ngIf="updateFail" color="red">Failed To Update</h4>
+
+        <label>Username: </label>
+        <input type="text" readonly="true" [(ngModel)]="manager.account.username"><br>
+
+        <label>Main Email: </label>
+        <input type="text" readonly="true" [(ngModel)]="manager.account.mainEmail"><br>
+
+        <label>Backup Email: </label>
+        <input type="text" readonly="true" [(ngModel)]="manager.account.backupEmail"><br>
+
+        <label>First Name: </label>
+        <input type="text" [(ngModel)]="manager.account.firstName"><br>
+
+        <label>Last Name: </label>
+        <input type="text" [(ngModel)]="manager.account.lastName"><br>
+
+        <label>Months before Resetting password: </label>
+        <input type="number" [(ngModel)]="manager.account.passwordMonthReset"><br>
+
+        <label>Last Password Set: </label>
+        <input type="date" readonly="true" [(ngModel)]="manager.account.passwordChanged"><br>
+
+        <label>First Name: </label>
+        <input type="number" [(ngModel)]="manager.account.timeForValidToken"><br>
+
+        <label>First Name: </label>
+        <input type="number" [(ngModel)]="manager.account.maxLoginAttempts"><br>
+
+        <label>Lock Time (by Ten Minutes): </label>
+        <input type="number" [(ngModel)]="manager.account.lockTime"><br>
+
+        <input type="button" class="btn btn-submit" value="Submit" (click)="updateAccount()">
+        <input type="button" class="btn btn-submit" value="Update Password" (click)="toggleUpdateMode()">
+    </div>
+
+    <div width="100%" class="form" *ngIf="!updateMode">
+
+        <h4 *ngIf="updateFail" color="red">Failed To Update</h4>
+
+        <label>Username: </label>
+        <input type="text" [(ngModel)]="username"><br>
+
+        <label>Old Password: </label>
+        <input type="password" [(ngModel)]="oldPassword"><br>
+
+        <label>New Password: </label>
+        <input type="password" [(ngModel)]="newPassword"><br>
+
+        <input type="button" class="btn btn-submit" value="Submit" (click)="updatePassword()">
+        <input type="button" class="btn btn-submit" value="Update Account" (click)="toggleUpdateMode()">
+    </div>
+</div>

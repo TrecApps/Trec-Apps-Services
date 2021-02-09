@@ -1,0 +1,18 @@
+<div class="container">
+    <div id="messageJumbo" class="jumbotron">Welcome! Let's Validate your account and you can be on your Way!</div>
+    
+    <div width="100%" class="form">
+
+        <p>Welcome New User, Please click the <b>Get Token</b> button to get an email with a validation token
+            Once you get your email, please enter the provided code into the textbox below and click <b>Submit Token</b>
+            to validate your Trec Account!</p>
+
+        <label>Get Validation Token</label>
+        <button class="btn btn-submit" (click)="getToken()">Get Token</button><br>
+
+        <label>Enter Token:</label>
+        <input type="text" [(ngModel)]="validToken">
+        <button class="btn btn-submit" (click)="postToken()">Submit Token</button>
+        
+    </div>
+</div>

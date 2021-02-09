@@ -3,6 +3,7 @@
 // The list of file replacements can be found in `angular.json`.
 
 export const environment = {
+  SERVICE_URL: "http://localhost:4200/api/auth/",
   production: false
 };
 
