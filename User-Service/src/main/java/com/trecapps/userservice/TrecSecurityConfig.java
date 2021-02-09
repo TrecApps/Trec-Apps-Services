@@ -22,7 +22,10 @@ public class TrecSecurityConfig extends WebSecurityConfigurerAdapter
 
 	String restrictedEndpoints[] = {
 		"auth/oauth2/authorize",
-		"Validate"
+		"Validate",
+		"Account",
+		"UpdateUser",
+		"UpdatePassword"
 	};
 
 	@Override

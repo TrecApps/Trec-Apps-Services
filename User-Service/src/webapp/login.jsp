@@ -16,7 +16,7 @@
 		<div class="container">
 			<div id="messageJumbo" class="jumbotron">${message}</div>
 			
-			<form hidden width="100%" class="form" id="Passwordform" action="${formAction}" method="post">
+			<form width="100%" class="form" id="Passwordform" action="${formAction}" method="post">
 				<label>Username</label>
 				<input type="text" class="form-control" name="username"> <br>
 				<label id="Label2">Password:</label>

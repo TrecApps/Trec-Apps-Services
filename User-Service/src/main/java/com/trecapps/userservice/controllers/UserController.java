@@ -2,6 +2,7 @@ package com.trecapps.userservice.controllers;
 
 import javax.servlet.http.HttpServletRequest;
 
+import com.trecapps.userservice.security.TrecAuthentication;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -113,39 +114,40 @@ public class UserController {
 			return new ResponseEntity<ReturnObj>(HttpStatus.INTERNAL_SERVER_ERROR);
 		return new ResponseEntity<ReturnObj>(ret, HttpStatus.OK);
 	}
+
+	@GetMapping("/Account")
+	ResponseEntity<TrecAccount> getAccount(Authentication user)
+	{
+		TrecAccount acc = ((TrecAuthentication)user).getAccount();
+		acc.setOauthUse(0);
+		acc.setFailedLoginAttempts((byte)0);
+		acc.setLockInit(null);
+		acc.setToken(null);
+		acc.setValidationToken(null);
+		acc.setValidTimeFromActivity((byte)0);
+
+		return new ResponseEntity<TrecAccount>(acc,HttpStatus.OK);
+	}
 	
 	@GetMapping("/Validate")
-	Boolean validate(HttpServletRequest req)
+	Boolean validate(Authentication user)
 	{
-		String token = req.getHeader("Authorization");
-		if(token == null)
+		TrecAccount acc = ((TrecAuthentication)user).getAccount();
+
+		// Eventually, plan to add text validation in addition to email validation
+		if(acc.getIsValidated() > 1)
 			return false;
 		
-		TrecAccount account = tokenService.verifyToken(token);
-		
-		if(account == null)
-			return false;
-		
-		if(account.getIsValidated() != 0)
-			return true;
-		
-		accountService.sendverificationEmail(account);
+		accountService.sendverificationEmail(acc);
 		return true;
 	}
 	
 	@PostMapping("/Validate")
-	ResponseEntity<String> validateWithToken(HttpServletRequest req)
+	ResponseEntity<String> validateWithToken(HttpServletRequest req, Authentication user)
 	{
-		String token = req.getHeader("Authorization");
+		TrecAccount account = ((TrecAuthentication)user).getAccount();
+
 		String validationToken = req.getHeader("Verification");
-		
-		if(token == null)
-			return new ResponseEntity<String>(HttpStatus.UNAUTHORIZED);
-		
-		TrecAccount account = tokenService.verifyToken(token);
-		
-		if(account == null)
-			return new ResponseEntity<String>(HttpStatus.UNAUTHORIZED);
 		
 		if(validationToken == null)
 			return new ResponseEntity<String>("Validation Token not provided in 'Verification' header", HttpStatus.BAD_REQUEST);
@@ -155,71 +157,16 @@ public class UserController {
 		if(account == null)
 			return new ResponseEntity<String>("Validation Token provided in 'Verification' header not correct", HttpStatus.BAD_REQUEST);
 		
-		String ret = tokenService.generateToken(account);
-		
-		if(ret == null)
-			return new ResponseEntity<String>(HttpStatus.INTERNAL_SERVER_ERROR);
-		
-		return new ResponseEntity<String>(ret, HttpStatus.OK);
+		return new ResponseEntity<String>(HttpStatus.NO_CONTENT);
 	}
-	
-	@GetMapping("/UpdateUser")
-	ModelAndView getUpdatePage(@RequestParam("Redirect") String returnUrl)
-	{
-		ModelAndView view = new ModelAndView();
-		view.setViewName("AccountUpdate");
-		
-		ModelMap map = view.getModelMap();
-		
-		if(returnUrl != null)
-			map.addAttribute("redirect", returnUrl);
-		else
-			map.addAttribute("redirect", "");
-		
-		return view;
-	}
-	
-	
-	@PostMapping("/UpdateUser")
-	ResponseEntity<ReturnAccount> logInToUpdate(@RequestBody LogIn login)
-	{
-		TrecAccount account = null;
-		if(login.getUsername() != null)
-		{
-			account = accountService.logInUsername(login.getUsername(), login.getPassword());
-		}
-		else if(login.getEmail() != null)
-		{
-			account = accountService.logInEmail(login.getEmail(), login.getPassword());
-		}
-		
-		if(account == null)
-			return new ResponseEntity<ReturnAccount>(HttpStatus.UNAUTHORIZED);
-		
-		ReturnObj ret = generateAuth(account);
-		
-		if(ret == null)
-			return new ResponseEntity<ReturnAccount>(HttpStatus.INTERNAL_SERVER_ERROR);
-		return new ResponseEntity<ReturnAccount>(new ReturnAccount(account, ret.getToken()), HttpStatus.OK);
-	}
-	
-	
+
 	
 	@PutMapping(value = "/UpdateUser")
-	ResponseEntity<String> updateUser(RequestEntity<TrecAccount> entry)
+	ResponseEntity<String> updateUser(RequestEntity<TrecAccount> entry, Authentication auth)
 	{
-		HttpHeaders headers = entry.getHeaders();
-		
-		String token = headers.getFirst("Authorization");
-		
-		TrecAccount user = tokenService.verifyToken(token);
-		
-		if(user == null)
-		{
-			return new ResponseEntity<String>("Could Not Authenticate User", HttpStatus.UNAUTHORIZED);
-		}
-		
-		
+		// To-Do: Retrieve account from credentials so that certain fields cannot be overridden
+		TrecAccount user = ((TrecAuthentication)auth).getAccount();
+
 		TrecAccount newSettings = entry.getBody();
 		
 		user.setColor(newSettings.getColor());
@@ -235,28 +182,13 @@ public class UserController {
 			return new ResponseEntity<String>(HttpStatus.NO_CONTENT);
 		return new ResponseEntity<String>("Failed to Update User!", HttpStatus.INTERNAL_SERVER_ERROR);
 	}
-	
-	
-	@GetMapping("/UpdatePassword")
-	ModelAndView getUpdatePasswordPage(@RequestParam("Redirect") String returnUrl)
-	{
-		ModelAndView view = new ModelAndView();
-		view.setViewName("AccountUpdate");
-		
-		ModelMap map = view.getModelMap();
-		
-		if(returnUrl != null)
-			map.addAttribute("redirect", returnUrl);
-		else
-			map.addAttribute("redirect", "");
-		
-		return view;
-	}
-	
+
 	
 	@PostMapping(value = "/UpdatePassword", consumes = "application/x-www-form-urlencoded")
-	Boolean updatePassword(RequestEntity<MultiValueMap<String, String>> entry)
+	Boolean updatePassword(RequestEntity<MultiValueMap<String, String>> entry, Authentication auth)
 	{
+		TrecAccount user = ((TrecAuthentication)auth).getAccount();
+
 		MultiValueMap<String, String> map = entry.getBody();
 		
 		String username = map.getFirst("username");
@@ -276,6 +208,10 @@ public class UserController {
 		
 		
 		if(account == null)
+		{
+			return false;
+		}
+		if(!account.equals(user))
 		{
 			return false;
 		}
