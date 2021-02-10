@@ -37,6 +37,16 @@ public class FullFalsehood {
 		return new FullFalsehood(contents, metadata.clone(), verdicts, events);
 	}
 
+	public FullFalsehood clone(byte severity)
+	{
+		if(severity < 0 || severity > 7)
+			throw new IllegalArgumentException("Severity Parameter out of bounds");
+
+		Falsehood newMeta = metadata.clone();
+		newMeta.setStatus(severity);
+		return new FullFalsehood(contents, newMeta, verdicts, events);
+	}
+
 	/**
 	 * 
 	 */

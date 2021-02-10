@@ -803,8 +803,12 @@ public class PublicFalsehoodRepository implements PublicFalsehoodRepo
 				ret.add(pf);
 			System.out.println("With status " + status + " and date " + d + " before= " +end+ " after= " + begin);
 		}
+		System.out.println("R-Before Public Cull, size is " + ret.size());
+		ret = cullList(p, ret);
+
+		System.out.println("R-After Public Cull, size is " + ret.size());
 		
-		return cullList(p, ret);
+		return ret;
 	}
 
 
@@ -1822,10 +1826,14 @@ public class PublicFalsehoodRepository implements PublicFalsehoodRepo
 			if (foundTerm(pf.getTags(), terms) && (offType > 15 || offType == pf.getOfficialType()) && status > 4 && d.getTime() >= begin.getTime()
 					&& d.getTime() <= end.getTime())
 				ret.add(pf);
-			System.out.println("With status " + status + " and date " + d + " before= " +end+ " after= " + begin);
+			System.out.println("With status " + status + " and date " + d + " before= " +end+ " after= " + begin + " Terms (obj) = " + pf.getTags());
 		}
-		
-		return cullList(p, ret);
+		System.out.println("Terms = "+ terms + "R-Before Public Cull, size is " + ret.size());
+		ret = cullList(p, ret);
+
+		System.out.println("R-After Public Cull, size is " + ret.size());
+
+		return ret;
 	}
 
 

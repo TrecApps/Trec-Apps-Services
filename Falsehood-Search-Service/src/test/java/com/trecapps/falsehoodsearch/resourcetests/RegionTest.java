@@ -52,8 +52,8 @@ public class RegionTest {
 			regEntries[2] = new RegionEntry(new Region(null, "Morag"), 
 					"Old planet, known for intense flooding, once held the Power Stone");
 
-		RegionRepo pRepo = sharedApp.getRegionRepo();
-		FalsehoodStorageHolder storage = sharedApp.getStorageHolder();
+		RegionRepo pRepo = app.getRegionRepo();
+		FalsehoodStorageHolder storage = app.getStorageHolder();
 
 		pRepo.save(regEntries[0].getRegion());
 		storage.addNewFile("Region-" + 0, regEntries[0].getContents());

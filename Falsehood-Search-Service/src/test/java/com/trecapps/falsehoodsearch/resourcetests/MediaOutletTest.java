@@ -47,8 +47,8 @@ public class MediaOutletTest {
 				new MediaOutlet(null, (short)1960, "Daily Bugle"),
 				"Founded by JJJ, this outlet has it out for Spider-Man.");
 
-		MediaOutletRepo pRepo = sharedApp.getMediaOutletRepo();
-		FalsehoodStorageHolder storage = sharedApp.getStorageHolder();
+		MediaOutletRepo pRepo = app.getMediaOutletRepo();
+		FalsehoodStorageHolder storage = app.getStorageHolder();
 
 		pRepo.save(medEntries[0].getOutlet());
 		storage.addNewFile("MediaOutlet-" + 0, medEntries[0].getText());

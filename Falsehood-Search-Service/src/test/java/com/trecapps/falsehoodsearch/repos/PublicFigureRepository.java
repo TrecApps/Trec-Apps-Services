@@ -13,6 +13,8 @@ import java.util.*;
 public class PublicFigureRepository implements PublicFigureRepo {
     Set<PublicFigure> appeals = new TreeSet<>();
 
+
+
     @Override
     public List<PublicFigure> findAll() {
         return new LinkedList<>(appeals);
@@ -36,6 +38,8 @@ public class PublicFigureRepository implements PublicFigureRepo {
 
         System.out.println("PublicFigureRepository.findAll has total entries of " + preRet.size());
         System.out.println("StartIndex = " + start + " EndIndex = " + end);
+
+
         
         return new TrecPage<PublicFigure>( preRet.subList(start, Math.min(end, preRet.size())));
     }

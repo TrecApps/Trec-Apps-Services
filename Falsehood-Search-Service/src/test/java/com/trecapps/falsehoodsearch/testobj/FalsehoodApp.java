@@ -46,8 +46,6 @@ public class FalsehoodApp {
 	PublicFalsehoodRepo publicFalsehoodRepo;
 
 	FalsehoodRepo falsehoodRepo;
-
-	Map<String, String> inbox;
 	
 	public FalsehoodApp()
 	{
@@ -59,8 +57,6 @@ public class FalsehoodApp {
 		regionRepo = new RegionRepository();
 		institutionRepo = new InstitutionRepository();
 
-
-		inbox = new TreeMap<>();
 		
 		if(storageHolder == null)
 			storageHolder = new FalsehoodStorageHolder(System.getProperty("user.dir") + File.separator + "build" + File.separator + "storage",

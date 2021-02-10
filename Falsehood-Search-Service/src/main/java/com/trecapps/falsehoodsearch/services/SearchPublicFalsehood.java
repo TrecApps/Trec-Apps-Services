@@ -116,6 +116,21 @@ public class SearchPublicFalsehood
 		this.officialType = 20;
 	}
 
+	@Override
+	public String toString() {
+		return "SearchPublicFalsehood{" +
+				"terms='" + terms + '\'' +
+				", to=" + to +
+				", from=" + from +
+				", numberOfEntries=" + numberOfEntries +
+				", page=" + page +
+				", minimum=" + minimum +
+				", maximum=" + maximum +
+				", official=" + official +
+				", officialType=" + officialType +
+				'}';
+	}
+
 	public String getTerms() {
         return terms;
     }

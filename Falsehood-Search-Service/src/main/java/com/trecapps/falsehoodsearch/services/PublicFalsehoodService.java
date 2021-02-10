@@ -70,7 +70,8 @@ public class PublicFalsehoodService {
     	String terms = search.getTerms();
     	
     	Pageable p = PageRequest.of(search.getPage(), search.getNumberOfEntries() == 0 ? 1 : search.getNumberOfEntries());
-    	
+
+    	System.out.println("Search Object is " + search);
     	
     	if(begin != null && end != null)
     	{

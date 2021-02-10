@@ -18,6 +18,12 @@ public class TrecPage<T> implements Page {
     }
 
     @Override
+    public List<T> toList()
+    {
+        return items;
+    }
+
+    @Override
     public int getTotalPages() {
         return 0;
     }

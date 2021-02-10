@@ -31,7 +31,9 @@ public class PublicFigureService
 	
 	public List<PublicFigure> getPublicFigures(int page, int pageSize)
 	{
-		return figureRepo.findAll(PageRequest.of(page, pageSize)).toList();
+		var pRequest = PageRequest.of(page, pageSize);
+		System.out.println("PareRequest is " + pRequest);
+		return figureRepo.findAll(pRequest).toList();
 	}
 	
 	public List<PublicFigure> getPublicFigure(String entry)

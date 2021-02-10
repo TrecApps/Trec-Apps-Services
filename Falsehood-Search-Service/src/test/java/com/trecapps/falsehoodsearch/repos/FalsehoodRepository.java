@@ -176,7 +176,7 @@ public class FalsehoodRepository implements FalsehoodRepo
 
 	@Override
 	public void deleteInBatch(Iterable<Falsehood> entities) {
-		
+
 	}
 
 

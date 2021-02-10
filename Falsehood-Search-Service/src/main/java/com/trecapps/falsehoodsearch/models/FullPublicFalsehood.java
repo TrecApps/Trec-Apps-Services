@@ -38,6 +38,16 @@ public class FullPublicFalsehood {
     	return new FullPublicFalsehood(contents, metadata.clone(), verdicts, events);
     }
 
+	public FullPublicFalsehood clone(byte severity)
+	{
+		if(severity < 0 || severity > 7)
+			throw new IllegalArgumentException("Severity Parameter out of bounds");
+
+		PublicFalsehood newMeta = metadata.clone();
+		newMeta.setStatus(severity);
+		return new FullPublicFalsehood(contents, newMeta, verdicts, events);
+	}
+
     public String getContents() {
         return contents;
     }

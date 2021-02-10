@@ -57,8 +57,8 @@ public class InstitutionTest {
 			intEntries[2] = new InstitutionEntry(new Institution(null, "Morag"), 
 					"Old planet, known for intense flooding, once held the Power Stone");
 
-		InstitutionRepo pRepo = sharedApp.getInstitutionRepo();
-		FalsehoodStorageHolder storage = sharedApp.getStorageHolder();
+		InstitutionRepo pRepo = app.getInstitutionRepo();
+		FalsehoodStorageHolder storage = app.getStorageHolder();
 
 		pRepo.save(intEntries[0].getInstitution());
 		storage.addNewFile("Institution-" + 0, intEntries[0].getContents());
