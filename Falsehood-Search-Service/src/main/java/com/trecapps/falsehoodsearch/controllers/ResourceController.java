@@ -62,7 +62,7 @@ public class ResourceController
     }
 
     @GetMapping("/PublicFigures/{name}")
-    public List<PublicFigure> getFigures(@SuppressWarnings("rawtypes") RequestEntity entry, @PathVariable("name")String name)
+    public List<PublicFigure> getFigures(@PathVariable("name")String name)
     {
         return pfService.getPublicFigure(name);
     }

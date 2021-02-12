@@ -2,6 +2,7 @@ package com.trecapps.falsehoodsearch.repos;
 
 
 
+import com.trecapps.falsehoodsearch.models.MediaOutlet;
 import com.trecapps.falsehoodsearch.models.PublicFigure;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.Page;
@@ -204,26 +205,47 @@ public class PublicFigureRepository implements PublicFigureRepo {
         return false;
     }
 
-    @Override
-    public Page<PublicFigure> findAllApproved(Pageable pageable) {
-        return null;
-    }
+
 
 	@Override
-	public List<PublicFigure> findLikeName(String f, String m, String l) {
-		// TODO Auto-generated method stub
-		return null;
+	public List<PublicFigure> findLikeName(String f, String m, String l)
+    {
+        List<PublicFigure> ret = new ArrayList<>();
+
+        for(PublicFigure app: appeals)
+        {
+            if(app.getFirstname().indexOf(f) != -1 &&
+                    app.getMiddleNames().indexOf(m) != -1 &&
+                    app.getLastName().indexOf(l) != -1)
+            ret.add(app);
+        }
+        return ret;
 	}
 
 	@Override
 	public List<PublicFigure> findLikeName(String f, String n) {
-		// TODO Auto-generated method stub
-		return null;
+        List<PublicFigure> ret = new ArrayList<>();
+
+        for(PublicFigure app: appeals)
+        {
+            if(app.getFirstname().indexOf(f) != -1 &&
+                    (app.getMiddleNames().indexOf(n) != -1 ||
+                    app.getLastName().indexOf(n) != -1))
+                ret.add(app);
+        }
+        return ret;
 	}
 
 	@Override
 	public List<PublicFigure> findLikeName(String name) {
-		// TODO Auto-generated method stub
-		return null;
+        List<PublicFigure> ret = new ArrayList<>();
+
+        for(PublicFigure app: appeals)
+        {
+            if(app.getFirstname().indexOf(name) != -1 ||
+                    app.getLastName().indexOf(name) != -1)
+                ret.add(app);
+        }
+        return ret;
 	}
 }

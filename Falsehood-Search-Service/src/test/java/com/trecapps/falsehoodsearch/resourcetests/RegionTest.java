@@ -8,11 +8,15 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.List;
 
+import com.trecapps.falsehoodsearch.controllers.ResourceController;
+import com.trecapps.falsehoodsearch.models.Institution;
+import com.trecapps.falsehoodsearch.models.InstitutionEntry;
 import com.trecapps.falsehoodsearch.models.Region;
 import com.trecapps.falsehoodsearch.models.RegionEntry;
 import com.trecapps.falsehoodsearch.repos.PublicFigureRepo;
 import com.trecapps.falsehoodsearch.repos.RegionRepo;
 import com.trecapps.falsehoodsearch.services.FalsehoodStorageHolder;
+import com.trecapps.falsehoodsearch.services.PublicAttributeService;
 import com.trecapps.falsehoodsearch.testobj.FalsehoodApp;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Order;
@@ -64,5 +68,32 @@ public class RegionTest {
 		pRepo.save(regEntries[2].getRegion());
 		storage.addNewFile("Region-" + 2, regEntries[2].getContents());
 	}
+	@Test
+	@Order(4)
+	public void searchRegion()
+	{
+		ResourceController pfController = sharedApp.getResourceController();
 
+		List<Region> regions = pfController.getRegionsBySearchTerm("Coru");
+		assertEquals(1, regions.size());
+		assertEquals("Coruscant", regions.get(0).getName());
+
+		RegionEntry reg = pfController.getRegionsById(1L);
+		assertNotNull(reg);
+		assertEquals(1L,reg.getRegion().getId());
+	}
+
+	@Test
+	@Order(1)
+	public void getRegion()
+	{
+		PublicAttributeService attService = sharedApp.getAttService();
+
+		RegionEntry re = attService.getRegion(0);
+
+		assertNotNull(re);
+		assertNotNull(re.getContents());
+		assertNotNull(re.getRegion());
+		assertEquals(0L, re.getRegion().getId().longValue());
+	}
 }

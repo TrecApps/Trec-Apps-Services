@@ -209,7 +209,13 @@ public class MediaOutletRepository implements MediaOutletRepo
 
 	@Override
 	public List<MediaOutlet> getOutletLikeName(String name) {
-		// TODO Auto-generated method stub
-		return null;
+		List<MediaOutlet> ret = new ArrayList<>();
+
+		for(MediaOutlet app: appeals)
+        {
+            if(app.getName().indexOf(name) != -1)
+                ret.add(app);
+        }
+		return ret;
 	}
 }
