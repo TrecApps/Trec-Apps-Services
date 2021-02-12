@@ -3,7 +3,10 @@
 // The list of file replacements can be found in `angular.json`.
 
 export const environment = {
-  production: false
+  production: false,
+  RESOURCE_URL: 'http://localhost:4200/api/resources/search/',
+  FALSEHOOD_SEARCH: 'http://localhost:4200/api/falsehood-search/',
+  FALSEHOOD_WRITE: 'http://localhost:4200/api/falsehoods/'
 };
 
 /*
