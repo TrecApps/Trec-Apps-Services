@@ -1,0 +1,31 @@
+<h2>Institution</h2>
+
+
+<div>
+
+
+  <label>Search Institution</label>
+  <input class="form-control" type="search" (change)="onSearchUpdate($event)" [(ngModel)]="searchText" placeholder="Search Institution">
+
+  <ul *ngFor="let inst of searchInst">
+    <li (click)="getInst(inst.id)">Institution: {{inst.name}}</li>
+  </ul>
+</div>
+
+<div *ngIf="mainInst">
+  <h3>Title: {{mainInst.institution.name}}</h3>
+
+  <button class="btn bg-info" (click)="setMode(1)">Wiki</button>
+  <button class="btn bg-info" (click)="setMode(2)">Public Falsehoods</button>
+
+  <br>
+
+  <div class="container">
+    <div *ngIf="mode==1" [innerHTML]="mainInst.contents | marked">
+
+    </div>
+    
+    <!--app-public-falsehood-search></app-public-falsehood-search-->
+    
+  </div>
+</div>

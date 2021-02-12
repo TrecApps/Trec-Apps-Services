@@ -1,0 +1,27 @@
+<h2>Media Outlets</h2>
+
+    <div>
+        <label>Search Media Outlet</label>
+        <input class="form-control" type="search" (change)="onSearchUpdate($event)" [(ngModel)]="searchText" placeholder="Search Media Outlet">
+
+        <ul *ngFor="let outlet of searchOutlets">
+          <li (click)="getOutlet(outlet.outletId)">Public Figure: {{outlet.name}}, founded {{outlet.foundationYear}}</li>
+        </ul>
+    </div>
+
+    <div *ngIf="mainOutlet">
+        <h3 *ngIf="mainOutlet.outlet">Title: {{mainOutlet.outlet.name}}</h3>
+    
+        <button class="btn bg-info" (click)="setMode(1)">Wiki</button>
+        <button class="btn bg-info" (click)="setMode(2)">Media Falsehoods</button>
+        
+        <br>
+
+        
+        <div class="container">
+          <div *ngIf="mode==1" [innerHTML]="mainOutlet.text | marked"></div>
+
+          <!--app-falsehood-search></app-falsehood-search-->
+        </div>
+    </div>
+

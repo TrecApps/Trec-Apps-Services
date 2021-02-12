@@ -1,0 +1,31 @@
+<h2>Public Figure</h2>
+
+
+    <div>
+        <label>Search Public Figure</label>
+        <input class="form-control" type="search" (change)="onSearchUpdate($event)" [(ngModel)]="searchText" placeholder="Search Public Figure">
+
+        <ul *ngFor="let figure of searchFigures">
+          <li (click)="getFigure(figure.id)">Public Figure: {{figure.firstname}} {{figure.middleNames}} {{figure.lastName}}</li>
+        </ul>
+    </div>
+
+    <div *ngIf="mainFigure">
+        <h3 *ngIf="mainFigure.figure">Title: {{mainFigure.figure.firstname + mainFigure.figure.middleNames + mainFigure.figure.lastName}}</h3>
+    
+        <button class="btn bg-info" (click)="setMode(1)">Wiki</button>
+        <button class="btn bg-info" (click)="setMode(2)">Public Falsehoods</button>
+        <button class="btn bg-info" (click)="setMode(3)">Media Falsehoods</button>
+
+        <br>
+
+        <div *ngIf="mode==1" [innerHTML]="mainFigure.text | marked"></div>
+
+        
+        <!--app-public-falsehood-search></app-public-falsehood-search>
+        
+        <app-falsehood-search></app-falsehood-search-->
+        
+    </div>
+
+

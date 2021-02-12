@@ -1,0 +1,30 @@
+<h2>Region</h2>
+
+
+<div>
+  <label>Search Region</label>
+  <input class="form-control" type="search" (change)="onSearchUpdate($event)" [(ngModel)]="searchText" placeholder="Search Region">
+
+  <ul *ngFor="let region of searchRegion">
+    <li (click)="getRegion(region.id)">Region: {{region.name}}</li>
+  </ul>
+</div>
+
+<div *ngIf="mainRegion">
+  <h3>Title: {{mainRegion.region.name}}</h3>
+
+  <button class="btn bg-info" (click)="setMode(1)">Wiki</button>
+  <button class="btn bg-info" (click)="setMode(2)">Public Falsehoods</button>
+  <br>
+  <!--Give those with a high credibility rating a chance to approve or reject an unconfirmed falsehood-->
+
+  <div class="container">
+    <div *ngIf="mode==1" [innerHTML]="mainRegion.contents | marked">
+
+    </div>
+    
+    <!--app-public-falsehood-search></app-public-falsehood-search-->
+   
+  </div>
+</div>
+
