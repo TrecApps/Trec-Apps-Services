@@ -65,6 +65,15 @@ public class TrecAccount implements UserDetails // implements UserDetails
 
 	int oauthUse;
 
+	@Transient  // This user has been authorized to create a Trec-Apps Client
+	private static final byte CLIENT_CREATOR = 0b00000001;
+	@Transient  // This User is a regular employee of Trec-Apps
+	private static final byte REGULAR_EMPLOYEE = 0b00000010;
+	@Transient  // This User is a Developer for Trec-Apps
+	private static final byte DEVELOPER_EMPLOYEE = 0b00000100;
+	@Transient  // This User is a Registered FACT-Checker for the Falsehoods Service
+	private static final byte FALSEHOODS_FACT = 0b00001000;
+
 	byte priveledges;
 
 	public int getOauthUse() {
