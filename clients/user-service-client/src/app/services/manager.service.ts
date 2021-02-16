@@ -145,7 +145,7 @@ export class ManagerService {
 
   async createClient(name:String): Promise<ClientError> {
     let ret = new ClientError();
-    await this.httpClient.get(`${environment.SERVICE_URL}create`).toPromise()
+    await this.httpClient.get(`${environment.SERVICE_URL}create?name=${name}`).toPromise()
       .then((res: Client) => {
         ret.client = res;
       }).catch((reason) => {
