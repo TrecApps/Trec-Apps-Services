@@ -1,0 +1,26 @@
+<div class="container">
+    <div id="messageJumbo" class="jumbotron">Create Trec Client</div>
+
+    <label>Click this button to see if You can create a client!</label>
+
+    <button (click)="checkClientPermission()" class="btn btn-submit">Can Create Client</button>
+
+    <h3 class="bg-error">{{clientMessage}}</h3>
+
+    <div *ngIf="canCreate">
+        <label>Enter a name for your Trec-Apps Client!</label>
+        <input type="text" ([ngModel])="clientName"><br>
+        <button (click)="submitClient()" class="btn btn-submit">Submit Client</button>
+    </div>
+
+    <div *ngIf="clientObj">
+        <h4>Here is your Client Details: Please Keep this information Safe!</h4><br>
+        <h5>Client Name: <h6>{{clientObj.name}}</h6></h5><br>
+        <h5>Client Id: <h6>{{clientObj.clientId}}</h6></h5><br>
+        <h5>Client Secret: <h6>{{clientObj.clientSecret}}</h6></h5><br>
+        <button (click)="dropObject()" class="btn btn-submit">Drop Client Object</button>
+
+    </div>
+
+    <button (click)="moveToUpdate()">Send to Update</button>
+</div>

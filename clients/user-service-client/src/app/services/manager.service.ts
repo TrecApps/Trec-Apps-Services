@@ -3,6 +3,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
 import { TrecAccount } from '../models/TrecAccount';
 import { NewUser } from '../models/NewUser';
+import { Client, ClientError } from '../models/Client';
 
 @Injectable({
   providedIn: 'root'
@@ -129,5 +130,37 @@ export class ManagerService {
       alert(reason.message || reason.error.message);
       this.revertToLogin(reason);
     })
+  }
+
+  async canCreateClient(): Promise<boolean> {
+    let ret: boolean;
+    await this.httpClient.get(`${environment.SERVICE_URL}clients/canCreate`).toPromise()
+      .then((res: boolean) => {
+        ret = res;
+      }).catch(() => {
+        ret = false;
+      });
+    return ret;
+  }
+
+  async createClient(name:String): Promise<ClientError> {
+    let ret = new ClientError();
+    await this.httpClient.get(`${environment.SERVICE_URL}create`).toPromise()
+      .then((res: Client) => {
+        ret.client = res;
+      }).catch((reason) => {
+        if(reason.status) {
+          switch(reason.status) {
+            case 401:
+              this.mode = 2;
+              break;
+            case 403:
+              ret.error = "You are Not Authorized to Create a Trec Client!";
+          }
+        } else {
+          ret.error = "Client Creation Failed! Reason Unknown!";
+        }
+      });
+    return ret;
   }
 }

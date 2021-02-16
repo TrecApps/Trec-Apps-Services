@@ -48,8 +48,12 @@ public class TrecOauthClientController {
 			return new ResponseEntity<TrecOauthClient>((TrecOauthClient) null, HttpStatus.FORBIDDEN);
 		}
 
-		return new ResponseEntity<TrecOauthClient>(clientService.createNewClient(name, 0,
-				((TrecAuthentication)user).getAccount()), HttpStatus.OK);
+		TrecOauthClient newClient = clientService.createNewClient(name, 0,
+				((TrecAuthentication)user).getAccount());
+
+		newClient.setOwner(null);
+
+		return new ResponseEntity<TrecOauthClient>(newClient, HttpStatus.OK);
 	}
 
 }

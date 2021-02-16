@@ -12,6 +12,7 @@ import { AppRoutingModule } from './app-routing.module';
 import { UpdateComponent } from './components/update/update.component';
 import { CreateComponent } from './components/create/create.component';
 import { ValidateComponent } from './components/validate/validate.component';
+import { ClientComponent } from './components/client/client.component';
 
 @NgModule({
   declarations: [
@@ -19,7 +20,8 @@ import { ValidateComponent } from './components/validate/validate.component';
     LoginComponent,
     UpdateComponent,
     CreateComponent,
-    ValidateComponent
+    ValidateComponent,
+    ClientComponent
   ],
   imports: [
     BrowserModule,

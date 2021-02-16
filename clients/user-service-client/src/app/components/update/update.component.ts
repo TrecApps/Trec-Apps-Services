@@ -38,4 +38,7 @@ export class UpdateComponent implements OnInit {
     this.updateMode = !this.updateMode;
   }
 
+  moveToClient() {
+    this.manager.mode = 5;
+  }
 }
