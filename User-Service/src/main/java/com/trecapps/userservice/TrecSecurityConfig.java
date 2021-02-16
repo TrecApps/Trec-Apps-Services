@@ -25,7 +25,8 @@ public class TrecSecurityConfig extends WebSecurityConfigurerAdapter
 		"Validate",
 		"Account",
 		"UpdateUser",
-		"UpdatePassword"
+		"UpdatePassword",
+		"clients"
 	};
 
 	@Override

@@ -28,7 +28,7 @@ public class TrecOauthClientService // implements ClientDetailsService
 		return oauthRepo.existsById(clientId) ? oauthRepo.getOne(clientId) : null;
 	}
 	
-	public String createNewClient(String name, int type, TrecAccount owner)
+	public TrecOauthClient createNewClient(String name, int type, TrecAccount owner)
 	{
 		String newId;
 		
@@ -47,7 +47,7 @@ public class TrecOauthClientService // implements ClientDetailsService
 		System.out.println(client);
 		oauthRepo.save(client);
 		
-		return newId;
+		return client;
 	}
 	
 	

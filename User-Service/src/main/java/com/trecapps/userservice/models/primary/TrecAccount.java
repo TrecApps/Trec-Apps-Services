@@ -65,6 +65,8 @@ public class TrecAccount implements UserDetails // implements UserDetails
 
 	int oauthUse;
 
+	byte priveledges;
+
 	public int getOauthUse() {
 		return oauthUse;
 	}
@@ -117,17 +119,24 @@ public class TrecAccount implements UserDetails // implements UserDetails
 		this.lockTime=lockTime;
 		this.lockInit=lockInit;
 
+		this.priveledges = 0;
 		// Used to aid in generating one time codes
 		oauthUse = 0;
+
 	}
 	public TrecAccount() {
 		super();
 	}
-	
-	
-	
-	
-	
+
+
+	public byte getPriveledges() {
+		return priveledges;
+	}
+
+	public void setPriveledges(byte priveledges) {
+		this.priveledges = priveledges;
+	}
+
 	@Override
 	public String toString() {
 		return "TrecAccount [firstName=" + firstName + ", lastName=" + lastName + ", accountId=" + accountId
