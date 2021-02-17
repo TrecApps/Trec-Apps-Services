@@ -7,7 +7,7 @@ plugins {
 
     // Apply the java-library plugin to add support for Java Library
     id 'java-library'
-    id 'org.springframework.boot' version '2.2.6.RELEASE'
+    id 'org.springframework.boot' version '2.4.2'
     // Test Coverage
     id 'jacoco'
 }
@@ -24,19 +24,20 @@ repositories {
 }
 
 dependencies {
-
+	implementation 'org.springframework.plugin:spring-plugin-core:+'
     // Spring Boot Support
     implementation 'org.springframework.boot:spring-boot-starter-web:+'
     implementation 'org.springframework.boot:spring-boot-starter-actuator:+'
     // Enable Discovery
-    implementation 'org.springframework.cloud:spring-cloud-starter-eureka:+'
+    implementation 'org.springframework.cloud:spring-cloud-starter-netflix-eureka-client:+'
+    implementation 'org.springframework.cloud:spring-cloud-commons:+'
+    
     // Make this a Gateway Service
-    implementation 'org.springframework.cloud:spring-cloud-starter-feign:+'
-    implementation 'org.springframework.cloud:spring-cloud-starter-sleuth:+'
-    implementation 'org.springframework.cloud:spring-cloud-sleuth-zipkin:+'
-    implementation 'org.springframework:spring-webmvc:+'
-    implementation 'org.springframework:spring-aspects:+'
-    implementation 'org.springframework.cloud:spring-cloud-starter-zuul:+'
+    implementation 'org.springframework.cloud:spring-cloud-starter-netflix-hystrix:+'
+    implementation 'org.springframework.cloud:spring-cloud-starter-loadbalancer:+'
+    implementation 'org.springframework.cloud:spring-cloud-starter-netflix-zuul:+'
+    
+    implementation 'com.google.code.gson:gson:2.8.2'
     
     // Testing
     testCompile group: 'junit', name: 'junit', version: '4.12'
@@ -64,5 +65,5 @@ test.finalizedBy(project.tasks.jacocoTestReport)
 
 application {
     // Define the main class for the application.
-    mainClassName = 'com.trecapps.discover.Driver'
+    mainClassName = 'com.trecapps.gateway.Driver'
 }
