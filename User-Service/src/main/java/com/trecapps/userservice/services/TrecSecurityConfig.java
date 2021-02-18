@@ -1,4 +1,4 @@
-package com.trecapps.userservice;
+package com.trecapps.userservice.services;
 
 import com.trecapps.userservice.security.TrecSecurityContext;
 import com.trecapps.userservice.services.TrecAccountService;
@@ -22,20 +22,21 @@ public class TrecSecurityConfig extends WebSecurityConfigurerAdapter
 
 	String restrictedEndpoints[] = {
 		"auth/oauth2/authorize",
-		"Validate",
-		"Account",
-		"UpdateUser",
-		"UpdatePassword",
-		"clients"
+		"users/Validate",
+		"users/Account",
+		"users/UpdateUser",
+		"users/UpdatePassword",
+		"clients/*"
 	};
 
 	@Override
 	protected void configure(HttpSecurity http) throws Exception
 	{
-		http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
+		http.csrf().disable().
+				sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
 				.userDetailsService(accountService)
 				.securityContext().securityContextRepository(secContext).and()
-				.authorizeRequests().anyRequest().permitAll().and()
+				.authorizeRequests().antMatchers("/**").permitAll().and()
 				.authorizeRequests().antMatchers(restrictedEndpoints).authenticated().and()
 				.formLogin().loginPage("/login");
 		// http.authorizeRequests().antMatchers("/*").permitAll();

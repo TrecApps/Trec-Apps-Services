@@ -6,33 +6,39 @@ spring:
     name: gateway-service
 
 eureka:
+  instance:
+    leaseRenewalIntervalInSeconds: 10
+    leaseExpirationDurationInSeconds: 20
   client:
     service-url:
       defaultZone: http://localhost:8081/eureka/
+    registerWithEureka: true
+    fetchRegistry: true
 
 zuul:
   routes:
     auth:                     # port 8082 Authentication Service: Used to holds Trec Accounts and use them
       path: /auth/**
-      serviceId: auth-service
-      strip-prefix: false
-    resources:                # port 8083 Resources used in Falsehoods and other Services
-      path: /resources/**
-      strip-prefix: false
-      serviceId: resource-service
-    falsehoods_search:        # port 8084 Search Service
-      path: /falsehood-search/**
-      strip-prefix: false
-      serviceId: falsehood-search-service
-    falsehoods:               # port 8085 Falsehoods Service (Requires Authentication)
-      path: /falsehoods/**
-      strip-prefix: false
-      serviceId: falsehood-service
-    pictures:                 # port 8086 Manages Pictures
-      path: /pictures/**
-      strip-prefix: false
-      serviceId: picture-service
-    adverts:                  # port 8087 Manages Advertisments
-      path: /ads/**
-      strip-prefix: false
-      serviceId: ad-service
+      #serviceId: auth-service
+      #strip-prefix: false
+      url: http://localhost:8082/auth/
+#    resources:                # port 8083 Resources used in Falsehoods and other Services
+#      path: /resources/**
+#      strip-prefix: false
+#      serviceId: resource-service
+#    falsehoods_search:        # port 8084 Search Service
+#      path: /falsehood-search/**
+#      strip-prefix: false
+#      serviceId: falsehood-search-service
+#    falsehoods:               # port 8085 Falsehoods Service (Requires Authentication)
+#      path: /falsehoods/**
+#      strip-prefix: false
+#      serviceId: falsehood-service
+#    pictures:                 # port 8086 Manages Pictures
+#      path: /pictures/**
+#      strip-prefix: false
+#      serviceId: picture-service
+#    adverts:                  # port 8087 Manages Advertisments
+#      path: /ads/**
+#      strip-prefix: false
+#      serviceId: ad-service

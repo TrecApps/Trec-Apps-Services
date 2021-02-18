@@ -1,6 +1,8 @@
 package com.trecapps.userservice.controllers;
 
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import com.trecapps.userservice.security.TrecAuthentication;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,7 +31,10 @@ import com.trecapps.userservice.models.primary.TrecAccount;
 import com.trecapps.userservice.services.JwtTokenService;
 import com.trecapps.userservice.services.TrecAccountService;
 
-@RestController
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
+
+@RestController("/users")
 public class UserController {
 
 	@Autowired
@@ -80,7 +85,7 @@ public class UserController {
 	}
 	
 	@PostMapping("/LogIn")
-	ResponseEntity<ReturnObj> logIn(RequestEntity<LogIn> entity)
+	ResponseEntity<ReturnObj> logIn(RequestEntity<LogIn> entity, HttpServletResponse response)
 	{
 		LogIn login = entity.getBody();
 		
@@ -112,12 +117,19 @@ public class UserController {
 		
 		if(ret == null)
 			return new ResponseEntity<ReturnObj>(HttpStatus.INTERNAL_SERVER_ERROR);
+
+		Cookie cook = new Cookie("JSESSIONID", tokenService.generateToken(account));
+		cook.setHttpOnly(true);         // Not accessibe via JavaScript
+		cook.setMaxAge(-1);             // Make it a Session Cookie
+		response.addCookie(cook);
+
 		return new ResponseEntity<ReturnObj>(ret, HttpStatus.OK);
 	}
 
 	@GetMapping("/Account")
 	ResponseEntity<TrecAccount> getAccount(Authentication user)
 	{
+		System.out.println(user);
 		TrecAccount acc = ((TrecAuthentication)user).getAccount();
 		acc.setOauthUse(0);
 		acc.setFailedLoginAttempts((byte)0);

@@ -34,8 +34,10 @@ public class TrecSecurityContext implements SecurityContextRepository {
 
         Cookie[] cookies = request.getCookies();
 
-        if(cookies == null)
-            return ;
+        if(cookies == null) {
+            System.out.println("Null Cookies detected!");
+            return;
+        }
         Cookie cook = null;
         if(cookies != null)
             for(Cookie c: cookies)
@@ -63,6 +65,7 @@ public class TrecSecurityContext implements SecurityContextRepository {
         } catch(Exception e)
         {
             // To-Do: Log Exception
+            System.out.println("Cookie Generation Failed: "+ e);
             if(cook != null)
                 cook.setMaxAge(0);
 

@@ -5,6 +5,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;  // Import this class to handle errors
 import java.io.FileReader;
 import java.io.IOException;
+import java.sql.Timestamp;
 import java.util.Scanner; // Import the Scanner class to read text files
 
 import java.security.KeyFactory;
@@ -175,6 +176,13 @@ public class JwtTokenService {
 		return privateKey != null && publicKey != null;
 	}
 
+	/**
+	 * Use for generating an OAuth Session
+	 * @param account the account to log on as
+	 * @param clientId the client making the request
+	 * @param currentSessionId Session mechanism to prevent to many sessions from being valid
+	 * @return
+	 */
 	public String generateSession(TrecAccount account, TrecOauthClient clientId, String currentSessionId)
 	{
 		if(currentSessionId != null)
@@ -226,6 +234,11 @@ public class JwtTokenService {
 				.sign(Algorithm.RSA512(publicKey, privateKey));
 	}
 
+	/**
+	 * Use when attempting to log on to User Service directly (through the User Client Project)
+	 * @param account
+	 * @return
+	 */
 	public String generateToken(TrecAccount account)
 	{
 		if(account == null)
@@ -305,6 +318,11 @@ public class JwtTokenService {
 		return idClaim.asString();
 	}
 
+	/***
+	 * Verifies that a token refers to a specific User Account
+	 * @param token
+	 * @return
+	 */
 	public TrecAccount verifyToken(String token)
 	{
 		DecodedJWT decodedJwt = decodeJWT(token);
@@ -430,7 +448,7 @@ public class JwtTokenService {
 
 	boolean verifyUnlocked(TrecAccount account)
 	{
-		Date locked = account.getLockInit();
+		Timestamp locked = account.getLockInit();
 		
 		if(locked == null)
 			return true;

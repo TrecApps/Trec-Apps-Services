@@ -1,6 +1,7 @@
 package com.trecapps.userservice.models;
 
 import java.sql.Date;
+import java.sql.Timestamp;
 import java.util.Calendar;
 
 import org.springframework.stereotype.Component;
@@ -17,7 +18,7 @@ public class NewUser {
 	String trecEmail;
 	String backupEmail;
 	String password;
-	Date birthday;
+	Timestamp birthday;
 	String clientId;
 	
 	// Security features
@@ -31,7 +32,7 @@ public class NewUser {
 	
 	public TrecAccount getTrecAccount()
 	{
-		Date now = new Date(Calendar.getInstance().getTime().getTime());
+		Timestamp now = new Timestamp(Calendar.getInstance().getTime().getTime());
 		
 		return new TrecAccount(0L, firstName, lastName, username, mainEmail, trecEmail,
 			backupEmail, password, birthday, 0, null, null,
@@ -50,7 +51,7 @@ public class NewUser {
 	}
 	
 	public NewUser(String firstName, String lastName, String username, String mainEmail, String trecEmail,
-			String backupEmail, String password, Date birthday, String clientId) {
+			String backupEmail, String password, Timestamp birthday, String clientId) {
 		super();
 		this.firstName = firstName;
 		this.lastName = lastName;
@@ -88,7 +89,7 @@ public class NewUser {
 	 * @param lockTime
 	 */
 	public NewUser(String firstName, String lastName, String username, String mainEmail, String trecEmail,
-			String backupEmail, String password, Date birthday, byte passwordMonthReset, byte timeForValidToken,
+			String backupEmail, String password, Timestamp birthday, byte passwordMonthReset, byte timeForValidToken,
 			byte validTimeFromActivity, byte maxLoginAttempts, byte lockTime, String clientId) {
 		super();
 		this.firstName = firstName;
@@ -252,10 +253,10 @@ public class NewUser {
 	public void setPassword(String password) {
 		this.password = password;
 	}
-	public Date getBirthday() {
+	public Timestamp getBirthday() {
 		return birthday;
 	}
-	public void setBirthday(Date birthday) {
+	public void setBirthday(Timestamp birthday) {
 		this.birthday = birthday;
 	}
 	

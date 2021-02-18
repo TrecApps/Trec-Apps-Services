@@ -3,19 +3,24 @@ plugins {
     id 'java'
 
     // Apply the application plugin to add support for building a CLI application.
+    id 'java-library'
     id 'application'
 
     id 'jacoco'
     id "org.sonarqube" version "2.7"
 
-    id 'org.springframework.boot' version '2.0.5.RELEASE'
-    id 'io.spring.dependency-management' version '1.0.7.RELEASE'
+    id 'org.springframework.boot' version '2.4.2'
 }
+
+apply plugin: 'java'
+apply plugin: 'java-library'
+apply plugin: 'org.springframework.boot'
+apply plugin: 'jacoco'
 
 repositories {
     // Use jcenter for resolving dependencies.
     // You can declare any Maven/Ivy/file repository here.
-    jcenter()
+    mavenCentral()
 
 }
 
@@ -39,24 +44,30 @@ dependencies {
     // Use JUnit test framework
     testImplementation 'junit:junit:4.12'
 
-    implementation 'org.springframework.boot:spring-boot-dependencies:2.0.5.RELEASE'
-    implementation 'org.springframework.boot:spring-boot-starter'
-    implementation 'org.springframework.boot:spring-boot-starter-web'
-    implementation 'org.springframework.boot:spring-boot-devtools'
+    implementation 'org.springframework.boot:spring-boot-starter:+'
+    implementation 'org.springframework.boot:spring-boot-starter-web:+'
+    implementation 'org.springframework.boot:spring-boot-starter-actuator:+'
+    implementation 'org.springframework.boot:spring-boot-devtools:+'
 
 
-    implementation 'org.hibernate:hibernate-core'
-    implementation 'org.hibernate:hibernate-entitymanager'
-    implementation 'javax.validation:validation-api'
+    implementation 'org.hibernate:hibernate-core:+'
+    implementation 'org.hibernate:hibernate-entitymanager:+'
+    implementation 'javax.validation:validation-api:+'
 
     // To-Do: Add Database Driver Jar here
     implementation fileTree(dir: "app/libs", includes: ['*.jar']) // Oracle
     implementation 'mysql:mysql-connector-java:+' // mySQL
 
 
-    implementation 'org.springframework.boot:spring-boot-starter-security'
-    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
-    implementation 'org.springframework.boot:spring-boot-starter-mail'
+    implementation 'org.springframework.boot:spring-boot-starter-security:+'
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa:+'
+    implementation 'org.springframework.boot:spring-boot-starter-mail:+'
+
+
+    // Enable Discovery
+    implementation 'org.springframework.cloud:spring-cloud-starter-netflix-eureka-client:+'
+    implementation 'org.springframework.cloud:spring-cloud-commons:+'
+    implementation 'com.google.code.gson:gson:2.8.2'
     // https://mvnrepository.com/artifact/org.springframework.security.oauth/spring-security-oauth2
     //implementation group: 'org.springframework.security.oauth', name: 'spring-security-oauth2', version: '2.4.0.RELEASE'
 

@@ -55,10 +55,10 @@ export class ManagerService {
   async createUser(newUser: NewUser): Promise<boolean> {
     let ret: boolean = false;
 
-    await this.httpClient.post(`${environment.SERVICE_URL}CreateUser`, newUser)
+    await this.httpClient.post(`${environment.SERVICE_URL}users/CreateUser`, newUser)
       .toPromise()
       .then(async () => {
-        await this.httpClient.get(`${environment.SERVICE_URL}Account`).toPromise()
+        await this.httpClient.get(`${environment.SERVICE_URL}users/Account`).toPromise()
         .then((acc: TrecAccount) => {
           this.account = acc;
           this.loginPage = this.validatePage = true;
@@ -72,7 +72,7 @@ export class ManagerService {
   async userExists(username:String): Promise<boolean> {
     let ret: boolean = true;
 
-    await this.httpClient.get(`${environment.SERVICE_URL}CreateUser?username=${username}`)
+    await this.httpClient.get(`${environment.SERVICE_URL}users/CreateUser?username=${username}`)
       .toPromise()
       .then((res: boolean) => {
        ret = res;
@@ -83,7 +83,7 @@ export class ManagerService {
   async prepValidation(): Promise<boolean> {
     let ret: boolean = true;
 
-    await this.httpClient.get(`${environment.SERVICE_URL}Validate`)
+    await this.httpClient.get(`${environment.SERVICE_URL}users/Validate`)
       .toPromise()
       .then((res: boolean) => {
        ret = res;
@@ -96,7 +96,7 @@ export class ManagerService {
   async attemptValidation(token: string): Promise<String> {
     let ret:String;
 
-    await this.httpClient.post(`${environment.SERVICE_URL}Validate`, null, {
+    await this.httpClient.post(`${environment.SERVICE_URL}users/Validate`, null, {
       headers: new HttpHeaders({Verification: token})}).toPromise()
       .catch((reason) => {
         ret = reason.message || reason.error.message;
@@ -106,7 +106,7 @@ export class ManagerService {
   }
 
   updateUser() {
-    this.httpClient.put(`${environment.SERVICE_URL}UpdateUser`, this.account).toPromise()
+    this.httpClient.put(`${environment.SERVICE_URL}users/UpdateUser`, this.account).toPromise()
       .then(() => {
         alert("Account Updated!");
       })
@@ -117,7 +117,7 @@ export class ManagerService {
   }
 
   updatePassword(username: String, oldPassword: String, newPassword: String) {
-    this.httpClient.post(`${environment.SERVICE_URL}UpdatePassword`, {username, oldPassword, newPassword},
+    this.httpClient.post(`${environment.SERVICE_URL}users/UpdatePassword`, {username, oldPassword, newPassword},
     { headers: new HttpHeaders({'Content-Type': 'application/x-www-form-urlencoded'})}).toPromise()
     .then((res : boolean) => {
       if (res) {
@@ -145,7 +145,7 @@ export class ManagerService {
 
   async createClient(name:String): Promise<ClientError> {
     let ret = new ClientError();
-    await this.httpClient.get(`${environment.SERVICE_URL}create?name=${name}`).toPromise()
+    await this.httpClient.get(`${environment.SERVICE_URL}clients/create?name=${name}`).toPromise()
       .then((res: Client) => {
         ret.client = res;
       }).catch((reason) => {

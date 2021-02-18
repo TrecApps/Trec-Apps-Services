@@ -1,6 +1,7 @@
 package com.trecapps.userservice.models.primary;
 
 import java.sql.Date;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;
@@ -39,9 +40,7 @@ public class TrecAccount implements UserDetails // implements UserDetails
 	String lastName;
 	
 	@Id
-	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="TrecSequence")
-	@SequenceGenerator(name="TrecSequence", allocationSize=1, sequenceName="SQ_TREC_PK")
-	@NotNull
+	@GeneratedValue(strategy=GenerationType.AUTO)
 	long accountId;
 	
 	@Column
@@ -58,7 +57,7 @@ public class TrecAccount implements UserDetails // implements UserDetails
 	String trecEmail;
 	String backupEmail;
 	String token;
-	Date birthday;
+	Timestamp birthday;
 	int isValidated;
 	String color;
 	String validationToken;
@@ -86,23 +85,23 @@ public class TrecAccount implements UserDetails // implements UserDetails
 
 	// Security Attributes
 	byte passwordMonthReset; // How many months before Password needs to be Changed
-	Date passwordChanged; // When the Password was last set
+	Timestamp passwordChanged; // When the Password was last set
 	
 	byte timeForValidToken; // How long after login that the token should last (by 10 minutes)
 	byte validTimeFromActivity; // Whether apps should update the token every activity
 	
 	byte maxLoginAttempts; // How many login attempts per hour 
-	Date recentFailedLogin; 
+	Timestamp recentFailedLogin;
 	byte failedLoginAttempts; // Set this to 0 initially
 	
 	byte lockTime;  // Time, in 10 minutes, to lock an account after max_login_attempts 
-	Date lockInit;  // When the account was locked (if NULL, assume unlocked)
-	
+	Timestamp lockInit;  // When the account was locked (if NULL, assume unlocked)
+
 	public TrecAccount(long accountId, String firstName, String lastName, String username, String mainEmail, String trecEmail,
-			String backupEmail, String token, Date birthday, int isValidated, String color, String validationToken,
+			String backupEmail, String token, Timestamp birthday, int isValidated, String color, String validationToken,
 			
-			byte passwordMonthReset, Date passwordChanged, byte timeForValidToken, byte validTimeFromActivity,
-			byte maxLoginAttempts,Date recentFailedLogin, byte failedLoginAttempts, byte lockTime, Date lockInit) {
+			byte passwordMonthReset, Timestamp passwordChanged, byte timeForValidToken, byte validTimeFromActivity,
+			byte maxLoginAttempts,Timestamp recentFailedLogin, byte failedLoginAttempts, byte lockTime, Timestamp lockInit) {
 		super();
 		this.accountId = accountId;
 		this.firstName = firstName;
@@ -175,13 +174,13 @@ public class TrecAccount implements UserDetails // implements UserDetails
 	/**
 	 * @return the passwordChanged
 	 */
-	public Date getPasswordChanged() {
+	public Timestamp getPasswordChanged() {
 		return passwordChanged;
 	}
 	/**
 	 * @param passwordChanged the passwordChanged to set
 	 */
-	public void setPasswordChanged(Date passwordChanged) {
+	public void setPasswordChanged(Timestamp passwordChanged) {
 		this.passwordChanged = passwordChanged;
 	}
 	/**
@@ -223,13 +222,13 @@ public class TrecAccount implements UserDetails // implements UserDetails
 	/**
 	 * @return the recentFailedLogin
 	 */
-	public Date getRecentFailedLogin() {
+	public Timestamp getRecentFailedLogin() {
 		return recentFailedLogin;
 	}
 	/**
 	 * @param recentFailedLogin the recentFailedLogin to set
 	 */
-	public void setRecentFailedLogin(Date recentFailedLogin) {
+	public void setRecentFailedLogin(Timestamp recentFailedLogin) {
 		this.recentFailedLogin = recentFailedLogin;
 	}
 	/**
@@ -259,13 +258,13 @@ public class TrecAccount implements UserDetails // implements UserDetails
 	/**
 	 * @return the lockInit
 	 */
-	public Date getLockInit() {
+	public Timestamp getLockInit() {
 		return lockInit;
 	}
 	/**
 	 * @param lockInit the lockInit to set
 	 */
-	public void setLockInit(Date lockInit) {
+	public void setLockInit(Timestamp lockInit) {
 		this.lockInit = lockInit;
 	}
 	public long getAccountId() {
@@ -365,10 +364,10 @@ public class TrecAccount implements UserDetails // implements UserDetails
 	public void setToken(String token) {
 		this.token = token;
 	}
-	public Date getBirthday() {
+	public Timestamp getBirthday() {
 		return birthday;
 	}
-	public void setBirthday(Date birthday) {
+	public void setBirthday(Timestamp birthday) {
 		this.birthday = birthday;
 	}
 	public int getIsValidated() {

@@ -26,7 +26,7 @@ import { ClientComponent } from './components/client/client.component';
   imports: [
     BrowserModule,
     HttpClientModule,
-    AppRoutingModule,
+    // AppRoutingModule,
     FormsModule,
   ],
   providers: [],

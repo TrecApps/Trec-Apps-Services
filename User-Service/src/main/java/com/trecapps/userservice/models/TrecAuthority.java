@@ -14,6 +14,10 @@ public class TrecAuthority implements GrantedAuthority
         this.authority = authority;
     }
 
+    public TrecAuthority() {
+        this.authority = "";
+    }
+
     String authority;
 
     @Override

@@ -1,6 +1,7 @@
 package com.trecapps.userservice.services;
 
 import java.sql.Date;
+import java.sql.Timestamp;
 import java.util.Calendar;
 
 import javax.mail.MessagingException;
@@ -138,7 +139,7 @@ public class TrecAccountServiceImp implements TrecAccountService//,  UserDetails
 		
 		if(failed >= exists.getMaxLoginAttempts())
 		{
-			exists.setLockInit(new Date(Calendar.getInstance().getTime().getTime()));
+			exists.setLockInit(new Timestamp(Calendar.getInstance().getTime().getTime()));
 		}
 		
 		trecRepo.save(exists);
@@ -171,7 +172,7 @@ public class TrecAccountServiceImp implements TrecAccountService//,  UserDetails
 		
 		if(failed >= exists.getMaxLoginAttempts())
 		{
-			exists.setLockInit(new Date(Calendar.getInstance().getTime().getTime()));
+			exists.setLockInit(new Timestamp(Calendar.getInstance().getTime().getTime()));
 		}
 		
 		trecRepo.save(exists);
