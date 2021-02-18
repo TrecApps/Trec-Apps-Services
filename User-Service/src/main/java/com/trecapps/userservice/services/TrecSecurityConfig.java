@@ -21,24 +21,30 @@ public class TrecSecurityConfig extends WebSecurityConfigurerAdapter
 	TrecSecurityContext secContext;
 
 	String restrictedEndpoints[] = {
-		"auth/oauth2/authorize",
-		"users/Validate",
-		"users/Account",
-		"users/UpdateUser",
-		"users/UpdatePassword",
-		"clients/*"
+		"/auth/oauth2/authorize",
+		"/auth/users/Validate",
+		"/auth/users/Account",
+		"/auth/users/UpdateUser",
+		"/auth/users/UpdatePassword",
+		"/auth/clients/*"
+	};
+
+	String allowedEndpoints[] = {
+			"/auth/users/LogIn",
+			"/auth/users/UserExists"
 	};
 
 	@Override
 	protected void configure(HttpSecurity http) throws Exception
 	{
-		http.csrf().disable().
-				sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
+		http.csrf().disable()
+				// sessionManagement().sessionCreationPolicy(SessionCreationPolicy.NEVER).and()
 				.userDetailsService(accountService)
 				.securityContext().securityContextRepository(secContext).and()
-				.authorizeRequests().antMatchers("/**").permitAll().and()
-				.authorizeRequests().antMatchers(restrictedEndpoints).authenticated().and()
-				.formLogin().loginPage("/login");
+				.authorizeRequests()
+				.antMatchers(allowedEndpoints).permitAll()
+				.antMatchers(restrictedEndpoints).authenticated().and()
+				.httpBasic();
 		// http.authorizeRequests().antMatchers("/*").permitAll();
 	}
 

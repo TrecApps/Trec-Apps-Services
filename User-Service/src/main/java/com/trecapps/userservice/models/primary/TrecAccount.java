@@ -10,6 +10,7 @@ import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
+import com.trecapps.userservice.models.TrecAccountExt;
 import com.trecapps.userservice.models.TrecAuthority;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -22,6 +23,14 @@ import org.springframework.stereotype.Component;
 @Entity
 public class TrecAccount implements UserDetails // implements UserDetails
 {
+	public TrecAccountExt getExternalRep()
+	{
+		return new TrecAccountExt(firstName, lastName, accountId,
+				username, mainEmail, trecEmail, backupEmail, birthday,
+				isValidated, color, passwordMonthReset, passwordChanged,
+				timeForValidToken, maxLoginAttempts, recentFailedLogin,
+				lockTime);
+	}
 
 	@Transient
 	private static final int MINUTE_LENGTH = 100000;
@@ -35,6 +44,7 @@ public class TrecAccount implements UserDetails // implements UserDetails
 	/**
 	 * 
 	 */
+	@Transient
 	private static final long serialVersionUID = 1456689615303218227L;
 	String firstName;
 	String lastName;

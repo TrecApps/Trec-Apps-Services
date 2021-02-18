@@ -3,16 +3,18 @@ package com.trecapps.userservice.security;
 import com.trecapps.userservice.models.primary.TrecAccount;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.stereotype.Component;
 
 import javax.security.auth.Subject;
 import java.util.Collection;
 
+@Component
 public class TrecAuthentication implements Authentication {
 
     TrecAccount account;
     boolean isTrusted;
 
-    TrecAuthentication(TrecAccount account)
+    public TrecAuthentication(TrecAccount account)
     {
         this.account = account;
         isTrusted = true;

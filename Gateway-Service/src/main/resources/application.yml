@@ -15,10 +15,13 @@ eureka:
     registerWithEureka: true
     fetchRegistry: true
 
+
+
 zuul:
   routes:
     auth:                     # port 8082 Authentication Service: Used to holds Trec Accounts and use them
       path: /auth/**
+      sensitiveHeaders: Cookia
       #serviceId: auth-service
       #strip-prefix: false
       url: http://localhost:8082/auth/

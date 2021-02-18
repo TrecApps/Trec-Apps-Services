@@ -31,46 +31,31 @@ public class TrecSecurityContext implements SecurityContextRepository {
 
     @Override
     public void saveContext(SecurityContext context, HttpServletRequest request, HttpServletResponse response) {
-
-        Cookie[] cookies = request.getCookies();
-
-        if(cookies == null) {
-            System.out.println("Null Cookies detected!");
-            return;
-        }
-        Cookie cook = null;
-        if(cookies != null)
-            for(Cookie c: cookies)
-            {
-                if(c.getName().equals("JSESSIONID"))
-                {
-                    cook = c;
-                    break;
-                }
-            }
-
-        try {
-            TrecAuthentication trecAuth = (TrecAuthentication) context.getAuthentication();
-            if(cook != null)
-            {
-                cook.setValue(jwtService.generateSession(trecAuth.getAccount(), null, jwtService.getSessionId(cook.getValue())));
-
-            }
-            else
-            {
-                cook = new Cookie("JSESSIONID", jwtService.generateSession(trecAuth.getAccount(), null, null));
-            }
-
-            response.addCookie(cook);
-        } catch(Exception e)
+        Cookie cook;
+        if(!(context.getAuthentication() instanceof TrecAuthentication))
         {
-            // To-Do: Log Exception
-            System.out.println("Cookie Generation Failed: "+ e);
-            if(cook != null)
-                cook.setMaxAge(0);
-
-            return;
+            System.out.println("Not TrecAuthentication");
+            cook = new Cookie("JSESSIONID", null);
+            cook.setHttpOnly(true);
+            cook.setMaxAge(0);
         }
+        else
+        {
+            System.out.println("TrecAccount Detected!");
+            TrecAuthentication trecAuth = (TrecAuthentication) context.getAuthentication();
+
+            if (trecAuth == null) {
+                System.out.println("TrecAccount was NULL");
+                cook = new Cookie("JSESSIONID", null);
+                cook.setHttpOnly(true);
+                cook.setMaxAge(0);
+            } else {
+                cook = new Cookie("JSESSIONID", jwtService.generateToken(trecAuth.getAccount()));
+                cook.setHttpOnly(true);
+                cook.setMaxAge(-1);
+            }
+        }
+        response.addCookie(cook);
 
 
     }
@@ -83,10 +68,11 @@ public class TrecSecurityContext implements SecurityContextRepository {
     SecurityContext getContextFromCookie(HttpServletRequest request)
     {
         Cookie[] cookies = request.getCookies();
-
-        if(cookies == null)
-            return null;
-
+        SecurityContext context = SecurityContextHolder.createEmptyContext();
+        if(cookies == null) {
+            System.out.println("Null Cookies detected");
+            return context;
+        }
         for(Cookie c: cookies)
         {
             if(c.getName().equals("JSESSIONID"))
@@ -94,14 +80,14 @@ public class TrecSecurityContext implements SecurityContextRepository {
                 String data = c.getValue();
                 TrecAccount acc = jwtService.verifyToken(data);
                 if(acc == null)
-                    return null;
-                SecurityContext context = SecurityContextHolder.createEmptyContext();
+                    return context;
+
 
                 context.setAuthentication(new TrecAuthentication(acc));
                 return context;
             }
         }
 
-        return null;
+        return context;
     }
 }

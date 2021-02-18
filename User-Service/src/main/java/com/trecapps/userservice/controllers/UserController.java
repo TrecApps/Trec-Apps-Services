@@ -1,40 +1,32 @@
 package com.trecapps.userservice.controllers;
 
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.trecapps.userservice.models.TrecAccountExt;
 import com.trecapps.userservice.security.TrecAuthentication;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.RequestEntity;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.ui.ModelMap;
 import org.springframework.util.MultiValueMap;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.trecapps.userservice.models.LogIn;
 import com.trecapps.userservice.models.NewUser;
-import com.trecapps.userservice.models.PasswordChange;
-import com.trecapps.userservice.models.ReturnAccount;
 import com.trecapps.userservice.models.ReturnObj;
 import com.trecapps.userservice.models.primary.TrecAccount;
 import com.trecapps.userservice.services.JwtTokenService;
 import com.trecapps.userservice.services.TrecAccountService;
 
-import java.net.URLEncoder;
-import java.nio.charset.StandardCharsets;
+import java.io.IOException;
 
-@RestController("/users")
+@RestController
+@RequestMapping("/users")
 public class UserController {
 
 	@Autowired
@@ -83,16 +75,17 @@ public class UserController {
 	{
 		return accountService.getAccountByUserName(username) != null;
 	}
-	
+
 	@PostMapping("/LogIn")
-	ResponseEntity<ReturnObj> logIn(RequestEntity<LogIn> entity, HttpServletResponse response)
-	{
+	void logIn(RequestEntity<LogIn> entity, HttpServletResponse response) throws IOException {
 		LogIn login = entity.getBody();
 		
 		if(login == null)
 		{
 			System.out.println("Login Object was Null!");
-			return new ResponseEntity<ReturnObj>(HttpStatus.BAD_REQUEST);
+			response.setStatus(HttpStatus.BAD_REQUEST.value());
+			response.getWriter().write("Null Login Object Detected!");
+			return;
 		}
 		
 		
@@ -111,26 +104,20 @@ public class UserController {
 		if(account == null)
 		{
 			System.out.println("Account was null!");
-			return new ResponseEntity<ReturnObj>(HttpStatus.UNAUTHORIZED);
+			response.setStatus(HttpStatus.UNAUTHORIZED.value());
+			return;
 		}
-		ReturnObj ret = generateAuth(account);
-		
-		if(ret == null)
-			return new ResponseEntity<ReturnObj>(HttpStatus.INTERNAL_SERVER_ERROR);
 
-		Cookie cook = new Cookie("JSESSIONID", tokenService.generateToken(account));
-		cook.setHttpOnly(true);         // Not accessibe via JavaScript
-		cook.setMaxAge(-1);             // Make it a Session Cookie
-		response.addCookie(cook);
+		SecurityContextHolder.getContext().setAuthentication(new TrecAuthentication(account));
 
-		return new ResponseEntity<ReturnObj>(ret, HttpStatus.OK);
 	}
 
 	@GetMapping("/Account")
-	ResponseEntity<TrecAccount> getAccount(Authentication user)
+	ResponseEntity<TrecAccountExt> getAccount()
 	{
+		TrecAuthentication user = ((TrecAuthentication)SecurityContextHolder.getContext().getAuthentication());
 		System.out.println(user);
-		TrecAccount acc = ((TrecAuthentication)user).getAccount();
+		TrecAccount acc = user.getAccount();
 		acc.setOauthUse(0);
 		acc.setFailedLoginAttempts((byte)0);
 		acc.setLockInit(null);
@@ -138,12 +125,13 @@ public class UserController {
 		acc.setValidationToken(null);
 		acc.setValidTimeFromActivity((byte)0);
 
-		return new ResponseEntity<TrecAccount>(acc,HttpStatus.OK);
+		return new ResponseEntity<>(acc.getExternalRep(), HttpStatus.OK);
 	}
 	
 	@GetMapping("/Validate")
-	Boolean validate(Authentication user)
+	Boolean validate()
 	{
+		TrecAuthentication user = ((TrecAuthentication)SecurityContextHolder.getContext().getAuthentication());
 		TrecAccount acc = ((TrecAuthentication)user).getAccount();
 
 		// Eventually, plan to add text validation in addition to email validation
@@ -155,9 +143,10 @@ public class UserController {
 	}
 	
 	@PostMapping("/Validate")
-	ResponseEntity<String> validateWithToken(HttpServletRequest req, Authentication user)
+	ResponseEntity<String> validateWithToken(HttpServletRequest req)
 	{
-		TrecAccount account = ((TrecAuthentication)user).getAccount();
+		TrecAuthentication user = ((TrecAuthentication)SecurityContextHolder.getContext().getAuthentication());
+		TrecAccount account = user.getAccount();
 
 		String validationToken = req.getHeader("Verification");
 		
@@ -174,10 +163,11 @@ public class UserController {
 
 	
 	@PutMapping(value = "/UpdateUser")
-	ResponseEntity<String> updateUser(RequestEntity<TrecAccount> entry, Authentication auth)
+	ResponseEntity<String> updateUser(RequestEntity<TrecAccount> entry)
 	{
-		// To-Do: Retrieve account from credentials so that certain fields cannot be overridden
-		TrecAccount user = ((TrecAuthentication)auth).getAccount();
+
+		TrecAuthentication auth = ((TrecAuthentication)SecurityContextHolder.getContext().getAuthentication());
+		TrecAccount user = auth.getAccount();
 
 		TrecAccount newSettings = entry.getBody();
 		
@@ -197,9 +187,10 @@ public class UserController {
 
 	
 	@PostMapping(value = "/UpdatePassword", consumes = "application/x-www-form-urlencoded")
-	Boolean updatePassword(RequestEntity<MultiValueMap<String, String>> entry, Authentication auth)
+	Boolean updatePassword(RequestEntity<MultiValueMap<String, String>> entry)
 	{
-		TrecAccount user = ((TrecAuthentication)auth).getAccount();
+		TrecAuthentication auth = ((TrecAuthentication)SecurityContextHolder.getContext().getAuthentication());
+		TrecAccount user = auth.getAccount();
 
 		MultiValueMap<String, String> map = entry.getBody();
 		

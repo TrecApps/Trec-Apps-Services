@@ -39,10 +39,10 @@ export class ManagerService {
   async login(username: String, password: String): Promise<boolean> {
     let ret: boolean = false;
 
-    await this.httpClient.post(`${environment.SERVICE_URL}LogIn`, {username, password})
+    await this.httpClient.post(`${environment.SERVICE_URL}users/LogIn`, {username, password})
       .toPromise()
       .then(async () => {
-        await this.httpClient.get(`${environment.SERVICE_URL}Account`).toPromise()
+        await this.httpClient.get(`${environment.SERVICE_URL}users/Account`).toPromise()
         .then((acc: TrecAccount) => {
           this.account = acc;
           this.loginPage = false;
