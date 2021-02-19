@@ -3,22 +3,21 @@ package com.trecapps.userservice.controllers;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.trecapps.userservice.models.TrecAccountExt;
+import com.trecapps.userservice.models.*;
 import com.trecapps.userservice.security.TrecAuthentication;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.RequestEntity;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.stereotype.Controller;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.trecapps.userservice.models.LogIn;
-import com.trecapps.userservice.models.NewUser;
-import com.trecapps.userservice.models.ReturnObj;
 import com.trecapps.userservice.models.primary.TrecAccount;
 import com.trecapps.userservice.services.JwtTokenService;
 import com.trecapps.userservice.services.TrecAccountService;
@@ -34,30 +33,25 @@ public class UserController {
 	
 	@Autowired
 	JwtTokenService tokenService;
-	
-	@GetMapping(value="/CreateUser")
-	public ModelAndView formNewUser()
-	{
-		ModelAndView view = new ModelAndView();
-		view.setViewName("register");
-		return view;
-	}
-	
+
 	@PostMapping("/CreateUser")
-	ResponseEntity<ReturnObj> createUser(RequestEntity<NewUser> entity)
+	void createUser(RequestEntity<NewUser> entity, HttpServletResponse res)
 	{
 		var body = entity.getBody();
 		
 		TrecAccount account = accountService.createAccount(body);
 		
-		if(account == null)
-			return new ResponseEntity<ReturnObj>(HttpStatus.BAD_REQUEST);
-		
+		if(account == null) {
+			res.setStatus(HttpStatus.BAD_REQUEST.value());
+			return;
+		}
 		ReturnObj ret = generateAuth(account);
 		
-		if(ret == null)
-			return new ResponseEntity<ReturnObj>(HttpStatus.INTERNAL_SERVER_ERROR);
-		return new ResponseEntity<ReturnObj>(ret, HttpStatus.OK);
+		if(ret == null) {
+			res.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
+			return;
+		}
+		SecurityContextHolder.getContext().setAuthentication(new TrecAuthentication(account));
 	}
 	
 	private ReturnObj generateAuth(TrecAccount account)
@@ -179,6 +173,7 @@ public class UserController {
 		user.setMaxLoginAttempts(newSettings.getMaxLoginAttempts());
 		user.setTimeForValidToken(newSettings.getTimeForValidToken());
 		user.setValidTimeFromActivity(newSettings.getValidTimeFromActivity());
+		user.setPasswordMonthReset(newSettings.getPasswordMonthReset());
 		
 		if(accountService.updateUser(user))
 			return new ResponseEntity<String>(HttpStatus.NO_CONTENT);
@@ -186,17 +181,17 @@ public class UserController {
 	}
 
 	
-	@PostMapping(value = "/UpdatePassword", consumes = "application/x-www-form-urlencoded")
-	Boolean updatePassword(RequestEntity<MultiValueMap<String, String>> entry)
+	@PostMapping(value = "/UpdatePassword")
+	Boolean updatePassword(RequestEntity<PasswordChange> entry)
 	{
 		TrecAuthentication auth = ((TrecAuthentication)SecurityContextHolder.getContext().getAuthentication());
 		TrecAccount user = auth.getAccount();
 
-		MultiValueMap<String, String> map = entry.getBody();
-		
-		String username = map.getFirst("username");
-		String oldPassword = map.getFirst("oldPassword");
-		String newPassword = map.getFirst("newPassword");
+		PasswordChange map = entry.getBody();
+
+		String username = map.getUsername();
+		String oldPassword = map.getOldPassword();
+		String newPassword = map.getNewPassword();
 
 		TrecAccount account;
 		
@@ -212,10 +207,13 @@ public class UserController {
 		
 		if(account == null)
 		{
+			System.out.println("Updating Password, account was null!");
 			return false;
 		}
 		if(!account.equals(user))
 		{
+			System.out.println("Updating Password, Authenticated account did not match account specified by Params!");
+			System.out.println("Accounts were " + account + "\n\tand " + user);
 			return false;
 		}
 		
@@ -223,8 +221,8 @@ public class UserController {
 	}
 	
 	@GetMapping("/Logout")
-	Boolean logout()
+	void logout()
 	{
-		return true;
+		SecurityContextHolder.getContext().setAuthentication(null);
 	}
 }

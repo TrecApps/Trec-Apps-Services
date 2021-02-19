@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
 import { TrecAccount } from '../models/TrecAccount';
 import { NewUser } from '../models/NewUser';
@@ -72,7 +72,7 @@ export class ManagerService {
   async userExists(username:String): Promise<boolean> {
     let ret: boolean = true;
 
-    await this.httpClient.get(`${environment.SERVICE_URL}users/CreateUser?username=${username}`)
+    await this.httpClient.get(`${environment.SERVICE_URL}users/UserExists?username=${username}`)
       .toPromise()
       .then((res: boolean) => {
        ret = res;
@@ -101,6 +101,8 @@ export class ManagerService {
       .catch((reason) => {
         ret = reason.message || reason.error.message;
         this.revertToLogin(reason);
+      }).then(() => {
+        this.mode = 3;
       });
     return ret;
   }
@@ -117,8 +119,9 @@ export class ManagerService {
   }
 
   updatePassword(username: String, oldPassword: String, newPassword: String) {
-    this.httpClient.post(`${environment.SERVICE_URL}users/UpdatePassword`, {username, oldPassword, newPassword},
-    { headers: new HttpHeaders({'Content-Type': 'application/x-www-form-urlencoded'})}).toPromise()
+
+
+    this.httpClient.post(`${environment.SERVICE_URL}users/UpdatePassword`, {username, oldPassword, newPassword}).toPromise()
     .then((res : boolean) => {
       if (res) {
         alert("Successfully Updated Password!");

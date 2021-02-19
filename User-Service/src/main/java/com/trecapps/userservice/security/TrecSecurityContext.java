@@ -34,7 +34,7 @@ public class TrecSecurityContext implements SecurityContextRepository {
         Cookie cook;
         if(!(context.getAuthentication() instanceof TrecAuthentication))
         {
-            System.out.println("Not TrecAuthentication");
+            System.out.println("Not TrecAuthentication in save Context");
             cook = new Cookie("JSESSIONID", null);
             cook.setHttpOnly(true);
             cook.setMaxAge(0);

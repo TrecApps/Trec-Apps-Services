@@ -2,6 +2,8 @@
     
     <div width="100%" class="form">
 
+        <div id="messageJumbo" class="jumbotron">Create Trec Account</div>
+
         <h4 *ngIf="updateFail" color="red">Failed To Update</h4>
         <h4 *ngIf="needsFields" color="red">Required Fields still needed</h4>
         <h4 *ngIf="!usernameFree" color="red">Username is taken</h4>
@@ -25,7 +27,7 @@
         <input type="password" [(ngModel)]="user.password"><br>
 
         <label>Birthday: </label>
-        <input type="text" [(ngModel)]="user.birthday"><br>
+        <input type="date" [(ngModel)]="user.birthday"><br>
 
         <label>Months until Password Reset (0 for no reset requirement): </label>
         <input type="number" [(ngModel)]="user.passwordMonthReset"><br>

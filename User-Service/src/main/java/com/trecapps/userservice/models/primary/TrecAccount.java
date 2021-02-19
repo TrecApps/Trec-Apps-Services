@@ -5,6 +5,7 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;
+import java.util.Objects;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -30,6 +31,22 @@ public class TrecAccount implements UserDetails // implements UserDetails
 				isValidated, color, passwordMonthReset, passwordChanged,
 				timeForValidToken, maxLoginAttempts, recentFailedLogin,
 				lockTime);
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (!(o instanceof TrecAccount)) return false;
+		TrecAccount that = (TrecAccount) o;
+
+		return accountId == that.getAccountId() && firstName.equals(that.getFirstName()) &&
+				lastName.equals(that.getLastName()) && username.equals(that.getUsername()) &&
+				mainEmail.equals(that.getMainEmail());
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(firstName, lastName, accountId, username, mainEmail);
 	}
 
 	@Transient
@@ -158,13 +175,7 @@ public class TrecAccount implements UserDetails // implements UserDetails
 	@Override
 	public String toString() {
 		return "TrecAccount [firstName=" + firstName + ", lastName=" + lastName + ", accountId=" + accountId
-				+ ", username=" + username + ", mainEmail=" + mainEmail + ", trecEmail=" + trecEmail + ", backupEmail="
-				+ backupEmail + ", token=" + token + ", birthday=" + birthday + ", isValidated=" + isValidated
-				+ ", color=" + color + ", validationToken=" + validationToken + ", passwordMonthReset="
-				+ passwordMonthReset + ", passwordChanged=" + passwordChanged + ", timeForValidToken="
-				+ timeForValidToken + ", validTimeFromActivity=" + validTimeFromActivity + ", maxLoginAttempts="
-				+ maxLoginAttempts + ", recentFailedLogin=" + recentFailedLogin + ", failedLoginAttempts="
-				+ failedLoginAttempts + ", lockTime=" + lockTime + ", lockInit=" + lockInit + "]";
+				+ ", username=" + username + ", mainEmail=" + mainEmail + "]";
 	}
 	
 	

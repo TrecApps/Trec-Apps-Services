@@ -6,18 +6,27 @@ import org.springframework.stereotype.Component;
 public class PasswordChange {
 
 	String username;
-	String currentPassword;
+	String oldPassword;
 	String newPassword;
 	public PasswordChange() {
 		super();
 	}
-	public PasswordChange(String username, String currentPassword, String newPassword) {
+	public PasswordChange(String username, String oldPassword, String newPassword) {
 		super();
 		this.username = username;
-		this.currentPassword = currentPassword;
+		this.oldPassword = oldPassword;
 		this.newPassword = newPassword;
 	}
-	
+
+	@Override
+	public String toString() {
+		return "PasswordChange{" +
+				"username='" + username + '\'' +
+				", oldPassword='" + oldPassword + '\'' +
+				", newPassword='" + newPassword + '\'' +
+				'}';
+	}
+
 	/**
 	 * @return the username
 	 */
@@ -30,11 +39,11 @@ public class PasswordChange {
 	public void setUsername(String username) {
 		this.username = username;
 	}
-	public String getCurrentPassword() {
-		return currentPassword;
+	public String getOldPassword() {
+		return oldPassword;
 	}
-	public void setCurrentPassword(String currentPassword) {
-		this.currentPassword = currentPassword;
+	public void setOldPassword(String oldPassword) {
+		this.oldPassword = oldPassword;
 	}
 	public String getNewPassword() {
 		return newPassword;
