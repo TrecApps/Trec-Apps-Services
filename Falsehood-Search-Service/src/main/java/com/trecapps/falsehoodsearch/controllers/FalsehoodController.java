@@ -1,6 +1,8 @@
 package com.trecapps.falsehoodsearch.controllers;
 
 import com.trecapps.falsehoodsearch.models.Falsehood;
+import com.trecapps.falsehoodsearch.models.FullFalsehood;
+import com.trecapps.falsehoodsearch.models.FullPublicFalsehood;
 import com.trecapps.falsehoodsearch.models.PublicFalsehood;
 import com.trecapps.falsehoodsearch.services.FalsehoodService;
 import com.trecapps.falsehoodsearch.services.PublicFalsehoodService;
@@ -9,6 +11,7 @@ import com.trecapps.falsehoodsearch.services.SearchPublicFalsehood;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.math.BigInteger;
 import java.util.List;
 
 @RestController
@@ -45,6 +48,12 @@ public class FalsehoodController
         return pfService.getSubmittedFalsehoods(size, page);
     }
 
+    @GetMapping("/Public/id/{id}")
+    public FullPublicFalsehood GetPublicFalsehood(@PathVariable("id") BigInteger id)
+    {
+        return pfService.getFalsehoodById(id);
+    }
+
     @PostMapping("/Media/searchConfirmed")
     public List<Falsehood> searchFalsehoodByParams(@RequestBody SearchFalsehood searchObj)
     {
@@ -62,6 +71,13 @@ public class FalsehoodController
                                                            @RequestParam(value="page", defaultValue="0", required=false)int page)
     {
         return mfService.getSubmittedFalsehoods(size, page);
+    }
+
+    @GetMapping("/Media/id/{id}")
+    public FullFalsehood GetFalsehood(@PathVariable("id") BigInteger id)
+    {
+        System.out.println("id endpoint hit! id = " + id);
+        return mfService.getFalsehoodById(id);
     }
 
 }
