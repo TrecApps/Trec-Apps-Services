@@ -8,6 +8,8 @@ Every other folder in the root directory holds a single Server-Side Project.
 
 **Note: These services are currently written and configured to run on local machines (i.e. localhost)**
 
+**Note: The Gateway and Discovery service needs work before they can be used in a production environment but are currently usable in a local environment. The User Service can create and manage accounts, as well as create an OAuth2 Client, but OAuth2 support needs to be tested. All other services need to be tested (and one of them doesn't even compile!**
+
 ## Services
 
 There are multiple Services being developed for the Trec-Apps ecosystem, with more to come. Many of these services depend on other services to run. The Ideal Order to run
