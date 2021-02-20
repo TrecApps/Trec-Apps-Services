@@ -47,14 +47,15 @@ public class TrecSecurityContext implements SecurityContextRepository {
             if (trecAuth == null) {
                 System.out.println("TrecAccount was NULL");
                 cook = new Cookie("JSESSIONID", null);
-                cook.setHttpOnly(true);
                 cook.setMaxAge(0);
             } else {
                 cook = new Cookie("JSESSIONID", jwtService.generateToken(trecAuth.getAccount()));
-                cook.setHttpOnly(true);
                 cook.setMaxAge(-1);
+
             }
         }
+        cook.setHttpOnly(true);
+        cook.setPath("/");
         response.addCookie(cook);
 
 

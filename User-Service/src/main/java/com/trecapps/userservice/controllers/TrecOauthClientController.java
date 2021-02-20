@@ -32,28 +32,36 @@ public class TrecOauthClientController {
 
 
 	@GetMapping(value = "/canCreate")
-	boolean canCreate(Authentication user)
+	boolean canCreate()
 	{
-		TrecAccount account = ((TrecAuthentication)user).getAccount();
+		TrecAuthentication auth = ((TrecAuthentication)SecurityContextHolder.getContext().getAuthentication());
+		return canCreate(auth.getAccount());
 
-		byte accountRoles = account.getPriveledges();
-		return (accountRoles & 0b00000001) > 0;
+
 	}
 
 	@GetMapping(value = "/create")
-	ResponseEntity<TrecOauthClient> createClient(Authentication user, @RequestParam(required = true, name = "name")String name)
+	ResponseEntity<TrecOauthClient> createClient(@RequestParam(required = true, name = "name")String name)
 	{
-		if(!canCreate(user))
+		TrecAuthentication auth = ((TrecAuthentication)SecurityContextHolder.getContext().getAuthentication());
+		TrecAccount account = auth.getAccount();
+		if(!canCreate(account))
 		{
 			return new ResponseEntity<TrecOauthClient>((TrecOauthClient) null, HttpStatus.FORBIDDEN);
 		}
 
 		TrecOauthClient newClient = clientService.createNewClient(name, 0,
-				((TrecAuthentication)user).getAccount());
+				account);
 
 		newClient.setOwner(null);
 
 		return new ResponseEntity<TrecOauthClient>(newClient, HttpStatus.OK);
+	}
+
+	private boolean canCreate(TrecAccount account)
+	{
+		byte accountRoles = account.getPriveledges();
+		return (accountRoles & 0b00000001) > 0;
 	}
 
 }
