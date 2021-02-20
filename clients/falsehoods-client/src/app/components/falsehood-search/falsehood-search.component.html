@@ -1,0 +1,21 @@
+
+<table *ngIf="falsehoods?.length > 0">
+    <tr>
+        <th>Media Outlet</th>
+        <th>Status</th>
+        <th>MediaType</th>
+        <th>Severity</th>
+        <th>Public Figures</th>
+        <th>Date Made</th>
+        <th>Content Id</th>
+    </tr>
+    <tr *ngFor="let falsehood of falsehoods" (click)="selectFalsehood(falsehood)">
+        <td>{{falsehood.outlet.name}}</td>
+        <td>{{falsehood.status}}</td>
+        <td>{{falsehood.mediaType}}</td>
+        <td>{{falsehood.severity}}</td>
+        <td>{{falsehood.author1.firstname + falsehood.author1.middleNames + falsehood.author1.lastName}}</td>
+        <td>{{falsehood.dateMade}}</td>
+        <td>{{falsehood.contentId}}</td>
+    </tr>
+</table>
