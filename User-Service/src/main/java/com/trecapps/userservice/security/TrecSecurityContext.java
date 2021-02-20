@@ -2,8 +2,12 @@ package com.trecapps.userservice.security;
 
 import com.trecapps.userservice.models.primary.TrecAccount;
 import com.trecapps.userservice.services.JwtTokenService;
+import com.trecapps.userservice.services.TrecAccountService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.Authentication;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.context.HttpRequestResponseHolder;
@@ -91,4 +95,5 @@ public class TrecSecurityContext implements SecurityContextRepository {
 
         return context;
     }
+
 }
