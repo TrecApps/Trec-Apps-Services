@@ -18,7 +18,7 @@ public class InstitutionEntry {
 	}
 
 	/**
-	 * @param insitution
+	 * @param institution
 	 * @param contents
 	 */
 	public InstitutionEntry(Institution institution, String contents) {

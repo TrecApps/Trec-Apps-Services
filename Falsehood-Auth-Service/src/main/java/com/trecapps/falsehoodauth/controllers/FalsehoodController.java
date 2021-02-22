@@ -162,24 +162,6 @@ public class FalsehoodController extends AuthenticationControllerBase
 		
 		return new ResponseEntity<String>(HttpStatus.NO_CONTENT);
 	}
-	
-	@PostMapping("/AddOutlet")
-	public ResponseEntity<String> addMediaOutlet(RequestEntity<MediaOutletEntry> entry)
-	{
-		FalsehoodUser user = super.getUser(entry);
-		
-		ResponseEntity<String> ret = super.validateUser(user, MIN_CREDIT_ADD_OUTLET);
-		
-		if(ret != null)
-			return ret;
-		
-		String response = this.mediaService.submitMediaOutlet(entry.getBody(), user);
-		
-		if("".equals(response))
-			return new ResponseEntity<String>(HttpStatus.NO_CONTENT);
-		
-		return new ResponseEntity<String>(response, HttpStatus.BAD_REQUEST);
-	}
-	
+
 
 }

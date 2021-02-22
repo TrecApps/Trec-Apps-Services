@@ -70,7 +70,7 @@ public class PublicFalsehood implements Comparable<PublicFalsehood>{
 	
 	@ManyToOne
 	@JoinColumn
-    com.trecapps.falsehoodsearch.models.Region region;
+    Region region;
 	
 	@ManyToOne
 	@JoinColumn
@@ -105,7 +105,7 @@ public class PublicFalsehood implements Comparable<PublicFalsehood>{
 	 * @param severity
 	 */
 	public PublicFalsehood(BigInteger id, CommonLie commonLie, byte status, PublicFigure official, byte officialType,
-                           com.trecapps.falsehoodsearch.models.Region region, Institution institution, byte severity, Date dateMade, String tags) {
+                           Region region, Institution institution, byte severity, Date dateMade, String tags) {
 		super();
 		this.id = id;
 		this.commonLie = commonLie;
@@ -226,14 +226,14 @@ public class PublicFalsehood implements Comparable<PublicFalsehood>{
 	/**
 	 * @return the region
 	 */
-	public com.trecapps.falsehoodsearch.models.Region getRegion() {
+	public Region getRegion() {
 		return region;
 	}
 
 	/**
 	 * @param region the region to set
 	 */
-	public void setRegion(com.trecapps.falsehoodsearch.models.Region region) {
+	public void setRegion(Region region) {
 		this.region = region;
 	}
 

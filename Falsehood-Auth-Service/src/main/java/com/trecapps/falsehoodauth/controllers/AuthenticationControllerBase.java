@@ -38,12 +38,12 @@ public class AuthenticationControllerBase {
 	{
 		if(user == null)
 		{
-			return new ResponseEntity<String>("Could Not Authenticate User", HttpStatus.UNAUTHORIZED);
+			return new ResponseEntity<>("Could Not Authenticate User", HttpStatus.UNAUTHORIZED);
 		}
 		
 		if( user.getCredit() < minCredit)
 		{
-			return new ResponseEntity<String>("Could Not Authenticate User", HttpStatus.FORBIDDEN);
+			return new ResponseEntity<>("Could Not Authenticate User", HttpStatus.FORBIDDEN);
 		}
 		
 		

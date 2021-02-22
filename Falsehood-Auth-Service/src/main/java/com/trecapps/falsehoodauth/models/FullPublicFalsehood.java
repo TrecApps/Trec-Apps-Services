@@ -1,7 +1,7 @@
 package com.trecapps.falsehoodauth.models;
 
-import com.trecapps.falsehoodsearch.jsonmodels.EventObj;
-import com.trecapps.falsehoodsearch.jsonmodels.VerdictObj;
+import com.trecapps.falsehoodauth.jsonmodels.EventObj;
+import com.trecapps.falsehoodauth.jsonmodels.VerdictObj;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -11,7 +11,7 @@ public class FullPublicFalsehood {
 
     String contents;
 
-    com.trecapps.falsehoodsearch.models.PublicFalsehood metadata;
+    PublicFalsehood metadata;
 
 	List<VerdictObj> verdicts;
 	List<EventObj> events;
@@ -24,7 +24,7 @@ public class FullPublicFalsehood {
 	 * @param metadata
 	 * @param events
 	 */
-	public FullPublicFalsehood(String contents, com.trecapps.falsehoodsearch.models.PublicFalsehood metadata, List<VerdictObj> verdicts,
+	public FullPublicFalsehood(String contents, PublicFalsehood metadata, List<VerdictObj> verdicts,
                                List<EventObj> events) {
 		super();
 		this.contents = contents;
@@ -46,11 +46,11 @@ public class FullPublicFalsehood {
         this.contents = contents;
     }
 
-    public com.trecapps.falsehoodsearch.models.PublicFalsehood getMetadata() {
+    public PublicFalsehood getMetadata() {
         return metadata;
     }
 
-    public void setMetadata(com.trecapps.falsehoodsearch.models.PublicFalsehood metadata) {
+    public void setMetadata(PublicFalsehood metadata) {
         this.metadata = metadata;
     }
 

@@ -32,43 +32,7 @@ public class PublicFigureService
 		this.figureRepo = figureRepo;
 		this.userService = userService;
 	}
-	
-	
-	public String submitPublicFigure(PublicFigureEntry publicFigure, FalsehoodUser user)
-	{
-		if(publicFigure == null)
-		{
-			return "Public Figure Entry was null";
-		}
-		
-		if(publicFigure.getFigure() == null)
-		{
-			return "Public Figure Metadata was null";
-		}
-		
-		if(publicFigure.getText() == null)
-		{
-			return "Public Figure text was null";
-		}
-		
-		PublicFigure pFigure = publicFigure.getFigure();
-		
-		pFigure = figureRepo.save(pFigure);
-		
-		if(!"Success".equals(awsStorage.addNewFile("PublicFigure-" + pFigure.getId(), publicFigure.getText())))
-		{
-			figureRepo.delete(pFigure);
-			return "Failed to Save Public Figure to Storage!";
-		}
-		
-		
-		
-		return "";
-	}
-	
-	
 
-	
 	public List<PublicFigure> getPublicFigures(boolean showAll, int page, int pageSize)
 	{
 		return figureRepo.findAll(PageRequest.of(page, pageSize)).toList();

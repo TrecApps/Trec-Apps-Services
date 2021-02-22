@@ -28,41 +28,7 @@ public class MediaOutletService {
 		this.awsStorage = awsStorage;
 		this.userService = userService;
 	}
-	
-	
-	public String submitMediaOutlet(MediaOutletEntry outletEntry, FalsehoodUser user)
-	{
-		if(outletEntry == null)
-		{
-			return "Public Figure Entry was null";
-		}
-		
-		if(outletEntry.getOutlet() == null)
-		{
-			return "Public Figure Metadata was null";
-		}
-		
-		if(outletEntry.getText() == null)
-		{
-			return "Public Figure text was null";
-		}
-		
-		MediaOutlet pFigure = outletEntry.getOutlet();
-		
-		pFigure = moRepo.save(pFigure);
-		
-		if(!"Success".equals(awsStorage.addNewFile("MediaOutlet-" + pFigure.getOutletId(), outletEntry.getText())))
-		{
-			moRepo.delete(pFigure);
-			return "Failed to Save Public Figure to Storage!";
-		}
-		
-		
-		
-		return "";
-	}
-	
-	
+
 
 	List<MediaOutlet> GetMediaOutlets(){
 		return moRepo.findAll();
