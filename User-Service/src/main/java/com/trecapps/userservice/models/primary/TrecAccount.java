@@ -99,8 +99,12 @@ public class TrecAccount implements UserDetails // implements UserDetails
 	private static final byte DEVELOPER_EMPLOYEE = 0b00000100;
 	@Transient  // This User is a Registered FACT-Checker for the Falsehoods Service
 	private static final byte FALSEHOODS_FACT = 0b00001000;
+	@Transient  // This User can manage Trusted URLS in the Linking service
+	private static final byte SITE_MANAGER = 0b00010000;
+	//@Transient
+	//private static final byte
 
-	byte priveledges;
+	byte privileges;
 
 	public int getOauthUse() {
 		return oauthUse;
@@ -154,7 +158,7 @@ public class TrecAccount implements UserDetails // implements UserDetails
 		this.lockTime=lockTime;
 		this.lockInit=lockInit;
 
-		this.priveledges = 0;
+		this.privileges = 0;
 		// Used to aid in generating one time codes
 		oauthUse = 0;
 
@@ -164,12 +168,12 @@ public class TrecAccount implements UserDetails // implements UserDetails
 	}
 
 
-	public byte getPriveledges() {
-		return priveledges;
+	public byte getPrivileges() {
+		return privileges;
 	}
 
-	public void setPriveledges(byte priveledges) {
-		this.priveledges = priveledges;
+	public void setPrivileges(byte privileges) {
+		this.privileges = privileges;
 	}
 
 	@Override
@@ -309,7 +313,18 @@ public class TrecAccount implements UserDetails // implements UserDetails
 
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {
-		return new ArrayList<TrecAuthority>();
+		ArrayList<TrecAuthority> ret = new ArrayList<>();
+		if((privileges & CLIENT_CREATOR) > 0)
+			ret.add(new TrecAuthority("CLIENT_CREATOR"));
+		if((privileges & REGULAR_EMPLOYEE) > 0)
+			ret.add(new TrecAuthority("REGULAR_EMPLOYEE"));
+		if((privileges & DEVELOPER_EMPLOYEE) > 0)
+			ret.add(new TrecAuthority("DEVELOPER_EMPLOYEE"));
+		if((privileges & FALSEHOODS_FACT) > 0)
+			ret.add(new TrecAuthority("FALSEHOODS_FACT"));
+		if((privileges & SITE_MANAGER) > 0)
+			ret.add(new TrecAuthority("SITE_MANAGER"));
+		return ret;
 	}
 
 	@Override

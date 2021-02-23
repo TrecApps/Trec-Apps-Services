@@ -1,19 +1,11 @@
 package com.trecapps.userservice.controllers;
 
-import java.io.IOException;
-
-import javax.servlet.http.HttpServletResponse;
-
 import com.trecapps.userservice.security.TrecAuthentication;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.ModelAndView;
 
 import com.trecapps.userservice.models.primary.TrecAccount;
 import com.trecapps.userservice.models.primary.TrecOauthClient;
@@ -60,7 +52,7 @@ public class TrecOauthClientController {
 
 	private boolean canCreate(TrecAccount account)
 	{
-		byte accountRoles = account.getPriveledges();
+		byte accountRoles = account.getPrivileges();
 		return (accountRoles & 0b00000001) > 0;
 	}
 
