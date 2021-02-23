@@ -15,7 +15,7 @@ public class TrustedSite {
     @Id
     String siteId;
 
-    @Column
+    @Column(unique = true)
     String url;
 
     public TrustedSite() {
