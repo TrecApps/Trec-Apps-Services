@@ -12,7 +12,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.authorizeRequests().antMatchers("search/**").permitAll().and()
-                .authorizeRequests().antMatchers("update/**").authenticated().and()
+                .authorizeRequests().antMatchers("update/**")
+                .hasAnyRole("REGULAR_EMPLOYEE", "FALSEHOODS_FACT").and()
                 .oauth2Login().loginProcessingUrl("http://localhost:8081/auth/oauth2/login");
     }
 }
