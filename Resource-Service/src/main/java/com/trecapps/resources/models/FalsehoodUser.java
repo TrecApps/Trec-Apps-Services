@@ -1,10 +1,11 @@
-package com.trecapps.falsehoodauth.models;
+package com.trecapps.resources.models;
 
-import com.trecapps.falsehoodauth.security.TrecAuthority;
+import javax.persistence.*;
+
+import com.trecapps.resources.security.TrecAuthority;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import javax.persistence.*;
 import java.util.Collection;
 import java.util.List;
 

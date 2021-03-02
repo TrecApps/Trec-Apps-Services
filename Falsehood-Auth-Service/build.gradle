@@ -46,6 +46,7 @@ dependencies {
     // Security Features
     implementation 'org.springframework.boot:spring-boot-starter-security:+'        // Make this use Spring Security
     implementation 'org.springframework.boot:spring-boot-starter-oauth2-client:+'   // Make this an Oauth Client
+    implementation 'org.springframework.security.oauth.boot:spring-security-oauth2-autoconfigure:+'
     implementation 'com.auth0:java-jwt:+'                   // Use JWT to verify user
     implementation 'org.webjars:js-cookie:2.1.0'            // Enables the Logout cookie
 
