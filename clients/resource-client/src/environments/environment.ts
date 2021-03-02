@@ -3,6 +3,7 @@
 // The list of file replacements can be found in `angular.json`.
 
 export const environment = {
+  RESOURCE_URL: "http://localhost:4200/api/resources/",
   production: false
 };
 
