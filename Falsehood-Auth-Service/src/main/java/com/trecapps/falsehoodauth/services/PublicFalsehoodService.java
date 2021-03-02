@@ -7,6 +7,7 @@ import com.trecapps.falsehoodauth.jsonmodels.VerdictObj;
 import com.trecapps.falsehoodauth.models.FalsehoodStatus;
 import com.trecapps.falsehoodauth.models.FalsehoodUser;
 import com.trecapps.falsehoodauth.models.PublicFalsehood;
+import com.trecapps.falsehoodauth.repos.FalsehoodUserRepo;
 import com.trecapps.falsehoodauth.repos.PublicFalsehoodRepo;
 import org.springframework.stereotype.Service;
 import org.json.JSONObject;
@@ -31,12 +32,12 @@ public class PublicFalsehoodService {
 
     FalsehoodStorageHolder s3BucketManager;
 
-    FalsehoodUserService uServe;
+    FalsehoodUserRepo uServe;
     
     @Autowired
     public PublicFalsehoodService(@Autowired FalsehoodStorageHolder s3BucketManager,
                                   @Autowired PublicFalsehoodRepo pfRepo,
-                                  @Autowired FalsehoodUserService uServe)
+                                  @Autowired FalsehoodUserRepo uServe)
     {
         this.pfRepo = pfRepo;
         this.s3BucketManager = s3BucketManager;
@@ -77,7 +78,7 @@ public class PublicFalsehoodService {
 
 		}
 
-		verdicts.setApproversAvailable(uServe.getUserCountAboveCredibility(MIN_CREDIT_APPROVE_REJECT));
+		verdicts.setApproversAvailable(uServe.getUsersAboveCredit(MIN_CREDIT_APPROVE_REJECT));
 
 		VerdictObj newVerdict = new VerdictObj(approve, user.getUserId(),
 				new Date(Calendar.getInstance().getTime().getTime()), comment, null);
@@ -114,8 +115,9 @@ public class PublicFalsehoodService {
 				{
 					if(event.isApprove() > 0)
 					{
-						FalsehoodUser createrUser = uServe.getUserById(event.getUserId());
-						uServe.adjustCredibility(createrUser, -5);
+						FalsehoodUser createrUser = uServe.getOne(event.getUserId());
+						createrUser.setCredit(createrUser.getCredit() - 5);
+						uServe.save(createrUser);
 						break;
 					}
 				}
@@ -145,7 +147,7 @@ public class PublicFalsehoodService {
         String objectId = "publicFalsehood-" + f.getId();
         
         VerdictListObj verdicts = new VerdictListObj();
-		verdicts.setApproversAvailable(uServe.getUserCountAboveCredibility(MIN_CREDIT_APPROVE_REJECT));
+		verdicts.setApproversAvailable(uServe.getUsersAboveCredit(MIN_CREDIT_APPROVE_REJECT));
 
 		EventObj event = new EventObj(1, user.getUserId(),
 				new Date(Calendar.getInstance().getTime().getTime()), null, null);

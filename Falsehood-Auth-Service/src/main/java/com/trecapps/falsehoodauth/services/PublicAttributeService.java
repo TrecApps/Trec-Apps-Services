@@ -23,20 +23,17 @@ public class PublicAttributeService {
 
 	@Autowired
 	EntityManager em;
-	
-	FalsehoodUserService userService;
+
 	
 
 	@Autowired
 	public PublicAttributeService(@Autowired FalsehoodStorageHolder storage,
 									@Autowired RegionRepo rRepo,
-									@Autowired InstitutionRepo iRepo,
-									@Autowired FalsehoodUserService userService)
+									@Autowired InstitutionRepo iRepo)
 	{
 		this.iRepo = iRepo;
 		this.rRepo = rRepo;
 		this.storage = storage;
-		this.userService = userService;
 	}
 
 

@@ -21,16 +21,13 @@ public class PublicFigureService
 
 	PublicFigureRepo figureRepo;
 
-	FalsehoodUserService userService;
 
 	@Autowired
-	public PublicFigureService(@Autowired FalsehoodUserService userService,
-							   @Autowired PublicFigureRepo figureRepo,
+	public PublicFigureService(@Autowired PublicFigureRepo figureRepo,
 							   @Autowired FalsehoodStorageHolder awsStorage)
 	{
 		this.awsStorage = awsStorage;
 		this.figureRepo = figureRepo;
-		this.userService = userService;
 	}
 
 	public List<PublicFigure> getPublicFigures(boolean showAll, int page, int pageSize)

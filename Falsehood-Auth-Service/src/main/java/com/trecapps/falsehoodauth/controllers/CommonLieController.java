@@ -3,11 +3,11 @@ package com.trecapps.falsehoodauth.controllers;
 import com.trecapps.falsehoodauth.models.CommonLieSubmission;
 import com.trecapps.falsehoodauth.models.FalsehoodUser;
 import com.trecapps.falsehoodauth.services.CommonLieService;
-import com.trecapps.falsehoodauth.services.FalsehoodUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.RequestEntity;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -22,17 +22,16 @@ public class CommonLieController extends AuthenticationControllerBase
 	public static final int MIN_CREDIT_PROPOSE_COMMON_LIE = 40;
 
 	@Autowired
-	public CommonLieController(@Autowired FalsehoodUserService service,
-							   @Autowired CommonLieService clService)
+	public CommonLieController(@Autowired CommonLieService clService)
 	{
-		super(service);
+		super();
 		this.clService = clService;
 	}
 	
 	@PostMapping("/insert")
 	ResponseEntity<String> insertCommonLie(RequestEntity<CommonLieSubmission> sub)
 	{
-		FalsehoodUser user = super.getUser(sub);
+		FalsehoodUser user = (FalsehoodUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 		
 		if(user == null)
 		{

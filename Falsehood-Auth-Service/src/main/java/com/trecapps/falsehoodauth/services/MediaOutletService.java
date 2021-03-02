@@ -17,16 +17,13 @@ public class MediaOutletService {
 	MediaOutletRepo moRepo;
 	FalsehoodStorageHolder awsStorage;
 
-	FalsehoodUserService userService;
 
 	@Autowired
 	public MediaOutletService(@Autowired MediaOutletRepo moRepo,
-			@Autowired FalsehoodStorageHolder awsStorage,
-			@Autowired FalsehoodUserService userService)
+			@Autowired FalsehoodStorageHolder awsStorage)
 	{
 		this.moRepo = moRepo;
 		this.awsStorage = awsStorage;
-		this.userService = userService;
 	}
 
 

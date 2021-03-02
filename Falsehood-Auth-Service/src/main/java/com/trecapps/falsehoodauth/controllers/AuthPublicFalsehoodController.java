@@ -2,13 +2,13 @@ package com.trecapps.falsehoodauth.controllers;
 
 
 import com.trecapps.falsehoodauth.models.*;
-import com.trecapps.falsehoodauth.services.FalsehoodUserService;
 import com.trecapps.falsehoodauth.services.PublicAttributeService;
 import com.trecapps.falsehoodauth.services.PublicFalsehoodService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.RequestEntity;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -34,11 +34,10 @@ public class AuthPublicFalsehoodController extends AuthenticationControllerBase
     public static final int MIN_CREDIT_ADD_RECOURSE = 35;
 
     @Autowired
-    public AuthPublicFalsehoodController(@Autowired FalsehoodUserService userService,
-                                         @Autowired PublicFalsehoodService service,
+    public AuthPublicFalsehoodController(@Autowired PublicFalsehoodService service,
                                          @Autowired PublicAttributeService attService)
     {
-        super(userService);
+        super();
         this.service = service;
         this.attService = attService;
     }
@@ -46,7 +45,7 @@ public class AuthPublicFalsehoodController extends AuthenticationControllerBase
     @PostMapping("/Insert")
     public ResponseEntity<String> insertFalsehood(RequestEntity<FullPublicFalsehood> entity, HttpServletRequest req)
     {
-        FalsehoodUser user = super.getUser(entity);
+        FalsehoodUser user = (FalsehoodUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
         ResponseEntity<String> ret = super.validateUser(user, MIN_CREDIT_SUBMIT_NEW);
 
@@ -88,7 +87,7 @@ public class AuthPublicFalsehoodController extends AuthenticationControllerBase
 	@PutMapping("/Approve")
 	public ResponseEntity<String> approveFalsehood(RequestEntity<VerdictSubmission> entity, HttpServletRequest req)
 	{
-		FalsehoodUser user = super.getUser(entity);
+		FalsehoodUser user = (FalsehoodUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
 		ResponseEntity<String> ret = super.validateUser(user, MIN_CREDIT_APPROVE_REJECT);
 
@@ -107,7 +106,7 @@ public class AuthPublicFalsehoodController extends AuthenticationControllerBase
 	@PutMapping("/Reject")
 	public ResponseEntity<String> rejectFalsehood(RequestEntity<VerdictSubmission> entity, HttpServletRequest req)
 	{
-		FalsehoodUser user = super.getUser(entity);
+		FalsehoodUser user = (FalsehoodUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
 		ResponseEntity<String> ret = super.validateUser(user, MIN_CREDIT_APPROVE_REJECT);
 

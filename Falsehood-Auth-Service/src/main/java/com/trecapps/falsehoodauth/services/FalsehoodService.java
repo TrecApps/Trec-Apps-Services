@@ -14,6 +14,7 @@ import com.trecapps.falsehoodauth.models.Falsehood;
 import com.trecapps.falsehoodauth.models.FalsehoodStatus;
 import com.trecapps.falsehoodauth.models.FalsehoodUser;
 import com.trecapps.falsehoodauth.repos.FalsehoodRepo;
+import com.trecapps.falsehoodauth.repos.FalsehoodUserRepo;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
@@ -31,12 +32,12 @@ public class FalsehoodService {
 
 	FalsehoodStorageHolder s3BucketManager;
 
-	FalsehoodUserService userService;
+	FalsehoodUserRepo userService;
 
 	@Autowired
 	public FalsehoodService(@Autowired FalsehoodRepo fRepo,
 							@Autowired FalsehoodStorageHolder s3BucketManager,
-							@Autowired FalsehoodUserService userService)
+							@Autowired FalsehoodUserRepo userService)
 	{
 		this.s3BucketManager = s3BucketManager;
 		this.fRepo = fRepo;
@@ -96,7 +97,7 @@ public class FalsehoodService {
 			System.out.println(e.getMessage());
 		}
 
-		verdicts.setApproversAvailable(userService.getUserCountAboveCredibility(MIN_CREDIT_APPROVE_REJECT));
+		verdicts.setApproversAvailable(userService.getUsersAboveCredit(MIN_CREDIT_APPROVE_REJECT));
 
 		EventObj event = new EventObj(1, user.getUserId(),
 				new Date(Calendar.getInstance().getTime().getTime()), null, null);
@@ -157,7 +158,7 @@ public class FalsehoodService {
 
 		}
 
-		verdicts.setApproversAvailable(userService.getUserCountAboveCredibility(MIN_CREDIT_APPROVE_REJECT));
+		verdicts.setApproversAvailable(userService.getUsersAboveCredit(MIN_CREDIT_APPROVE_REJECT));
 
 		VerdictObj newVerdict = new VerdictObj(approve, user.getUserId(),
 				new Date(Calendar.getInstance().getTime().getTime()), comment, null);
@@ -192,8 +193,9 @@ public class FalsehoodService {
 				{
 					if(event.isApprove() > 0)
 					{
-						FalsehoodUser createrUser = userService.getUserById(event.getUserId());
-						userService.adjustCredibility(createrUser, -5);
+						FalsehoodUser createrUser = userService.getOne(event.getUserId());
+						createrUser.setCredit(createrUser.getCredit() - 5);
+						userService.save(createrUser);
 						break;
 					}
 				}
@@ -232,7 +234,7 @@ public class FalsehoodService {
 
 		}
 
-		verdicts.setApproversAvailable(userService.getUserCountAboveCredibility(MIN_CREDIT_APPROVE_REJECT));
+		verdicts.setApproversAvailable(userService.getUsersAboveCredit(MIN_CREDIT_APPROVE_REJECT));
 
 		EventObj event = new EventObj(1, user.getUserId(),
 				new Date(Calendar.getInstance().getTime().getTime()), null, null);
