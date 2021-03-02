@@ -1,6 +1,7 @@
 package com.trecapps.userservice.controllers;
 
 import com.trecapps.userservice.models.OauthToken;
+import com.trecapps.userservice.models.UserInfo;
 import com.trecapps.userservice.models.primary.TrecAccount;
 import com.trecapps.userservice.models.primary.TrecOauthClient;
 import com.trecapps.userservice.security.TrecAuthentication;
@@ -11,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.RequestEntity;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.util.MultiValueMap;
@@ -151,7 +153,7 @@ public class Oauth2Controller {
     }
 
     @GetMapping("/userinfo")
-    public TrecAccount getUserInfo(HttpServletRequest req)
+    public UserInfo getUserInfo(HttpServletRequest req)
     {
         String auth = req.getHeader("Authorization");
         if(auth.startsWith("Bearer"))
@@ -160,20 +162,29 @@ public class Oauth2Controller {
         if(acc == null)
             return null;
 
-        // Scrub any sensitive information
-        acc.setLockTime((byte)0);
-        acc.setOauthUse((byte)0);
-        acc.setFailedLoginAttempts((byte)0);
-        acc.setLockInit(null);
-        acc.setPasswordChanged(null);
-        acc.setPasswordMonthReset((byte)0);
-        acc.setRecentFailedLogin(null);
-        acc.setTimeForValidToken((byte)0);
-        acc.setToken(null);
-        acc.setMaxLoginAttempts((byte)0);
-        acc.setValidationToken(null);
-        acc.setValidTimeFromActivity((byte)0);
-        return acc;
+        UserInfo ret = new UserInfo();
+
+        ret.setEmail(acc.getMainEmail());
+        ret.setFamily_name(acc.getLastName());
+        ret.setGiven_name(acc.getFirstName());
+        ret.setName(acc.getFirstName() + " " + acc.getLastName());
+        ret.setPreferred_username(acc.getUsername());
+        ret.setEmail_verified((acc.getIsValidated() % 2) > 0);
+        ret.setSub(acc.getAccountId());
+
+        var auths = acc.getAuthorities();
+
+        String roles = "";
+        boolean added = false;
+        for(GrantedAuthority ga: auths)
+        {
+            if(added)
+                roles += ";";
+            roles += ga.getAuthority();
+        }
+        ret.setRoles(roles);
+        return ret;
+
     }
 
     @GetMapping("/logout")
