@@ -3,6 +3,10 @@ package com.trecapps.resources.controllers;
 import com.trecapps.resources.models.*;
 import com.trecapps.resources.services.RetrievalService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -13,11 +17,25 @@ public class RetrievalController {
 
     RetrievalService service;
 
+    String clientId;
+
     @Autowired
-    RetrievalController(RetrievalService service)
+    RetrievalController(RetrievalService service,
+                        @Value("{spring.security.oauth2.client.registration.custom-client.client-id}")String clientId)
     {
         this.service = service;
+        this.clientId = clientId;
     }
+
+    @GetMapping("/isAuth")
+    public String isAuthenticated()
+    {
+        SecurityContext context = SecurityContextHolder.getContext();
+        Authentication auth = context.getAuthentication();
+
+        return (auth != null && auth.isAuthenticated()) ? "" : clientId;
+    }
+
 
     // Public Figures
     @GetMapping("/publicFigures/{name}")

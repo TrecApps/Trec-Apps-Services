@@ -4,7 +4,7 @@
 
 export const environment = {
   RESOURCE_URL: "http://localhost:4200/api/resources/",
-  AUTH_URL: "http://localhost:4200/api/auth/oauth2",
+  AUTH_URL: "http://localhost:4200/api/auth/oauth2/",
   production: false
 };
 
