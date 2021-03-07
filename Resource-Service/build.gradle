@@ -8,7 +8,7 @@ plugins {
 
     // Apply the java-library plugin to add support for Java Library
     id 'java-library'
-    id 'org.springframework.boot' version '2.2.6.RELEASE'
+    id 'org.springframework.boot' version '2.4.2'
 
     id 'jacoco'
 }
@@ -22,14 +22,16 @@ apply plugin: 'jacoco'
 repositories {
     // Use jcenter for resolving dependencies.
     // You can declare any Maven/Ivy/file repository here.
-    jcenter()
+    mavenCentral()
 }
 
 group = 'com.trecapps'
 
 dependencies {
     // Enable Discovery
-    implementation 'org.springframework.cloud:spring-cloud-starter-eureka:+'
+    implementation 'org.springframework.cloud:spring-cloud-starter-netflix-eureka-client:+'
+    implementation 'org.springframework.cloud:spring-cloud-commons:+'
+    implementation 'com.google.code.gson:gson:2.8.2'
     // Use JWT to verify user
     implementation 'com.auth0:java-jwt:+'
     implementation 'org.springframework.boot:spring-boot-starter-security:+'
@@ -43,8 +45,10 @@ dependencies {
     // implementation 'com.microsoft.azure:spring-starter-azure-storage:+'
 
     // Spring Boot features
+    implementation 'org.springframework.boot:spring-boot-starter:+'
     implementation 'org.springframework.boot:spring-boot-starter-web:+'
     implementation 'org.springframework.boot:spring-boot-starter-actuator:+'
+    implementation 'org.springframework.boot:spring-boot-devtools:+'
 
     // DB Support
     implementation 'org.hibernate:hibernate-core:5.4.11.Final'
@@ -61,6 +65,17 @@ dependencies {
 
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.6.0'
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine'
+
+    components {
+        withModule('org.springframework:spring-beans') {
+            allVariants {
+                withDependencyConstraints {
+                    // Need to patch constraints because snakeyaml is an optional dependency
+                    it.findAll { it.name == 'snakeyaml' }.each { it.version { strictly '1.19' } }
+                }
+            }
+        }
+    }
 }
 
 task prepareStorage {
@@ -91,5 +106,5 @@ test.finalizedBy(project.tasks.jacocoTestReport)
 
 application {
     // Define the main class for the application.
-    mainClassName = 'com.trecapps.false_hood.Driver'
+    mainClassName = 'com.trecapps.resources.Driver'
 }

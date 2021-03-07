@@ -15,8 +15,8 @@ export class AuthService {
   login() {
     this.httpClient.get(environment.RESOURCE_URL+ "search/isAuth").toPromise().then((ret: String) =>{
       this.isAuthenticated = ret.length == 0;
-      if(!this.isAuthenticated){
-        window.location.href = `${environment.AUTH_URL}login?client_id=${ret}&redirect_url=${window.location.href}`;
+      if(!this.isAuthenticated) {
+        window.location.href = `${environment.AUTH_URL}login?client_id=${ret}&redirect_url=${encodeURIComponent(window.location.href)}`;
       }
     });
   }
