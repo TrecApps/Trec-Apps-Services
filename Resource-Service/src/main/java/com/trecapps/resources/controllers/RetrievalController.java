@@ -4,6 +4,7 @@ import com.trecapps.resources.models.*;
 import com.trecapps.resources.services.RetrievalService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -21,19 +22,28 @@ public class RetrievalController {
 
     @Autowired
     RetrievalController(RetrievalService service,
-                        @Value("{spring.security.oauth2.client.registration.custom-client.client-id}")String clientId)
+                        @Value("${spring.security.oauth2.client.registration.custom-client.client-id}")String clientId)
     {
         this.service = service;
         this.clientId = clientId;
+        System.out.println("In Retrieval Controller Constructor: client Id is " + clientId);
     }
 
-    @GetMapping("/isAuth")
+    @GetMapping(value = "/isAuth", produces = "text/plain")
     public String isAuthenticated()
     {
         SecurityContext context = SecurityContextHolder.getContext();
         Authentication auth = context.getAuthentication();
 
-        return (auth != null && auth.isAuthenticated()) ? "" : clientId;
+        boolean isAuthenticated = (auth != null && !(auth instanceof AnonymousAuthenticationToken));
+
+
+
+        System.out.println("is Auth == " + isAuthenticated);
+
+        String ret = isAuthenticated ? "" : clientId;
+        System.out.println("Ret is " + ret);
+        return ret;
     }
 
 

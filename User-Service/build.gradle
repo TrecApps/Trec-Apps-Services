@@ -29,6 +29,9 @@ dependencies {
     implementation 'javax.activation:activation:1.1'
     implementation 'org.glassfish.jaxb:jaxb-runtime:2.3.0'
 
+    implementation 'org.thymeleaf:thymeleaf-spring5:3.0.11.RELEASE'
+    implementation 'javax.servlet:jstl:1.2'
+
 
     // This is needed so that multiple DataSources can be supported on Java 11
     implementation 'org.javassist:javassist:3.23.1-GA'

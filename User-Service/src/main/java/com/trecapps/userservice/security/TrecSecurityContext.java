@@ -27,6 +27,7 @@ public class TrecSecurityContext implements SecurityContextRepository {
     @Override
     public SecurityContext loadContext(HttpRequestResponseHolder requestResponseHolder) {
         HttpServletRequest req = requestResponseHolder.getRequest();
+        System.out.println("Path Info " + req.getPathInfo());
         SecurityContext ret = getContextFromCookie(req);
         if(ret == null)
             return SecurityContextHolder.createEmptyContext();

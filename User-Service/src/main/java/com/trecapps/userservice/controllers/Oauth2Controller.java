@@ -68,6 +68,7 @@ public class Oauth2Controller {
     @GetMapping("/login")
     public ModelAndView getAuthPage(@RequestParam Map<String, String> params)
     {
+        System.out.println("In Login mapping!");
         String clientId = params.get("client_id");
         String redirectUrl = params.get("redirect_url");
         TrecOauthClient client = validateClient(clientId, redirectUrl, null, false);
@@ -80,6 +81,7 @@ public class Oauth2Controller {
         models.addAttribute("message", client.getName() + " Log In");
         models.addAttribute("redirect_url", redirectUrl);
         models.addAttribute("client_id", clientId);
+        System.out.println("Returning View!");
         return view;
     }
 
