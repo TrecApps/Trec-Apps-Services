@@ -14,16 +14,16 @@
 		
 	
 		<div class="container">
-			<div id="messageJumbo" class="jumbotron">${message}</div>
+			<div id="messageJumbo" class="jumbotron">${jsp.message}</div>
 			
-			<form width="100%" class="form" id="Passwordform" action="${formAction}" method="post">
+			<form width="100%" class="form" id="Passwordform" action="${jsp.formAction}" method="post">
 				<label>Username</label>
 				<input type="text" class="form-control" name="username"> <br>
 				<label id="Label2">Password:</label>
 				<input id="input2" class="form-control" type="password" name="password"><br>
 
-				<input type="hidden" name="client_id" id="client_id" value="${client_id}" class="form-control" />
-				<input type="hidden" name="redirect_uri" value="${redirect_uri}" class="form-control" />
+				<input type="hidden" name="client_id" id="client_id" value="${jsp.client_id}" class="form-control" />
+				<input type="hidden" name="redirect_uri" value="${jsp.redirect_uri}" class="form-control" />
 				<input type="submit" class="btn btn-submit" value="Submit">
 				<a href="/CreateUser"  target="_blank">Create New Trec-Account (Opens in New Tab or Window)</a>
 			</form>

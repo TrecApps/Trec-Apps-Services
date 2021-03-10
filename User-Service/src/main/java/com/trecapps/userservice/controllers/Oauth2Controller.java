@@ -16,12 +16,14 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.util.MultiValueMap;
+import org.springframework.util.ResourceUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.*;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
@@ -31,14 +33,41 @@ import java.util.Map;
 @RequestMapping("/oauth2")
 public class Oauth2Controller {
 
-    @Autowired
     TrecOauthClientService oauthService;
 
-    @Autowired
     TrecAccountService accountService;
 
-    @Autowired
     JwtTokenService jwtService;
+
+    /**
+     * Serves as the Representation of the login page
+     */
+    StringBuilder loginContents;
+
+    @Autowired
+    public Oauth2Controller(TrecOauthClientService oauthService, TrecAccountService accountService,
+                            JwtTokenService jwtService) throws IOException {
+        this.oauthService = oauthService;
+        this.accountService = accountService;
+        this.jwtService = jwtService;
+
+        // need to read it into memory
+        File file = ResourceUtils.getFile("classpath:templates/login.jsp");
+        BufferedReader br = new BufferedReader(new FileReader(file));
+        loginContents = new StringBuilder();
+        char[] buffer = new char[100];
+        int ret = 0;
+        do {
+            ret = br.read(buffer);
+
+            for(int rust = 0; rust < ret; rust++)
+            {
+                loginContents.append(buffer[rust]);
+            }
+        }
+        while(ret != -1);
+
+    }
 
     private TrecOauthClient validateClient(String clientId, String url, String sec, boolean needSecret)
     {
@@ -66,24 +95,53 @@ public class Oauth2Controller {
     }
 
     @GetMapping("/login")
-    public ModelAndView getAuthPage(@RequestParam Map<String, String> params)
-    {
-        System.out.println("In Login mapping!");
+    public void getLoginPage(@RequestParam Map<String, String> params, HttpServletResponse response) throws IOException {
+
+        String copy = new String(loginContents);
+
         String clientId = params.get("client_id");
         String redirectUrl = params.get("redirect_url");
-        TrecOauthClient client = validateClient(clientId, redirectUrl, null, false);
+        TrecOauthClient client = null;
 
-        ModelAndView view = new ModelAndView();
-        view.setViewName("login");
+        try {
+            client = validateClient(clientId, redirectUrl, null, false);
+        } catch(Exception e)
+        {
+            response.setStatus(404);
+            response.setContentType("text/plain");
+            response.getWriter().write("Could not find client with ID: " + clientId);
+            return;
+        }
+        copy.replace("${jsp.formAction}", "/auth/oauth2/login");
+        copy.replace("${jsp.message}", client.getName() + " Log In");
+        copy.replace("${jsp.client_id}", clientId);
+        copy.replace("${jsp.redirect_uri}", redirectUrl);
 
-        ModelMap models = view.getModelMap();
-        models.addAttribute("formAction", "/auth/oauth2/login");
-        models.addAttribute("message", client.getName() + " Log In");
-        models.addAttribute("redirect_url", redirectUrl);
-        models.addAttribute("client_id", clientId);
-        System.out.println("Returning View!");
-        return view;
+        response.setStatus(200);
+        response.setContentType("text/html; charset=UTF-8");
+        response.getWriter().write(copy);
+
     }
+
+//    @GetMapping("/login")
+//    public ModelAndView getAuthPage(@RequestParam Map<String, String> params)
+//    {
+//        System.out.println("In Login mapping!");
+//        String clientId = params.get("client_id");
+//        String redirectUrl = params.get("redirect_url");
+//        TrecOauthClient client = validateClient(clientId, redirectUrl, null, false);
+//
+//        ModelAndView view = new ModelAndView();
+//        view.setViewName("login");
+//
+//        ModelMap models = view.getModelMap();
+//        models.addAttribute("formAction", "/auth/oauth2/login");
+//        models.addAttribute("message", client.getName() + " Log In");
+//        models.addAttribute("redirect_url", redirectUrl);
+//        models.addAttribute("client_id", clientId);
+//        System.out.println("Returning View!");
+//        return view;
+//    }
 
     @PostMapping(value = "/login", consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
     public void attemptLogin(RequestEntity<MultiValueMap<String, String>> request, HttpServletResponse response)
