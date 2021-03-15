@@ -326,7 +326,9 @@ public class JwtTokenService {
 	public TrecAccount verifyToken(String token)
 	{
 		DecodedJWT decodedJwt = decodeJWT(token);
-		
+
+		if(decodedJwt == null)
+			return null;
 		Claim idClaim = decodedJwt.getClaim("ID");
 		
 		Long idLong = idClaim.asLong();

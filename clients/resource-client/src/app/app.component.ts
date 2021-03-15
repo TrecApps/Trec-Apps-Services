@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { AuthService } from './services/auth.service';
 
 @Component({
@@ -6,7 +6,7 @@ import { AuthService } from './services/auth.service';
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css']
 })
-export class AppComponent {
+export class AppComponent implements OnInit{
   title = 'resource-client';
 
   authService: AuthService;
@@ -16,8 +16,12 @@ export class AppComponent {
     this.authService = authService;
   }
 
+  ngOnInit(): void {
+    this.authService.login(false);
+  }
+
   login() {
-    this.authService.login();
+    this.authService.login(true);
   }
 
   logout() {

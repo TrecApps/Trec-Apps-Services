@@ -44,7 +44,7 @@ public class SecondaryDataSourceConfiguration {
             EntityManagerFactoryBuilder secondaryEntityManagerFactoryBuilder, @Qualifier("secondaryDataSource") DataSource secondaryDataSource) {
     	Map<String, String> primaryJpaProperties = new HashMap<>();
         primaryJpaProperties.put("hibernate.dialect", System.getenv("DB_DIALECT"));
-        primaryJpaProperties.put("hibernate.hbm2ddl.auto", "none");
+        primaryJpaProperties.put("hibernate.hbm2ddl.auto", "update");
 
         primaryJpaProperties.put("hibernate.enable_lazy_load_no_trans", "true");
 

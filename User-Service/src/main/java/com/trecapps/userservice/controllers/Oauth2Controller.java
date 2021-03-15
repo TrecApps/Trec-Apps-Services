@@ -52,8 +52,11 @@ public class Oauth2Controller {
         this.jwtService = jwtService;
 
         // need to read it into memory
-        File file = ResourceUtils.getFile("classpath:templates/login.jsp");
-        BufferedReader br = new BufferedReader(new FileReader(file));
+        InputStream inStream = getClass().getResourceAsStream("/templates/login.jsp");
+
+
+        // File file = ResourceUtils.getFile("classpath:templates/login.jsp");
+        BufferedReader br = new BufferedReader(new InputStreamReader(inStream));
         loginContents = new StringBuilder();
         char[] buffer = new char[100];
         int ret = 0;
@@ -101,6 +104,7 @@ public class Oauth2Controller {
 
         String clientId = params.get("client_id");
         String redirectUrl = params.get("redirect_url");
+        String redirectUrl2 = params.get("redirect_url2");
         TrecOauthClient client = null;
 
         try {
@@ -112,10 +116,11 @@ public class Oauth2Controller {
             response.getWriter().write("Could not find client with ID: " + clientId);
             return;
         }
-        copy.replace("${jsp.formAction}", "/auth/oauth2/login");
-        copy.replace("${jsp.message}", client.getName() + " Log In");
-        copy.replace("${jsp.client_id}", clientId);
-        copy.replace("${jsp.redirect_uri}", redirectUrl);
+        copy = copy.replace("${jsp.formAction}", "/api/auth/oauth2/login");
+        copy = copy.replace("${jsp.message}", client.getName() + " Log In");
+        copy = copy.replace("${jsp.client_id}", clientId);
+        copy = copy.replace("${jsp.redirect_url}", URLEncoder.encode(redirectUrl,StandardCharsets.UTF_8));
+        copy = copy.replace("${jsp.redirect_url2}", URLEncoder.encode(redirectUrl2, StandardCharsets.UTF_8));
 
         response.setStatus(200);
         response.setContentType("text/html; charset=UTF-8");
@@ -144,12 +149,13 @@ public class Oauth2Controller {
 //    }
 
     @PostMapping(value = "/login", consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
-    public void attemptLogin(RequestEntity<MultiValueMap<String, String>> request, HttpServletResponse response)
+    public void attemptLogin(@RequestBody MultiValueMap<String, String> vars, HttpServletResponse response)
     {
-        MultiValueMap<String, String> vars = request.getBody();
+
 
         String clientId = vars.getFirst("client_id");
         String redirectUrl = vars.getFirst("redirect_url");
+        String redirectUrl2 = vars.getFirst("redirect_url2");
         String username = vars.getFirst("username");
         String password = vars.getFirst("password");
 
@@ -170,9 +176,10 @@ public class Oauth2Controller {
         cook.setMaxAge(-1);             // Make it a Session Cookie
         response.addCookie(cook);
 
-        response.addHeader("Location", String.format("/auth/oauth2/authorize?client_id=%s&redirect_url=%s",
+        response.addHeader("Location", String.format("/api/auth/oauth2/authorize?client_id=%s&redirect_url=%s&redirect_url2=%s",
                 URLEncoder.encode(clientId, StandardCharsets.UTF_8),
-                URLEncoder.encode(redirectUrl, StandardCharsets.UTF_8)));
+                URLEncoder.encode(redirectUrl, StandardCharsets.UTF_8),
+                URLEncoder.encode(redirectUrl2, StandardCharsets.UTF_8)));
         response.setStatus(HttpServletResponse.SC_FOUND);
     }
 
@@ -183,30 +190,38 @@ public class Oauth2Controller {
 
         String clientId = params.get("client_id");
         String redirectUrl = URLDecoder.decode(params.get("redirect_url"), StandardCharsets.UTF_8);
+        String redirectUrl2 = params.get("redirect_url2");
         TrecOauthClient client = validateClient(clientId, redirectUrl, null, false);
 
         String code = jwtService.generateOneTimeCode(account, client);
         if(code == null)
         {
+            System.out.println("FAILED to validate client in /authorize endpoint!");
             // To-Do: Handle Error
             return;
         }
 
-        char appender = redirectUrl.indexOf('?') == -1 ? '?' : '&';
+        String appender = redirectUrl.indexOf('?') == -1 ? "?" : "&";
 
-        response.addHeader("Location", String.format("%s%ccode=%s", redirectUrl, appender, code));
+        response.addHeader("Location", String.format("%s%scode=%s&redirect_url=%s",
+                redirectUrl,
+                appender,
+                code,
+                redirectUrl2));
         response.setStatus(HttpServletResponse.SC_FOUND);
     }
 
     @PostMapping(value = "/token", consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
     public OauthToken getToken(@RequestBody MultiValueMap<String, String> request)
     {
+        System.out.println("Token Endpoint called!");
         OauthToken ret = jwtService.verifyOneTimeCode(
                 request.getFirst("code"),
                 request.getFirst("client_id"),
                 request.getFirst("client_secret"));
         if(ret == null)
         {
+            System.out.println("Error Detected in token endpoint!");
             // handle error
         }
         return ret;
@@ -215,6 +230,7 @@ public class Oauth2Controller {
     @GetMapping("/userinfo")
     public UserInfo getUserInfo(HttpServletRequest req)
     {
+        System.out.println("In UserInfo Endpoint!");
         String auth = req.getHeader("Authorization");
         if(auth.startsWith("Bearer"))
             auth = auth.substring(6).trim();
