@@ -352,7 +352,7 @@ public class JwtTokenService {
 				.sign(Algorithm.RSA512(publicKey, privateKey));
 	}
 
-	public String verifyAuthToken(String token)
+	public OauthToken verifyAuthToken(String token)
 	{
 		DecodedJWT decodedJwt = decodeJWT(token);
 
@@ -379,7 +379,11 @@ public class JwtTokenService {
 			return null;
 
 		// All Checks have passed.
-		return generateToken(account);
+		OauthToken ret = new OauthToken();
+		ret.setAccess_token(generateToken(account));
+		ret.setExpires_in((int)account.getTimeForValidToken() * (int)TEN_MINUTES);
+		ret.setAccess_token(token);
+		return ret;
 	}
 
 	public String generateOneTimeCode(TrecAccount account, TrecOauthClient client)

@@ -24,7 +24,6 @@
 
 				<input type="hidden" name="client_id" id="client_id" value="${jsp.client_id}" class="form-control" />
 				<input type="hidden" name="redirect_url" value="${jsp.redirect_url}" class="form-control" />
-				<input type="hidden" name="redirect_url2" value="${jsp.redirect_url2}" class="form-control" />
 				<input type="submit" class="btn btn-submit" value="Submit">
 				<a href="/CreateUser"  target="_blank">Create New Trec-Account (Opens in New Tab or Window)</a>
 			</form>
