@@ -62,7 +62,6 @@ public class TrecOauthClientRepository  implements SecurityContextRepository {
     @Override
     public SecurityContext loadContext(HttpRequestResponseHolder requestResponseHolder) {
         HttpServletRequest req = requestResponseHolder.getRequest();
-        System.out.println("Path Info " + req.getPathInfo());
         SecurityContext ret = getContextFromCookie(req);
         if(ret == null)
             return SecurityContextHolder.createEmptyContext();
@@ -83,7 +82,6 @@ public class TrecOauthClientRepository  implements SecurityContextRepository {
         Cookie[] cookies = request.getCookies();
         SecurityContext context = SecurityContextHolder.createEmptyContext();
         if (cookies == null) {
-            System.out.println("Null Cookies detected");
             return context;
         }
         for (Cookie c : cookies) {
@@ -112,7 +110,6 @@ public class TrecOauthClientRepository  implements SecurityContextRepository {
                     List<GrantedAuthority> roles = authExtractor.extractAuthorities(userAtts);
                     if(user instanceof UserDetails && roles != null)
                     {
-                        System.out.println("Setting context!");
                         UserDetails userDetails = (UserDetails) user;
                         UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(userDetails, null, roles);
                         context.setAuthentication(token);
@@ -121,10 +118,7 @@ public class TrecOauthClientRepository  implements SecurityContextRepository {
 
                 }catch(RestClientResponseException ex)
                 {
-                    int status = ex.getRawStatusCode();
 
-                    System.out.println("Failed in getting userinfo: Status is " + status);
-                    System.out.println("Failed in getting userinfo: Body is " + ex.getResponseBodyAsString());
                 }
             }
         }

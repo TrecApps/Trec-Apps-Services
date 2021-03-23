@@ -148,7 +148,6 @@ public class Oauth2Controller {
         if(account == null)
         {
             // To-Do: authentication failed. Handle it
-            System.out.println("In login endpoint, auth failed!");
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
             return;
         }
@@ -156,8 +155,6 @@ public class Oauth2Controller {
         cook.setHttpOnly(true);         // Not accessibe via JavaScript
         cook.setMaxAge(-1);             // Make it a Session Cookie
         response.addCookie(cook);
-
-        System.out.println("Set cookie in post login oauth endpoint!");
 
         response.addHeader("Location", String.format("/api/auth/oauth2/authorize?client_id=%s&redirect_url=%s",
                 URLEncoder.encode(clientId, StandardCharsets.UTF_8),
@@ -177,7 +174,6 @@ public class Oauth2Controller {
         String code = jwtService.generateOneTimeCode(account, client);
         if(code == null)
         {
-            System.out.println("FAILED to validate client in /authorize endpoint!");
             // To-Do: Handle Error
             return;
         }
@@ -194,14 +190,12 @@ public class Oauth2Controller {
     @PostMapping(value = "/token", consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE, produces="application/json")
     public @ResponseBody OauthToken getToken(@RequestBody MultiValueMap<String, String> request)
     {
-        System.out.println("Token Endpoint called!");
         OauthToken ret = jwtService.verifyOneTimeCode(
                 request.getFirst("code"),
                 request.getFirst("client_id"),
                 request.getFirst("client_secret"));
         if(ret == null)
         {
-            System.out.println("Error Detected in token endpoint!");
             // handle error
 
             //maybe it was a refresh token
@@ -213,13 +207,11 @@ public class Oauth2Controller {
     @GetMapping("/userinfo")
     public @ResponseBody UserInfo getUserInfo(HttpServletRequest req, HttpServletResponse resp)
     {
-        System.out.println("In UserInfo Endpoint!");
         String auth = req.getHeader("Authorization");
         if(auth.startsWith("Bearer"))
             auth = auth.substring(6).trim();
         TrecAccount acc = jwtService.verifyToken(auth);
         if(acc == null) {
-            System.out.println("Failed to verify token!");
             resp.setStatus(HttpStatus.UNAUTHORIZED.value());
             return null;
         }

@@ -65,13 +65,11 @@ public class TokenController
             Cookie cook = new Cookie("JSESSIONID", token.getAccess_token());
             cook.setMaxAge(-1);
             cook.setHttpOnly(true);
-            System.out.println("Successful Authentication");
             resp.addCookie(cook);
             return token.getRefresh_token();
         }
         else
         {
-            System.out.println("Not Authenticated!");
             resp.setStatus(status.value());
             return null;
         }

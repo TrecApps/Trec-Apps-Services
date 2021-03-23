@@ -111,7 +111,6 @@ public class JwtTokenService {
 	{
 		if(publicKey == null)
 		{
-			System.out.println("Key location is " + publicKeyStr);
 			File publicFile = new File(publicKeyStr);
 
 			Scanner keyfis;
@@ -126,8 +125,6 @@ public class JwtTokenService {
 				}
 				
 				keyfis.close();
-				
-				System.out.println("Private Key is " + encKey);
 				
 				X509EncodedKeySpec pubKeySpec = new X509EncodedKeySpec(Base64.getDecoder().decode(encKey));
 				
@@ -195,7 +192,6 @@ public class JwtTokenService {
 			return null;
 
 		if(!verifyUnlocked(account)) {
-			System.out.println("FAILED TO Verify account unlocked!");
 			return null;
 		}
 		Date now = new Date(Calendar.getInstance().getTime().getTime());
@@ -361,19 +357,16 @@ public class JwtTokenService {
 		// Make sure it references a proper account
 		Claim claim = decodedJwt.getClaim("account");
 		Long idLong = claim.asLong();
-		System.out.println("Account ID is " + idLong);
 		if(idLong == null)
 			return null;
 
 		TrecAccount account =accountService.getAccountById(idLong);
 		if(account == null)
 		{
-			System.out.println("Account was null!");
 			return null;
 		}
 		if(!account.isCredentialsNonExpired() || !account.isAccountNonLocked())
 		{
-			System.out.println("Account was invalid! " + account);
 			return null;
 		}
 		claim = decodedJwt.getClaim("client");
@@ -385,8 +378,6 @@ public class JwtTokenService {
 		clientStr = claim.asString();
 		if(client == null || !client.getClientSecret().equals(clientStr))
 		{
-			System.out.println("Client details was invalid! " + client);
-			System.out.println("Secret was " + clientStr);
 			return null;
 		}
 		// All Checks have passed.
@@ -419,7 +410,6 @@ public class JwtTokenService {
 		// One-time code Expired (presumed cause of null value here)
 		if(decodedJwt == null)
 		{
-			System.out.println("verify One time code, decoded failed!");
 			return null;
 		}
 		Claim claim = decodedJwt.getClaim("account");
@@ -429,7 +419,6 @@ public class JwtTokenService {
 		// If the Account ID was not provided, or it references a nonexistent account, then code is invalid
 		if(tId == null || (account = accountService.getAccountById(tId)) == null)
 		{
-			System.out.println("Verify One time code, account retrieval failed!");
 			return null;
 		}
 		// Make sure that this code had not previously been used
@@ -438,7 +427,6 @@ public class JwtTokenService {
 
 		if(oTime == null || account.getOauthUse() != (oTime + 1))
 		{
-			System.out.println("oTime == " + oTime + " and account time == " + account.getOauthUse());
 			return null;
 		}
 		// Make sure that once the code was used, it cannot be used again
@@ -453,8 +441,6 @@ public class JwtTokenService {
 
 		if(clientStr == null || (clientObj = clientService.loadClientByClientId(clientStr)) == null)
 		{
-			System.out.println("Verify One time code, client Str = " + clientStr);
-
 			return null;
 		}
 		if( clientStr.equals(client) && clientObj.getClientSecret().equals(clientSec))
@@ -469,12 +455,6 @@ public class JwtTokenService {
 			ret.setRefresh_token(generateAuthToken(account, clientObj));
 			return ret;
 		}
-
-		System.out.println("In Verify One Time Code!");
-		System.out.println("clientStr = " + clientStr);
-		System.out.println("client    = " + client);
-		System.out.println("clientSec = " + clientSec);
-		System.out.println("Exiting verification of one time code!");
 
 		return null;
 	}

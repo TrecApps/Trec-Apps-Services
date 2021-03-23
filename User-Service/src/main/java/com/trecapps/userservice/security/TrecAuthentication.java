@@ -58,9 +58,6 @@ public class TrecAuthentication implements Authentication {
 
     @Override
     public boolean isAuthenticated() {
-        System.out.println("isNonExp = " + account.isAccountNonExpired()+
-                ", nonLocked = " + account.isAccountNonLocked() + ", isTrusted = " + isTrusted);
-
         return account.isAccountNonExpired() && account.isAccountNonLocked() && isTrusted;
     }
 

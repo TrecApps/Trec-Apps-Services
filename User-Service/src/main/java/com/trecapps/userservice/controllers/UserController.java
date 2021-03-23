@@ -76,7 +76,6 @@ public class UserController {
 		
 		if(login == null)
 		{
-			System.out.println("Login Object was Null!");
 			response.setStatus(HttpStatus.BAD_REQUEST.value());
 			response.getWriter().write("Null Login Object Detected!");
 			return;
@@ -86,18 +85,15 @@ public class UserController {
 		TrecAccount account = null;
 		if(login.getUsername() != null)
 		{
-			System.out.println("Login using username");
 			account = accountService.logInUsername(login.getUsername(), login.getPassword());
 		}
 		else if(login.getEmail() != null)
 		{
-			System.out.println("Login using email");
 			account = accountService.logInEmail(login.getEmail(), login.getPassword());
 		}
 		
 		if(account == null)
 		{
-			System.out.println("Account was null!");
 			response.setStatus(HttpStatus.UNAUTHORIZED.value());
 			return;
 		}
@@ -110,7 +106,6 @@ public class UserController {
 	ResponseEntity<TrecAccountExt> getAccount()
 	{
 		TrecAuthentication user = ((TrecAuthentication)SecurityContextHolder.getContext().getAuthentication());
-		System.out.println(user);
 		TrecAccount acc = user.getAccount();
 		acc.setOauthUse(0);
 		acc.setFailedLoginAttempts((byte)0);
@@ -207,13 +202,10 @@ public class UserController {
 		
 		if(account == null)
 		{
-			System.out.println("Updating Password, account was null!");
 			return false;
 		}
 		if(!account.equals(user))
 		{
-			System.out.println("Updating Password, Authenticated account did not match account specified by Params!");
-			System.out.println("Accounts were " + account + "\n\tand " + user);
 			return false;
 		}
 		

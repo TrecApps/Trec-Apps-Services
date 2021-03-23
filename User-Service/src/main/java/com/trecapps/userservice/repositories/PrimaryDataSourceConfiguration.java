@@ -42,7 +42,6 @@ public class PrimaryDataSourceConfiguration
 	@ConfigurationProperties("spring.datasource-primary.configuration")
 	public DataSource primaryDataSource(@Qualifier("primaryDataSourceProperties") DataSourceProperties primaryDataSourceProperties) {
 		DataSource ds = primaryDataSourceProperties.initializeDataSourceBuilder().type(HikariDataSource.class).build();
-		System.out.println("Primary DataSource is " + ds);
 		return ds;
 	}
 	
@@ -63,9 +62,7 @@ public class PrimaryDataSourceConfiguration
 			.persistenceUnit("primaryDataSource")
 			.properties(primaryJpaProperties)
 			.build();
-	
-        System.out.println("Primary Entity Manager is " + ret);
-        
+
         return ret;
 	}
 	

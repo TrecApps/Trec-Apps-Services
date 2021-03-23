@@ -29,7 +29,6 @@ public class TrecSecurityContext implements SecurityContextRepository {
 
 
         HttpServletRequest req = requestResponseHolder.getRequest();
-        System.out.println("Path Info " + req.getPathInfo());
         SecurityContext ret = getContextFromCookie(req);
         if(ret == null)
             return SecurityContextHolder.createEmptyContext();
@@ -41,14 +40,12 @@ public class TrecSecurityContext implements SecurityContextRepository {
         Cookie cook;
         if(!(context.getAuthentication() instanceof TrecAuthentication))
         {
-            System.out.println("Not TrecAuthentication in save Context");
             cook = new Cookie("JSESSIONID", null);
             cook.setHttpOnly(true);
             cook.setMaxAge(0);
         }
         else
         {
-            System.out.println("TrecAccount Detected!");
             TrecAuthentication trecAuth = (TrecAuthentication) context.getAuthentication();
 
             // Cookie will have been set by the endpoint!
@@ -56,11 +53,9 @@ public class TrecSecurityContext implements SecurityContextRepository {
                 return;
 
             if (trecAuth == null) {
-                System.out.println("TrecAccount was NULL");
                 cook = new Cookie("JSESSIONID", null);
                 cook.setMaxAge(0);
             } else {
-                System.out.println("Setting Cookie in Context");
                 cook = new Cookie("JSESSIONID", jwtService.generateToken(trecAuth.getAccount()));
                 cook.setMaxAge(-1);
 
@@ -83,7 +78,6 @@ public class TrecSecurityContext implements SecurityContextRepository {
         Cookie[] cookies = request.getCookies();
         SecurityContext context = SecurityContextHolder.createEmptyContext();
         if(cookies == null) {
-            System.out.println("Null Cookies detected");
             return context;
         }
         for(Cookie c: cookies)
@@ -98,7 +92,6 @@ public class TrecSecurityContext implements SecurityContextRepository {
 
                 TrecAuthentication tAuth = new TrecAuthentication(acc);
                 if(name.equals("OSESSIONID")) {
-                    System.out.println("O Token detected!");
                     tAuth.setRegularSession(false);
                 }
                 context.setAuthentication(tAuth);

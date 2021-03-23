@@ -64,7 +64,6 @@ public class UpdateController {
     @PostMapping("/Region")
     ResponseEntity<String> addRegion(@RequestBody RegionEntry entry)
     {
-        System.out.println("region entry is " + entry);
         String ret = updateService.submitRegion(entry, false);
         if("".equals(ret))
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);

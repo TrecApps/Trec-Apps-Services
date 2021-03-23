@@ -26,7 +26,6 @@ public class RetrievalController {
     {
         this.service = service;
         this.clientId = clientId;
-        System.out.println("In Retrieval Controller Constructor: client Id is " + clientId);
     }
 
     @GetMapping(value = "/isAuth", produces = "text/plain")
@@ -37,12 +36,7 @@ public class RetrievalController {
 
         boolean isAuthenticated = (auth != null && !(auth instanceof AnonymousAuthenticationToken));
 
-
-
-        System.out.println("is Auth == " + isAuthenticated);
-
         String ret = isAuthenticated ? "" : clientId;
-        System.out.println("Ret is " + ret);
         return ret;
     }
 

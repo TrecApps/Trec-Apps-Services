@@ -44,7 +44,6 @@ public class TrecOauthClientService // implements ClientDetailsService
 		}
 		
 		TrecOauthClient client = new TrecOauthClient(name, owner, newId, null, type, newSecret);
-		System.out.println(client);
 		oauthRepo.save(client);
 		
 		return client;

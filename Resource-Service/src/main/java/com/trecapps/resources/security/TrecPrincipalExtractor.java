@@ -17,7 +17,6 @@ public class TrecPrincipalExtractor implements PrincipalExtractor
     @Override
     public Object extractPrincipal(Map<String, Object> map) {
 
-        System.out.println("Extracting Principal");
         Object id = map.get("sub");
 
         Long lId;
