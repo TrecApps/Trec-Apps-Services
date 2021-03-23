@@ -14,10 +14,21 @@ public class TrecAuthentication implements Authentication {
     TrecAccount account;
     boolean isTrusted;
 
+    boolean regularSession;
+
     public TrecAuthentication(TrecAccount account)
     {
         this.account = account;
         isTrusted = true;
+        regularSession = true;
+    }
+
+    public boolean isRegularSession() {
+        return regularSession;
+    }
+
+    public void setRegularSession(boolean regularSession) {
+        this.regularSession = regularSession;
     }
 
     public TrecAccount getAccount()
@@ -47,6 +58,9 @@ public class TrecAuthentication implements Authentication {
 
     @Override
     public boolean isAuthenticated() {
+        System.out.println("isNonExp = " + account.isAccountNonExpired()+
+                ", nonLocked = " + account.isAccountNonLocked() + ", isTrusted = " + isTrusted);
+
         return account.isAccountNonExpired() && account.isAccountNonLocked() && isTrusted;
     }
 

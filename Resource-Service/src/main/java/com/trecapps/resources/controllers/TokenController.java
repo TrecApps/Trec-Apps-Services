@@ -63,7 +63,7 @@ public class TokenController
         {
             OauthToken token = response.getBody();
             Cookie cook = new Cookie("JSESSIONID", token.getAccess_token());
-            cook.setMaxAge(0);
+            cook.setMaxAge(-1);
             cook.setHttpOnly(true);
             System.out.println("Successful Authentication");
             resp.addCookie(cook);

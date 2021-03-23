@@ -26,6 +26,8 @@ public class TrecSecurityContext implements SecurityContextRepository {
 
     @Override
     public SecurityContext loadContext(HttpRequestResponseHolder requestResponseHolder) {
+
+
         HttpServletRequest req = requestResponseHolder.getRequest();
         System.out.println("Path Info " + req.getPathInfo());
         SecurityContext ret = getContextFromCookie(req);
@@ -49,11 +51,16 @@ public class TrecSecurityContext implements SecurityContextRepository {
             System.out.println("TrecAccount Detected!");
             TrecAuthentication trecAuth = (TrecAuthentication) context.getAuthentication();
 
+            // Cookie will have been set by the endpoint!
+            if(!trecAuth.isRegularSession())
+                return;
+
             if (trecAuth == null) {
                 System.out.println("TrecAccount was NULL");
                 cook = new Cookie("JSESSIONID", null);
                 cook.setMaxAge(0);
             } else {
+                System.out.println("Setting Cookie in Context");
                 cook = new Cookie("JSESSIONID", jwtService.generateToken(trecAuth.getAccount()));
                 cook.setMaxAge(-1);
 
@@ -81,15 +88,20 @@ public class TrecSecurityContext implements SecurityContextRepository {
         }
         for(Cookie c: cookies)
         {
-            if(c.getName().equals("JSESSIONID"))
+            String name = c.getName();
+            if(name.equals("JSESSIONID") || name.equals("OSESSIONID"))
             {
                 String data = c.getValue();
                 TrecAccount acc = jwtService.verifyToken(data);
                 if(acc == null)
                     return context;
 
-
-                context.setAuthentication(new TrecAuthentication(acc));
+                TrecAuthentication tAuth = new TrecAuthentication(acc);
+                if(name.equals("OSESSIONID")) {
+                    System.out.println("O Token detected!");
+                    tAuth.setRegularSession(false);
+                }
+                context.setAuthentication(tAuth);
                 return context;
             }
         }

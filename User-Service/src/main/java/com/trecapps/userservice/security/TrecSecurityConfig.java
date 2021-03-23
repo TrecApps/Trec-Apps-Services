@@ -4,6 +4,7 @@ import com.trecapps.userservice.services.TrecAccountService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 
@@ -22,12 +23,22 @@ public class TrecSecurityConfig extends WebSecurityConfigurerAdapter {
             "/auth/users/Account",
             "/auth/users/UpdateUser",
             "/auth/users/UpdatePassword",
-            "/auth/clients/*"
+            "/auth/clients/*",
+            "/oauth2/authorize",
+            "/users/Validate",
+            "/users/Account",
+            "/users/UpdateUser",
+            "/users/UpdatePassword",
+            "/clients/*"
     };
 
     String allowedEndpoints[] = {
             "/auth/users/LogIn",
-            "/auth/users/UserExists"
+            "/auth/users/UserExists",
+            "/auth/oauth2/userinfo",
+            "/users/LogIn",
+            "/users/UserExists",
+            "/oauth2/userinfo"
     };
 
     @Override
@@ -37,11 +48,13 @@ public class TrecSecurityConfig extends WebSecurityConfigurerAdapter {
                 .userDetailsService(accountService)
                 .securityContext().securityContextRepository(secContext).and()
                 .authorizeRequests()
-                .antMatchers(allowedEndpoints).permitAll()
                 .antMatchers(restrictedEndpoints).authenticated().and()
                 .httpBasic();
         // http.authorizeRequests().antMatchers("/*").permitAll();
     }
 
-
+    @Override
+    public void configure(WebSecurity web) throws Exception {
+        web.ignoring().antMatchers(allowedEndpoints);
+    }
 }

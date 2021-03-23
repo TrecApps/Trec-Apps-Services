@@ -194,9 +194,10 @@ public class JwtTokenService {
 		if(!setKeys())
 			return null;
 
-		if(!verifyUnlocked(account))
+		if(!verifyUnlocked(account)) {
+			System.out.println("FAILED TO Verify account unlocked!");
 			return null;
-
+		}
 		Date now = new Date(Calendar.getInstance().getTime().getTime());
 		Date exp = new Date(now.getTime() + TEN_MINUTES);
 

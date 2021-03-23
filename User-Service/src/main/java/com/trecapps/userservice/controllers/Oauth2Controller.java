@@ -9,6 +9,7 @@ import com.trecapps.userservice.services.JwtTokenService;
 import com.trecapps.userservice.services.TrecAccountService;
 import com.trecapps.userservice.services.TrecOauthClientService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.RequestEntity;
 import org.springframework.security.core.Authentication;
@@ -147,13 +148,16 @@ public class Oauth2Controller {
         if(account == null)
         {
             // To-Do: authentication failed. Handle it
-
+            System.out.println("In login endpoint, auth failed!");
+            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
             return;
         }
-        Cookie cook = new Cookie("JSESSIONID", jwtService.generateSession(account, client, null));
+        Cookie cook = new Cookie("OSESSIONID", jwtService.generateSession(account, client, null));
         cook.setHttpOnly(true);         // Not accessibe via JavaScript
         cook.setMaxAge(-1);             // Make it a Session Cookie
         response.addCookie(cook);
+
+        System.out.println("Set cookie in post login oauth endpoint!");
 
         response.addHeader("Location", String.format("/api/auth/oauth2/authorize?client_id=%s&redirect_url=%s",
                 URLEncoder.encode(clientId, StandardCharsets.UTF_8),
@@ -207,16 +211,18 @@ public class Oauth2Controller {
     }
 
     @GetMapping("/userinfo")
-    public UserInfo getUserInfo(HttpServletRequest req)
+    public @ResponseBody UserInfo getUserInfo(HttpServletRequest req, HttpServletResponse resp)
     {
         System.out.println("In UserInfo Endpoint!");
         String auth = req.getHeader("Authorization");
         if(auth.startsWith("Bearer"))
             auth = auth.substring(6).trim();
         TrecAccount acc = jwtService.verifyToken(auth);
-        if(acc == null)
+        if(acc == null) {
+            System.out.println("Failed to verify token!");
+            resp.setStatus(HttpStatus.UNAUTHORIZED.value());
             return null;
-
+        }
         UserInfo ret = new UserInfo();
 
         ret.setEmail(acc.getMainEmail());
@@ -238,6 +244,7 @@ public class Oauth2Controller {
             roles += ga.getAuthority();
         }
         ret.setRoles(roles);
+        resp.setStatus(HttpStatus.OK.value());
         return ret;
 
     }

@@ -90,7 +90,7 @@ public class TrecOauthClientRepository  implements SecurityContextRepository {
             if (c.getName().equals(cookieName))
             {
                 HttpHeaders headers = new HttpHeaders();
-                headers.setBasicAuth(c.getValue());
+                headers.setBearerAuth(c.getValue());
                 HttpEntity entity = new HttpEntity(headers);
                 try
                 {
@@ -112,6 +112,7 @@ public class TrecOauthClientRepository  implements SecurityContextRepository {
                     List<GrantedAuthority> roles = authExtractor.extractAuthorities(userAtts);
                     if(user instanceof UserDetails && roles != null)
                     {
+                        System.out.println("Setting context!");
                         UserDetails userDetails = (UserDetails) user;
                         UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(userDetails, null, roles);
                         context.setAuthentication(token);
@@ -121,7 +122,9 @@ public class TrecOauthClientRepository  implements SecurityContextRepository {
                 }catch(RestClientResponseException ex)
                 {
                     int status = ex.getRawStatusCode();
+
                     System.out.println("Failed in getting userinfo: Status is " + status);
+                    System.out.println("Failed in getting userinfo: Body is " + ex.getResponseBodyAsString());
                 }
             }
         }
