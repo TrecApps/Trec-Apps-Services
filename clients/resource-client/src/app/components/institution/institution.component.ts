@@ -25,7 +25,7 @@ export class InstitutionComponent implements OnInit {
   ngOnInit(): void {
   }
 
-  updateReg() {
+  updateInst() {
     if(!this.mainInstitution){
       return;
     }

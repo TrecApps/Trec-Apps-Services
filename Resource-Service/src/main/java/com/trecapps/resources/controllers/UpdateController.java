@@ -26,7 +26,7 @@ public class UpdateController {
 //    public void checkAuth()
 
     @PostMapping("/PublicFigure")
-    ResponseEntity<String> addPublicFigure(PublicFigureEntry entry)
+    ResponseEntity<String> addPublicFigure(@RequestBody PublicFigureEntry entry)
     {
         String ret = updateService.submitPublicFigure(entry, false);
         if("".equals(ret))
@@ -35,7 +35,7 @@ public class UpdateController {
     }
 
     @PutMapping("/PublicFigure")
-    ResponseEntity<String> updatePublicFigure(PublicFigureEntry entry)
+    ResponseEntity<String> updatePublicFigure(@RequestBody PublicFigureEntry entry)
     {
         String ret = updateService.submitPublicFigure(entry, true);
         if("".equals(ret))
@@ -44,7 +44,7 @@ public class UpdateController {
     }
 
     @PostMapping("/MediaOutlet")
-    ResponseEntity<String> addMediaOutlet(MediaOutletEntry entry)
+    ResponseEntity<String> addMediaOutlet(@RequestBody MediaOutletEntry entry)
     {
         String ret = updateService.submitMediaOutlet(entry, false);
         if("".equals(ret))
@@ -53,7 +53,7 @@ public class UpdateController {
     }
 
     @PutMapping("/MediaOutlet")
-    ResponseEntity<String> updateMediaOutlet(MediaOutletEntry entry)
+    ResponseEntity<String> updateMediaOutlet(@RequestBody MediaOutletEntry entry)
     {
         String ret = updateService.submitMediaOutlet(entry, true);
         if("".equals(ret))
@@ -62,8 +62,9 @@ public class UpdateController {
     }
 
     @PostMapping("/Region")
-    ResponseEntity<String> addRegion(RegionEntry entry)
+    ResponseEntity<String> addRegion(@RequestBody RegionEntry entry)
     {
+        System.out.println("region entry is " + entry);
         String ret = updateService.submitRegion(entry, false);
         if("".equals(ret))
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
@@ -71,7 +72,7 @@ public class UpdateController {
     }
 
     @PutMapping("/Region")
-    ResponseEntity<String> updateRegion(RegionEntry entry)
+    ResponseEntity<String> updateRegion(@RequestBody RegionEntry entry)
     {
         String ret = updateService.submitRegion(entry, true);
         if("".equals(ret))
@@ -80,7 +81,7 @@ public class UpdateController {
     }
 
     @PostMapping("/Institution")
-    ResponseEntity<String> addInstitution(InstitutionEntry entry)
+    ResponseEntity<String> addInstitution(@RequestBody InstitutionEntry entry)
     {
         String ret = updateService.submitInstitution(entry, false);
         if("".equals(ret))
@@ -89,7 +90,7 @@ public class UpdateController {
     }
 
     @PutMapping("/Institution")
-    ResponseEntity<String> updateInstitution(InstitutionEntry entry)
+    ResponseEntity<String> updateInstitution(@RequestBody InstitutionEntry entry)
     {
         String ret = updateService.submitInstitution(entry, true);
         if("".equals(ret))

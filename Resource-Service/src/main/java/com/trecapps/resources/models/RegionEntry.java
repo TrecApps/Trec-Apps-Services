@@ -56,6 +56,12 @@ public class RegionEntry {
 	public void setContents(String contents) {
 		this.contents = contents;
 	}
-	
-	
+
+	@Override
+	public String toString() {
+		return "RegionEntry{" +
+				"region=" + region +
+				", contents='" + contents + '\'' +
+				'}';
+	}
 }

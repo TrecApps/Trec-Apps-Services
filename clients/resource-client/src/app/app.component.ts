@@ -18,8 +18,9 @@ export class AppComponent implements OnInit{
   }
 
   ngOnInit(): void {
-    this.route.params.subscribe(params=>{
+    this.route.queryParams.subscribe(params=>{
       let code = params['code'];
+      console.log(`code=${code}`);
       this.authService.login(false,code);
     });
   }

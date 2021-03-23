@@ -25,7 +25,7 @@ export class OutletComponent implements OnInit {
   ngOnInit(): void {
   }
 
-  updateReg() {
+  updateOut() {
     if(!this.mainOutlet){
       return;
     }

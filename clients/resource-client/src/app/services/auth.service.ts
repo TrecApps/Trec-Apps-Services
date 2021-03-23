@@ -19,6 +19,7 @@ export class AuthService {
       this.httpClient.post(environment.RESOURCE_URL + "tokenize", code || this.refreshToken).toPromise().then((str: String) =>{
         this.refreshToken = str;
         this.isAuthenticated = ((str != null) && (str != undefined));
+        console.log("Authenticated!");
       }).catch(() =>{
         this.refreshToken = null;
         this.isAuthenticated = false;

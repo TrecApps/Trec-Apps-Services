@@ -14,6 +14,7 @@ public class TrecAuthorityExtractor implements AuthoritiesExtractor
     @Override
     public List<GrantedAuthority> extractAuthorities(Map<String, Object> map) {
 
+        System.out.println("Extracting Authorities!");
         List<GrantedAuthority> ret = new ArrayList<>();
 
         String roles = map.get("roles").toString();

@@ -187,8 +187,8 @@ public class Oauth2Controller {
         response.setStatus(HttpServletResponse.SC_FOUND);
     }
 
-    @PostMapping(value = "/token", consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
-    public OauthToken getToken(@RequestBody MultiValueMap<String, String> request)
+    @PostMapping(value = "/token", consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE, produces="application/json")
+    public @ResponseBody OauthToken getToken(@RequestBody MultiValueMap<String, String> request)
     {
         System.out.println("Token Endpoint called!");
         OauthToken ret = jwtService.verifyOneTimeCode(

@@ -25,7 +25,7 @@ export class FigureComponent implements OnInit {
   ngOnInit(): void {
   }
 
-  updateReg() {
+  updateFig() {
     if(!this.mainFigure){
       return;
     }

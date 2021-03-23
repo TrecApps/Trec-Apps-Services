@@ -11,14 +11,18 @@ import { FormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { WelcomeComponent } from './components/welcome/welcome.component';
 
+import { MarkedPipe } from './resources/marked.pipe';
+
 @NgModule({
   declarations: [
+    MarkedPipe,
     AppComponent,
     RegionComponent,
     InstitutionComponent,
     FigureComponent,
     OutletComponent,
     WelcomeComponent
+    
   ],
   imports: [
     BrowserModule,
