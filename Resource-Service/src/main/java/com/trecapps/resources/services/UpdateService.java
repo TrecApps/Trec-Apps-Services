@@ -5,7 +5,6 @@ import com.trecapps.resources.repos.InstitutionRepo;
 import com.trecapps.resources.repos.MediaOutletRepo;
 import com.trecapps.resources.repos.PublicFigureRepo;
 import com.trecapps.resources.repos.RegionRepo;
-import org.hibernate.sql.Update;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
