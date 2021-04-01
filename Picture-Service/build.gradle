@@ -1,0 +1,111 @@
+plugins {
+
+    // Apply the java plugin to add support for Java
+    id 'java'
+
+    // Apply the application plugin to add support for building a CLI application.
+    id 'application'
+
+    // Apply the java-library plugin to add support for Java Library
+    id 'java-library'
+    id 'org.springframework.boot' version '2.4.2'
+
+    id 'jacoco'
+}
+
+
+apply plugin: 'java'
+apply plugin: 'java-library'
+apply plugin: 'org.springframework.boot'
+apply plugin: 'jacoco'
+
+repositories {
+    // Use jcenter for resolving dependencies.
+    // You can declare any Maven/Ivy/file repository here.
+    mavenCentral()
+}
+
+group = 'com.trecapps'
+
+dependencies {
+    // Enable Discovery
+    implementation 'org.springframework.cloud:spring-cloud-starter-netflix-eureka-client:+'
+    implementation 'org.springframework.cloud:spring-cloud-commons:+'
+    implementation 'com.google.code.gson:gson:2.8.2'
+    // Use JWT to verify user
+    implementation 'com.auth0:java-jwt:+'
+    implementation 'org.springframework.boot:spring-boot-starter-security:+'
+    implementation 'org.springframework.boot:spring-boot-starter-oauth2-client:+'
+    implementation 'org.springframework.security.oauth.boot:spring-security-oauth2-autoconfigure:+'
+
+    // Used for writing files
+    // AWS S3
+    implementation 'com.amazonaws:aws-java-sdk:+'
+    // Azure Storage
+    // implementation 'com.microsoft.azure:spring-starter-azure-storage:+'
+
+    // Spring Boot features
+    implementation 'org.springframework.boot:spring-boot-starter:+'
+    implementation 'org.springframework.boot:spring-boot-starter-web:+'
+    implementation 'org.springframework.boot:spring-boot-starter-actuator:+'
+    implementation 'org.springframework.boot:spring-boot-devtools:+'
+    implementation 'org.springframework.boot:spring-boot-starter-webflux:+'
+
+    // DB Support
+    implementation 'org.hibernate:hibernate-core:5.4.11.Final'
+    implementation 'org.hibernate:hibernate-entitymanager:5.4.11.Final'
+    implementation 'javax.validation:validation-api:+'
+
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa:+'
+
+    implementation 'mysql:mysql-connector-java:+' // mySQL
+
+    // JSON Object Mapping
+    implementation 'org.json:json:20200518'
+
+
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.6.0'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine'
+
+    components {
+        withModule('org.springframework:spring-beans') {
+            allVariants {
+                withDependencyConstraints {
+                    // Need to patch constraints because snakeyaml is an optional dependency
+                    it.findAll { it.name == 'snakeyaml' }.each { it.version { strictly '1.19' } }
+                }
+            }
+        }
+    }
+}
+
+task prepareStorage {
+    mkdir "$buildDir/storage"
+}
+
+test.dependsOn(prepareStorage)
+
+jacoco {
+    toolVersion = '0.8.5'
+}
+
+jacocoTestReport {
+    def buildDir = "$buildDir".toString()
+    reports {
+        xml.setEnabled(true)
+        xml.destination file(buildDir + "/jacoco/jacoco.xml")
+        csv.setEnabled(false)
+        html.setEnabled(true)
+    }
+}
+test {
+    useJUnitPlatform()
+}
+
+// Make sure Jacoco Test report runs
+test.finalizedBy(project.tasks.jacocoTestReport)
+
+application {
+    // Define the main class for the application.
+    mainClassName = 'com.trecapps.pictures.Driver'
+}
