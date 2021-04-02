@@ -3,6 +3,8 @@ package com.trecapps.userservice.models;
 import org.springframework.stereotype.Component;
 
 import java.math.BigInteger;
+import java.sql.Date;
+import java.sql.Timestamp;
 
 @Component
 public class UserInfo {
@@ -14,6 +16,16 @@ public class UserInfo {
     String name, given_name, family_name;
 
     String roles, preferred_username;
+
+    Timestamp birthday;
+
+    public Timestamp getBirthday() {
+        return birthday;
+    }
+
+    public void setBirthday(Timestamp birthday) {
+        this.birthday = birthday;
+    }
 
     public UserInfo() {
     }

@@ -224,6 +224,7 @@ public class Oauth2Controller {
         ret.setPreferred_username(acc.getUsername());
         ret.setEmail_verified((acc.getIsValidated() % 2) > 0);
         ret.setSub(acc.getAccountId());
+        ret.setBirthday(acc.getBirthday());
 
         var auths = acc.getAuthorities();
 

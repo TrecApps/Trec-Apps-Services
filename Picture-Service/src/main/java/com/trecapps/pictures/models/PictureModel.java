@@ -2,9 +2,7 @@ package com.trecapps.pictures.models;
 
 import org.hibernate.validator.constraints.Length;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.sql.Date;
 
 @Table
@@ -12,6 +10,7 @@ import java.sql.Date;
 public class PictureModel
 {
     @Id
+    @GeneratedValue(strategy= GenerationType.AUTO)
     String id;          // Id, used to identify the actual file
 
     byte safe;          // Whether it has been cleared of any issue by a TrecApps employee

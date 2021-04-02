@@ -1,14 +1,13 @@
 package com.trecapps.pictures.models;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 @Table
 @Entity
 public class PictureFlag {
 
     @Id
+    @GeneratedValue(strategy= GenerationType.AUTO)
     String id;
 
     byte type;
@@ -16,6 +15,16 @@ public class PictureFlag {
     byte severity;
 
     String details;
+
+    byte resolved;
+
+    public byte isResolved() {
+        return resolved;
+    }
+
+    public void setResolved(byte resolved) {
+        this.resolved = resolved;
+    }
 
     public PictureFlag() {
     }
