@@ -1,5 +1,6 @@
 package com.trecapps.pictures.services;
 
+import com.trecapps.pictures.models.PictureEntry;
 import com.trecapps.pictures.models.PictureFlag;
 import com.trecapps.pictures.models.PictureModel;
 import com.trecapps.pictures.repos.PictureFlagRepo;
@@ -17,10 +18,12 @@ public class PictureFlagService {
 
     PictureModelRepo mRepo;
     PictureFlagRepo fRepo;
+    PictureStorageHolder storage;
 
     @Autowired
-    public PictureFlagService(PictureModelRepo mRepo, PictureFlagRepo fRepo)
+    public PictureFlagService(PictureModelRepo mRepo, PictureFlagRepo fRepo, PictureStorageHolder storage)
     {
+        this.storage = storage;
         this.mRepo = mRepo;
         this.fRepo = fRepo;
     }
@@ -55,9 +58,20 @@ public class PictureFlagService {
         return fRepo.getUnresolvedFlags(page);
     }
 
-    public PictureModel getFlaggedImage(String id)
+    public PictureEntry getFlaggedImage(String id)
     {
-        return mRepo.getPictureByFlagId(id);
+        PictureModel mod = mRepo.getPictureByFlagId(id);
+        try
+        {
+            PictureEntry ent = new PictureEntry();
+            ent.setData(storage.retrieveContents(mod.getId()));
+            ent.setModel(mod);
+            return ent;
+        }
+        catch(Exception e)
+        {
+            return null;
+        }
     }
 
     public String resolveFlag(String flagId, boolean affirm)

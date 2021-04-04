@@ -28,7 +28,7 @@ public class PictureService
         this.storage = storage;
     }
 
-    List<PictureModel> getPictures(boolean safe, long id, Date before, Date after, int pageNum, int size)
+    public List<PictureModel> getPictures(boolean safe, long id, Date before, Date after, int pageNum, int size)
     {
         Pageable page = PageRequest.of(pageNum, size);
         List<PictureModel> ret;
@@ -90,7 +90,7 @@ public class PictureService
         return ret;
     }
 
-    String submitPicture(PictureEntry entry)
+    public String submitPicture(PictureEntry entry)
     {
         PictureModel mod = entry.getModel();
 
@@ -116,7 +116,22 @@ public class PictureService
         return result;
     }
 
-    String removePicture(long id, String pictureId)
+    public PictureEntry getPicture(String id)
+    {
+        if(!repo.existsById(id))
+            return null;
+        PictureEntry ret;
+        try {
+            ret = new PictureEntry();
+            ret.setModel(repo.getOne(id));
+            ret.setData(storage.retrieveContents(id));
+        } catch (IOException e) {
+            ret = null;
+        }
+        return ret;
+    }
+
+    public String removePicture(long id, String pictureId)
     {
         if(pictureId == null)
             return "Null Picture Id Provided!";

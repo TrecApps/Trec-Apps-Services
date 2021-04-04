@@ -78,6 +78,14 @@ public class PictureModel
         this.extension = extension;
     }
 
+    public long getSubmitter() {
+        return submitter;
+    }
+
+    public void setSubmitter(long submitter) {
+        this.submitter = submitter;
+    }
+
     @Override
     public String toString() {
         return "PictureModel{" +
