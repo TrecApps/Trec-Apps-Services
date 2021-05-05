@@ -4,6 +4,7 @@
 
 export const environment = {
   production: false,
+  AUTH_URL: "http://localhost:4200/api/auth/oauth2/",
   RESOURCE_URL: 'http://localhost:4200/api/resources/search/',
   FALSEHOOD_SEARCH: 'http://localhost:4200/api/falsehood-search/',
   FALSEHOOD_WRITE: 'http://localhost:4200/api/falsehoods/'
