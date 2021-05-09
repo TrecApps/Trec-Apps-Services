@@ -12,6 +12,7 @@ import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.client.RestTemplate;
 
 import javax.servlet.http.Cookie;
@@ -38,8 +39,8 @@ public class TokenController
 
 
     @PostMapping("/tokenize")
-    public String tokenize(@RequestBody String code,
-                         HttpServletResponse resp) throws IOException {
+    public @ResponseBody String tokenize(@RequestBody String code,
+                    HttpServletResponse resp) throws IOException {
         MultiValueMap<String, String> requestBody = new LinkedMultiValueMap<>();
         requestBody.add("code", code);
         requestBody.add("client_id", clientId);

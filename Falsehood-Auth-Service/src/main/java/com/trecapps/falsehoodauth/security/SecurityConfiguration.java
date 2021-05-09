@@ -13,7 +13,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter
     TrecOauthClientRepository trecOauthClientRepository;
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http.antMatcher("/**").authorizeRequests().antMatchers("/isAuth").permitAll().and()
+        http.csrf().disable().antMatcher("/**").authorizeRequests().antMatchers("/isAuth").permitAll().and()
                 .authorizeRequests().antMatchers("/tokenize").permitAll().and()
                 .authorizeRequests().antMatchers("/login**").permitAll()
                 .anyRequest().authenticated().and()

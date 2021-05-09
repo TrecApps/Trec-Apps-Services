@@ -55,7 +55,7 @@ public class TokenController
     }
 
     @PostMapping("/tokenize")
-    public String tokenize(@RequestBody String code,
+    public @ResponseBody String tokenize(@RequestBody String code,
                          HttpServletResponse resp) throws IOException {
         MultiValueMap<String, String> requestBody = new LinkedMultiValueMap<>();
         requestBody.add("code", code);
