@@ -29,16 +29,17 @@ zuul:
       path: /resources/**
       sensitiveHeaders: Cookia
       url: http://localhost:8083/resources/
+    falsehoods: # port 8085 Falsehoods Service (Requires Authentication)
+      path: /falsehoods/**
+      sensitiveHeaders: Cookia
+      url: http://localhost:8085/falsehoods/
 #      strip-prefix: false
 #      serviceId: resource-service
 #    falsehoods_search:        # port 8084 Search Service
 #      path: /falsehood-search/**
 #      strip-prefix: false
 #      serviceId: falsehood-search-service
-#    falsehoods:               # port 8085 Falsehoods Service (Requires Authentication)
-#      path: /falsehoods/**
-#      strip-prefix: false
-#      serviceId: falsehood-service
+
 #    pictures:                 # port 8086 Manages Pictures
 #      path: /pictures/**
 #      strip-prefix: false
