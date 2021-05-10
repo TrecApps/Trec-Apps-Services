@@ -15,8 +15,11 @@ import { PublicFigureComponent } from './components/public-figure/public-figure.
 import { PublicFalsehoodSearchComponent } from './components/public-falsehood-search/public-falsehood-search.component';
 import { FalsehoodSearchComponent } from './components/falsehood-search/falsehood-search.component';
 
+import { MarkedPipe } from './resources/marked.pipe';
+
 @NgModule({
   declarations: [
+    MarkedPipe,
     AppComponent,
     WelcomeComponent,
     FalsehoodsComponent,
