@@ -16,6 +16,7 @@ import { PublicFalsehoodSearchComponent } from './components/public-falsehood-se
 import { FalsehoodSearchComponent } from './components/falsehood-search/falsehood-search.component';
 
 import { MarkedPipe } from './resources/marked.pipe';
+import { PublicFalsehoodsComponent } from './components/public-falsehoods/public-falsehoods.component';
 
 @NgModule({
   declarations: [
@@ -28,7 +29,8 @@ import { MarkedPipe } from './resources/marked.pipe';
     MediaOutletComponent,
     PublicFigureComponent,
     PublicFalsehoodSearchComponent,
-    FalsehoodSearchComponent
+    FalsehoodSearchComponent,
+    PublicFalsehoodsComponent
   ],
   imports: [
     BrowserModule,
