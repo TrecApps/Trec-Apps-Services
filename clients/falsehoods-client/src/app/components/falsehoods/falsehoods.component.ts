@@ -90,12 +90,13 @@ export class FalsehoodsComponent implements OnInit {
   }
 
   startCreateNew() {
-    this.createNew = true;
     this.doSearch = false;
     this.newFalsehood = new FullFalsehood();
     this.newFalsehood.metadata = new Falsehood();
     this.newFalsehood.metadata.id = null;
     this.newFalsehood.metadata.status = 0;
+    this.newFalsehood.metadata.tags = new String();
+    this.createNew = true;
   }
 
   submitNewFalsehod() {

@@ -65,7 +65,7 @@ export class ResourceSearchService {
   async searchPublicFigures(searchTerm: String): Promise<PublicFigure[]> {
     let ret: PublicFigure[];
 
-    await this.httpClient.get(environment.RESOURCE_URL + `PublicFigures/${searchTerm.replace(' ', '_')}`)
+    await this.httpClient.get(environment.RESOURCE_URL + `publicFigures/${searchTerm.replace(' ', '_')}`)
     .toPromise().then((figures: PublicFigure[]) => {
       ret = figures;
     }).catch((reason)=> {

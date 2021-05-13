@@ -22,6 +22,7 @@ import org.springframework.web.client.RestTemplate;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
+import javax.ws.rs.Produces;
 import java.io.IOException;
 
 @Controller
@@ -54,7 +55,7 @@ public class TokenController
         return ret;
     }
 
-    @PostMapping("/tokenize")
+    @PostMapping(value = "/tokenize", produces = "text/plain")
     public @ResponseBody String tokenize(@RequestBody String code,
                          HttpServletResponse resp) throws IOException {
         MultiValueMap<String, String> requestBody = new LinkedMultiValueMap<>();

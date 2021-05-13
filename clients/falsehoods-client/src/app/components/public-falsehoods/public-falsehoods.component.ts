@@ -111,12 +111,14 @@ export class PublicFalsehoodsComponent implements OnInit {
   }
 
   startCreateNew() {
-    this.createNew = true;
+    
     this.doSearch = false;
     this.newFalsehood = new FullPublicFalsehood();
     this.newFalsehood.metadata = new PublicFalsehood();
     this.newFalsehood.metadata.id = null;
     this.newFalsehood.metadata.status = 0;
+    this.newFalsehood.metadata.tags = new String();
+    this.createNew = true;
   }
   submitNewFalsehod() {
     this.submitter.submitPublicFalsehood(this.newFalsehood).then((result: boolean)=> {
