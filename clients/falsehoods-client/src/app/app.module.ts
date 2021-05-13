@@ -38,7 +38,7 @@ import { PublicFalsehoodsComponent } from './components/public-falsehoods/public
     FormsModule,
     HttpClientModule
   ],
-  providers: [],
+  providers: [HttpClientModule,FalsehoodSearchComponent, PublicFalsehoodSearchComponent],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
