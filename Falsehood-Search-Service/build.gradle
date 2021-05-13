@@ -29,7 +29,9 @@ group = 'com.trecapps'
 
 dependencies {
     // Enable Discovery
-    implementation 'org.springframework.cloud:spring-cloud-starter-eureka:+'
+    implementation 'org.springframework.cloud:spring-cloud-starter-netflix-eureka-client:+'
+    implementation 'org.springframework.cloud:spring-cloud-commons:+'
+    implementation 'com.google.code.gson:gson:2.8.2'
     // Use JWT to verify user
     implementation 'com.auth0:java-jwt:+'
 

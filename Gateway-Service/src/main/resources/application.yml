@@ -35,10 +35,10 @@ zuul:
       url: http://localhost:8085/falsehoods/
 #      strip-prefix: false
 #      serviceId: resource-service
-#    falsehoods_search:        # port 8084 Search Service
-#      path: /falsehood-search/**
-#      strip-prefix: false
-#      serviceId: falsehood-search-service
+    falsehoods_search:        # port 8084 Search Service
+      path: /falsehood-search/**
+      sensitiveHeaders: Cookia
+      url: http://localhost:8084/falsehood-search/
 
 #    pictures:                 # port 8086 Manages Pictures
 #      path: /pictures/**

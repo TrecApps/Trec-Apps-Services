@@ -71,7 +71,7 @@ public class FalsehoodService {
 	
 	public boolean insertEntryToStorage(String contents, Falsehood f, FalsehoodUser user, HttpServletRequest ip)
 	{
-		String objectId = f.getContentId();
+		String objectId = f.getId() + "-Falsehood";
 		
 		System.out.println("Object ID inserting is " + objectId);
 
@@ -115,7 +115,7 @@ public class FalsehoodService {
 
 		insertJson = verdicts.toJsonObject();
 
-		if(!"Success".equals(s3BucketManager.addJsonFile(f.getContentId(), insertJson)))
+		if(!"Success".equals(s3BucketManager.addJsonFile(objectId, insertJson)))
 		{
 			return false;
 		}
@@ -135,11 +135,11 @@ public class FalsehoodService {
 		Falsehood f = fRepo.getOne(id);
 		if(f.getStatus() != FalsehoodStatus.SUBMITTED.GetValue())
 			return "Cannot cast Verdict on established Falsehood! File an Appeal to update the status";
-
+		String objectId = f.getId() + "-Falsehood";
 		JSONObject verdictJson = null;
 		VerdictListObj verdicts = new VerdictListObj();
 		try {
-			verdictJson = s3BucketManager.getJSONObj(f.getContentId());
+			verdictJson = s3BucketManager.getJSONObj(objectId);
 			verdicts.initializeFromJson(verdictJson);
 
 			List<VerdictObj> verdictList = verdicts.getVerdicts();
@@ -171,7 +171,7 @@ public class FalsehoodService {
 
 		verdictJson = verdicts.toJsonObject();
 
-		if(!"Success".equals(s3BucketManager.addJsonFile(f.getContentId(), verdictJson)))
+		if(!"Success".equals(s3BucketManager.addJsonFile(objectId, verdictJson)))
 		{
 			return "failed to Write Verdict to storage!";
 		}
@@ -208,14 +208,13 @@ public class FalsehoodService {
 	
 	public boolean appendEntryToStorage(String contents, Falsehood f, FalsehoodUser user, HttpServletRequest ip)
 	{
-		String objectId = f.getContentId();
-
+		String objectId = f.getId() + "-Falsehood";
 		System.out.println("Object ID inserting is " + objectId);
 
 		JSONObject insertJson = null;
 		VerdictListObj verdicts = new VerdictListObj();
 		try {
-			insertJson = s3BucketManager.getJSONObj(f.getContentId());
+			insertJson = s3BucketManager.getJSONObj(objectId);
 			verdicts.initializeFromJson(insertJson);
 
 			List<EventObj> verdictList = verdicts.getEvents();
@@ -247,7 +246,7 @@ public class FalsehoodService {
 
 		insertJson = verdicts.toJsonObject();
 
-		if(!"Success".equals(s3BucketManager.addJsonFile(f.getContentId(), insertJson)))
+		if(!"Success".equals(s3BucketManager.addJsonFile(objectId, insertJson)))
 		{
 			return false;
 		}

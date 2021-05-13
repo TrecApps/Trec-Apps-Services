@@ -487,9 +487,10 @@ public class FalsehoodService {
 		String contents = "";
 		List<VerdictObj> verdicts = null;
 		List<EventObj> events = null;
+		String objectId = id + "-Falsehood";
 		try {
-			contents = s3BucketManager.retrieveContents(obj.getContentId());
-			JSONObject jObj = s3BucketManager.getJSONObj(obj.getContentId());
+			contents = s3BucketManager.retrieveContents(objectId);
+			JSONObject jObj = s3BucketManager.getJSONObj(objectId);
 			
 			VerdictListObj verList = new VerdictListObj();
 			verList.initializeFromJson(jObj);
