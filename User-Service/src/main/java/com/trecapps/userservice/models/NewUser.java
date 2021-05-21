@@ -34,7 +34,7 @@ public class NewUser {
 	{
 		Timestamp now = new Timestamp(Calendar.getInstance().getTime().getTime());
 		
-		return new TrecAccount(0L, firstName, lastName, username, mainEmail, trecEmail,
+		return new TrecAccount(null, firstName, lastName, username, mainEmail, trecEmail,
 			backupEmail, password, birthday, 0, null, null,
 			
 				passwordMonthReset,

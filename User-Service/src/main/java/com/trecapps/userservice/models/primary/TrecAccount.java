@@ -68,7 +68,7 @@ public class TrecAccount implements UserDetails // implements UserDetails
 	
 	@Id
 	@GeneratedValue(strategy=GenerationType.AUTO)
-	long accountId;
+	Long accountId;
 	
 	@Column
 	@Size(min=6, max = 30)
@@ -128,7 +128,7 @@ public class TrecAccount implements UserDetails // implements UserDetails
 	byte lockTime;  // Time, in 10 minutes, to lock an account after max_login_attempts 
 	Timestamp lockInit;  // When the account was locked (if NULL, assume unlocked)
 
-	public TrecAccount(long accountId, String firstName, String lastName, String username, String mainEmail, String trecEmail,
+	public TrecAccount(Long accountId, String firstName, String lastName, String username, String mainEmail, String trecEmail,
 			String backupEmail, String token, Timestamp birthday, int isValidated, String color, String validationToken,
 			
 			byte passwordMonthReset, Timestamp passwordChanged, byte timeForValidToken, byte validTimeFromActivity,
@@ -292,10 +292,10 @@ public class TrecAccount implements UserDetails // implements UserDetails
 	public void setLockInit(Timestamp lockInit) {
 		this.lockInit = lockInit;
 	}
-	public long getAccountId() {
+	public Long getAccountId() {
 		return accountId;
 	}
-	public void setAccountId(long accountId) {
+	public void setAccountId(Long accountId) {
 		this.accountId = accountId;
 	}
 	public String getFirstName() {
