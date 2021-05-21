@@ -135,29 +135,27 @@ public class FalsehoodService {
 		Falsehood f = fRepo.getOne(id);
 		if(f.getStatus() != FalsehoodStatus.SUBMITTED.GetValue())
 			return "Cannot cast Verdict on established Falsehood! File an Appeal to update the status";
+
 		String objectId = f.getId() + "-Falsehood";
 		JSONObject verdictJson = null;
 		VerdictListObj verdicts = new VerdictListObj();
 		try {
 			verdictJson = s3BucketManager.getJSONObj(objectId);
 			verdicts.initializeFromJson(verdictJson);
-
-			List<VerdictObj> verdictList = verdicts.getVerdicts();
-
-			for(int rust = 0; rust < verdictList.size(); rust++)
-			{
-				if(verdictList.get(rust).getUserId() == user.getUserId())
-				{
-					verdictList.remove(rust);
-					break;
-				}
-			}
-			verdicts.setVerdicts(verdictList);
 		} catch(Exception e)
 		{
 
 		}
-
+		var events = verdicts.getEvents();
+		FalsehoodUser creator = null;
+		for(EventObj event: events)
+		{
+			if(event.isApprove() > 0)
+			{
+				creator = userService.getOne(event.getUserId());
+				break;
+			}
+		}
 		verdicts.setApproversAvailable(userService.getUsersAboveCredit(MIN_CREDIT_APPROVE_REJECT));
 
 		VerdictObj newVerdict = new VerdictObj(approve, user.getUserId(),
@@ -166,10 +164,24 @@ public class FalsehoodService {
 		newVerdict.setIpAddress(ip);
 
 		List<VerdictObj> verdictList = verdicts.getVerdicts();
-		verdictList.add(newVerdict);
+
+		for(int rust = 0; rust < verdictList.size(); rust++)
+		{
+			if(verdictList.get(rust).getUserId() == user.getUserId())
+			{
+				verdictList.remove(rust);
+				break;
+			}
+		}
 		verdicts.setVerdicts(verdictList);
+		verdictList.add(newVerdict);
 
 		verdictJson = verdicts.toJsonObject();
+
+
+
+		if(creator != null && id.equals(creator.getUserId()))
+			return "Submitter cannot add a verdict!";
 
 		if(!"Success".equals(s3BucketManager.addJsonFile(objectId, verdictJson)))
 		{
@@ -185,20 +197,11 @@ public class FalsehoodService {
 		{
 			f.setStatus(FalsehoodStatus.REJECTED.GetValue());
 			fRepo.save(f);
-			if(verdicts.shouldStrike())
+			if(verdicts.shouldStrike() && creator != null)
 			{
 				// To-Do: Get the User
-				var events = verdicts.getEvents();
-				for(EventObj event: events)
-				{
-					if(event.isApprove() > 0)
-					{
-						FalsehoodUser createrUser = userService.getOne(event.getUserId());
-						createrUser.setCredit(createrUser.getCredit() - 5);
-						userService.save(createrUser);
-						break;
-					}
-				}
+				creator.setCredit(creator.getCredit() - 5);
+				userService.save(creator);
 			}
 		}
 

@@ -62,20 +62,19 @@ public class PublicFalsehoodService {
 			verdictJson = s3BucketManager.getJSONObj("publicFalsehood-" + f.getId());
 			verdicts.initializeFromJson(verdictJson);
 
-			List<VerdictObj> verdictList = verdicts.getVerdicts();
-
-			for(int rust = 0; rust < verdictList.size(); rust++)
-			{
-				if(verdictList.get(rust).getUserId() == user.getUserId())
-				{
-					verdictList.remove(rust);
-					break;
-				}
-			}
-			verdicts.setVerdicts(verdictList);
 		} catch(Exception e)
 		{
 
+		}
+		var events = verdicts.getEvents();
+		FalsehoodUser creator = null;
+		for(EventObj event: events)
+		{
+			if(event.isApprove() > 0)
+			{
+				creator = uServe.getOne(event.getUserId());
+				break;
+			}
 		}
 
 		verdicts.setApproversAvailable(uServe.getUsersAboveCredit(MIN_CREDIT_APPROVE_REJECT));
@@ -86,6 +85,15 @@ public class PublicFalsehoodService {
 		newVerdict.setIpAddress(ip);
 
 		List<VerdictObj> verdictList = verdicts.getVerdicts();
+
+		for(int rust = 0; rust < verdictList.size(); rust++)
+		{
+			if(verdictList.get(rust).getUserId() == user.getUserId())
+			{
+				verdictList.remove(rust);
+				break;
+			}
+		}
 		verdictList.add(newVerdict);
 		verdicts.setVerdicts(verdictList);
 
@@ -107,20 +115,10 @@ public class PublicFalsehoodService {
 			f.setStatus(FalsehoodStatus.REJECTED.GetValue());
 			pfRepo.save(f);
 			
-			if(verdicts.shouldStrike())
+			if(verdicts.shouldStrike() && creator != null)
 			{
-				// To-Do: Retrieve User that created the falsehood
-				var events = verdicts.getEvents();
-				for(EventObj event: events)
-				{
-					if(event.isApprove() > 0)
-					{
-						FalsehoodUser createrUser = uServe.getOne(event.getUserId());
-						createrUser.setCredit(createrUser.getCredit() - 5);
-						uServe.save(createrUser);
-						break;
-					}
-				}
+				creator.setCredit(creator.getCredit() - 5);
+				uServe.save(creator);
 			}
 		}
 
