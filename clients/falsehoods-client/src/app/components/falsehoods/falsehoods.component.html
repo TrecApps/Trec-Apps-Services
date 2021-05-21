@@ -110,35 +110,35 @@
             </tr>
             <tr>
                 <td>ID</td>
-                <td>{{mainFalsehood.metadata.id}}</td>
+                <td>{{searchComponent.falsehood.metadata.id}}</td>
             </tr>
             <tr>
                 <td>Media Outlet</td>
-                <td>{{mainFalsehood.metadata.outlet.name}}</td>
+                <td>{{searchComponent.falsehood.metadata.outlet.name}}</td>
             </tr>
             <tr>
                 <td>Common Lie</td>
-                <td>{{mainFalsehood.metadata.commonLie?.title}}</td>
+                <td>{{searchComponent.falsehood.metadata.commonLie?.title}}</td>
             </tr>
             <tr>
                 <td>Status</td>
-                <td>{{mainFalsehood.metadata.status}}</td>
+                <td>{{searchComponent.falsehood.metadata.status}}</td>
             </tr>
             <tr>
                 <td>Severity</td>
-                <td>{{mainFalsehood.metadata.severity}}</td>
+                <td>{{searchComponent.falsehood.metadata.severity}}</td>
             </tr>
             <tr>
                 <td>Author 1</td>
-                <td>{{mainFalsehood.metadata.author1.firstname + mainFalsehood.metadata.author1.lastName}}</td>
+                <td>{{searchComponent.falsehood.metadata.author1.firstname + searchComponent.falsehood.metadata.author1.lastName}}</td>
             </tr>
-            <tr *ngIf="mainFalsehood.metadata.author2">
+            <tr *ngIf="searchComponent.falsehood.metadata.author2">
                 <td>Author 2</td>
-                <td>{{mainFalsehood.metadata.author2.firstname + mainFalsehood.metadata.author2.lastName}}</td>
+                <td>{{searchComponent.falsehood.metadata.author2.firstname + searchComponent.falsehood.metadata.author2.lastName}}</td>
             </tr>
             <tr>
                 <td>Date</td>
-                <td>{{mainFalsehood.metadata.dateMade}}</td>
+                <td>{{searchComponent.falsehood.metadata.dateMade}}</td>
             </tr>
         </table>
 

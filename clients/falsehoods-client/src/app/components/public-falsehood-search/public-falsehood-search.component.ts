@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FullPublicFalsehood, PublicFalsehood, SearchPublicFalsehood } from 'src/app/models/publicFalsehood';
 import { FalsehoodSearchService } from 'src/app/services/falsehood-search.service';
-
+import { PublicFalsehoodsComponent } from '../public-falsehoods/public-falsehoods.component';
 
 @Component({
   selector: 'app-public-falsehood-search',
@@ -20,11 +20,21 @@ export class PublicFalsehoodSearchComponent implements OnInit {
 
   falsehoods: PublicFalsehood[];
   falsehood: FullPublicFalsehood;
+  component: PublicFalsehoodsComponent;
+
+  setParentComponent(component: PublicFalsehoodsComponent) {
+    this.component = component;
+  }
 
   selectFalsehood(falsehood: PublicFalsehood){
     this.searcher.getPublicFalsehood(falsehood.id).then((full: FullPublicFalsehood) => {
       this.falsehood = full;
-
+      console.log("Full Public Falsehood: " + full.contents);
+      console.log("Component: " + this.component);
+      if(this.component){
+        this.component.mainFalsehood = full;
+        
+      }
     });
     
   }

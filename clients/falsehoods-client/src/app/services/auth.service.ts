@@ -9,6 +9,7 @@ export class AuthService {
 
   isAuthenticated: boolean;
   refreshToken:String;
+  credit = 0;
   constructor(private httpClient: HttpClient) { 
     this.isAuthenticated = false;
   }

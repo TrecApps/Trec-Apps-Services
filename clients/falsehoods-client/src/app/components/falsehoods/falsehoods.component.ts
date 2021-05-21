@@ -3,6 +3,7 @@ import { Falsehood, FalsehoodSearchObject, FullFalsehood } from 'src/app/models/
 import { MediaOutlet } from 'src/app/models/mediaOutlet';
 import { PublicFigure } from 'src/app/models/publicFigure';
 import { ApproveService } from 'src/app/services/approve.service';
+import { AuthService } from 'src/app/services/auth.service';
 import { FalsehoodSearchService } from 'src/app/services/falsehood-search.service';
 import { ResourceSearchService } from 'src/app/services/resource-search.service';
 import { SubmitService } from 'src/app/services/submit.service';
@@ -23,6 +24,7 @@ export class FalsehoodsComponent implements OnInit {
   searchAuthor:string;
 
   mainFalsehood: FullFalsehood;
+  tokenService:AuthService;
   
   createNew: boolean;
   doSearch:boolean;
@@ -41,10 +43,14 @@ export class FalsehoodsComponent implements OnInit {
   @ViewChild('fNewSubmit') submitEl: ElementRef;
   constructor(searchComponent: FalsehoodSearchComponent, private resourceSearch: ResourceSearchService,
      private falsehoodSearch: FalsehoodSearchService, private approveService: ApproveService,
-     private submitter: SubmitService) { 
+     private submitter: SubmitService, tokenService: AuthService) { 
     this.createNew = this.doSearch = false;
     this.search = new FalsehoodSearchObject();
     this.searchComponent = searchComponent;
+
+    this.tokenService = tokenService;
+    this.submitSize = 20;
+    this.submittedPage = 0;
   }
   // Sub Search methods
   startSearch() {

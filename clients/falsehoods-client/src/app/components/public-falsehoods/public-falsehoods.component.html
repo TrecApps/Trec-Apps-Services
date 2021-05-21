@@ -162,8 +162,9 @@
             <button class="btn bg-info" (click)="Approve(true)">Approve Falsehood</button><br>
             <button class="btn bg-info" (click)="Approve(false)"> Reject Falsehood</button><br>
         </div>
+        <br>
 
-        <div [innerHTML]="searchComponent.falsehood.contents | marked"></div>
+        <div id="content1" [innerHTML]="searchComponent.falsehood.contents | marked"></div>
     </div>
 
 </div>

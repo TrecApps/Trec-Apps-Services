@@ -4,6 +4,7 @@ import { FullPublicFalsehood, PublicFalsehood, SearchPublicFalsehood } from 'src
 import { PublicFigure } from 'src/app/models/publicFigure';
 import { Region } from 'src/app/models/region';
 import { ApproveService } from 'src/app/services/approve.service';
+import { AuthService } from 'src/app/services/auth.service';
 import { FalsehoodSearchService } from 'src/app/services/falsehood-search.service';
 import { ResourceSearchService } from 'src/app/services/resource-search.service';
 import { SubmitService } from 'src/app/services/submit.service';
@@ -26,6 +27,7 @@ export class PublicFalsehoodsComponent implements OnInit {
   searchAuthor:string;
 
   mainFalsehood: FullPublicFalsehood;
+  tokenService: AuthService;
 
   createNew: boolean;
   doSearch:boolean;
@@ -45,7 +47,7 @@ export class PublicFalsehoodsComponent implements OnInit {
   @ViewChild('pfNewSubmit')  submitEl: ElementRef;
   constructor(searchComponent: PublicFalsehoodSearchComponent, private resourceSearch: ResourceSearchService,
     private falsehoodSearch: FalsehoodSearchService, private approveService: ApproveService,
-    private submitter: SubmitService) { 
+    private submitter: SubmitService, tokenService: AuthService) { 
     this.createNew = this.doSearch = false;
     this.search = new SearchPublicFalsehood();
 
@@ -55,6 +57,7 @@ export class PublicFalsehoodsComponent implements OnInit {
 
     this.submitReason = "";
     this.searchComponent = searchComponent;
+    this.tokenService = tokenService;
   }
 
   Approve(app: boolean) {
@@ -108,6 +111,7 @@ export class PublicFalsehoodsComponent implements OnInit {
 
   // Maintainence Methods
   ngOnInit(): void {
+    this.searchComponent.setParentComponent(this);
   }
 
   startCreateNew() {
