@@ -39,7 +39,9 @@ public class FalsehoodUser implements Comparable<FalsehoodUser>, UserDetails {
 		return result;
 	}
 
-
+	public void setAuthorities(List<TrecAuthority> authorities) {
+		this.authorities = authorities;
+	}
 
 	@Override
 	public boolean equals(Object obj) {

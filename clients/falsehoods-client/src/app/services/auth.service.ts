@@ -2,6 +2,14 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { environment } from 'src/environments/environment';
 
+
+class FalsehoodUser {
+  userId: number;
+  credit: number;
+  username: String;
+  email: String;
+}
+
 @Injectable({
   providedIn: 'root'
 })
@@ -17,10 +25,17 @@ export class AuthService {
   login(needsAuth: boolean, code:String) {
 
     if(code || this.refreshToken){
-      this.httpClient.post(environment.FALSEHOOD_WRITE + "tokenize", code || this.refreshToken).toPromise().then((str: String) =>{
+      this.httpClient.post(environment.FALSEHOOD_WRITE + "tokenize", code || this.refreshToken,
+       {responseType: 'text'}).toPromise().then((str: String) =>{
         this.refreshToken = str;
         this.isAuthenticated = ((str != null) && (str != undefined));
         console.log("Authenticated!");
+
+        this.httpClient.get(environment.FALSEHOOD_WRITE + "getUser").toPromise().then((user: FalsehoodUser) =>{
+          console.log("User info: " + user);
+          this.credit = user.credit;
+        }).catch((err) => alert(err.message || err.error.message));
+
       }).catch((reason) =>{
         console.log("Not Authenticated!", reason.message || reason.error.message);
         this.refreshToken = null;

@@ -1,5 +1,6 @@
 package com.trecapps.falsehoodauth.controllers;
 
+import com.trecapps.falsehoodauth.models.FalsehoodUser;
 import com.trecapps.falsehoodauth.security.OauthToken;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -80,8 +81,25 @@ public class TokenController
         }
         else
         {
+
             resp.setStatus(status.value());
             return null;
         }
+    }
+
+    @GetMapping("/getUser")
+    public @ResponseBody
+    FalsehoodUser getUserDetails(HttpServletResponse resp)
+    {
+        SecurityContext context = SecurityContextHolder.getContext();
+        Authentication auth = context.getAuthentication();
+        if(auth == null)
+        {
+            resp.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            return null;
+        }
+        FalsehoodUser user = (FalsehoodUser) auth.getPrincipal();
+        user.setAuthorities(null);
+        return user;
     }
 }

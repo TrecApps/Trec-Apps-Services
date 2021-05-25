@@ -130,7 +130,7 @@ public class FalsehoodService {
 			return "Not Enough Credit";
 
 		if(!fRepo.existsById(id))
-			return "Falsehood Doesn't exist";
+			return "Falsehood "+id+" Doesn't exist";
 
 		Falsehood f = fRepo.getOne(id);
 		if(f.getStatus() != FalsehoodStatus.SUBMITTED.GetValue())
