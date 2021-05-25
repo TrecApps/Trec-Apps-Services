@@ -8,7 +8,7 @@ Every other folder in the root directory holds a single Server-Side Project.
 
 **Note: These services are currently written and configured to run on local machines (i.e. localhost)**
 
-**Note: The Gateway and Discovery service needs work before they can be used in a production environment but are currently usable in a local environment. The User Service can create and manage accounts, as well as create an OAuth2 Client, but OAuth2 support needs to be tested. All other services need to be tested (and one of them doesn't even compile!**
+**Note: The Gateway and Discovery service needs work before they can be used in a production environment but are currently usable in a local environment. The User Service can create and manage accounts, as well as create an OAuth2 Client. Link and Picture Services are still in development and will need to be tested!**
 
 ## Services
 
@@ -18,7 +18,9 @@ these services are:
 1. Discover-Service (All other services expect this service to be running)
 2. Gateway-Service (Clients send request to this service, which then Routes it to Other services)
 3. User-Service (Manages Users and acts as the Authentication/Resource Server for OAuth2 Authentication)
-4. Any Other service you deem worth Running
+4. Resource-Service (Allows Trec-Apps "employees" to add and update various resources such as Public Figures, outlets, Regions, and Institutions)
+5. Falsehood-Auth-Service (Allows users to submit Falsehoods and Review them)
+6. Falsehood-Search-Service (Allows anyone to Browse various falsehoods)
 
 Note: Angular Servers can theoretically begin running at any point as long as the Relevent Back-End Services are Running before a Front-End Request is made.
 
@@ -153,7 +155,7 @@ Environment Variables Used:
 
 #### Other Services Being considered
 
-* Picture Service - Service Managing all images in Trec-Apps, allowing for access control anc content advisory
+* Picture Service - Service Managing all images in Trec-Apps, allowing for access control and content advisory
 * Linking Service - Enables links in entries to websites deemed safe by Trec-Apps
 * More to Come
 
