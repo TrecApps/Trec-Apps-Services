@@ -81,7 +81,7 @@ public class TokenController
         }
         else
         {
-
+            System.out.println("User Service responded with " + status.value() + " in /tokenize");
             resp.setStatus(status.value());
             return null;
         }
@@ -91,15 +91,20 @@ public class TokenController
     public @ResponseBody
     FalsehoodUser getUserDetails(HttpServletResponse resp)
     {
+        System.out.println("/getUser running!");
         SecurityContext context = SecurityContextHolder.getContext();
         Authentication auth = context.getAuthentication();
+        System.out.println("auth var set");
         if(auth == null)
         {
+            System.out.println("/getUser no user detected!");
             resp.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
             return null;
         }
+        resp.setStatus(HttpServletResponse.SC_OK);
         FalsehoodUser user = (FalsehoodUser) auth.getPrincipal();
         user.setAuthorities(null);
+        System.out.println("/getUser about to return!");
         return user;
     }
 }

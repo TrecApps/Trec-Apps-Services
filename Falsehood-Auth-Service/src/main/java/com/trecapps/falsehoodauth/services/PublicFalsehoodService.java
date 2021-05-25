@@ -77,6 +77,10 @@ public class PublicFalsehoodService {
 			}
 		}
 
+		if(creator != null && user.getUserId().equals(creator.getUserId()))
+			return "Submitter of the Falsehood cannot be the same one to Add a verdict!";
+		if(creator != null && user != null)
+			System.out.println("Creator ID: " + creator.getUserId() + " User ID: " + user.getUserId());
 		verdicts.setApproversAvailable(uServe.getUsersAboveCredit(MIN_CREDIT_APPROVE_REJECT));
 
 		VerdictObj newVerdict = new VerdictObj(approve, user.getUserId(),

@@ -34,7 +34,7 @@ export class AuthService {
         this.httpClient.get(environment.FALSEHOOD_WRITE + "getUser").toPromise().then((user: FalsehoodUser) =>{
           console.log("User info: " + user);
           this.credit = user.credit;
-        }).catch((err) => alert(err.message || err.error.message));
+        }).catch((err) => alert((err.message || err.error.message) + " " + code));
 
       }).catch((reason) =>{
         console.log("Not Authenticated!", reason.message || reason.error.message);

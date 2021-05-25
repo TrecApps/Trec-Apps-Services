@@ -324,15 +324,18 @@ public class JwtTokenService {
 	{
 		DecodedJWT decodedJwt = decodeJWT(token);
 
-		if(decodedJwt == null)
+		if(decodedJwt == null) {
+			System.out.println("decodedJwt was null!");
 			return null;
+		}
 		Claim idClaim = decodedJwt.getClaim("ID");
 		
 		Long idLong = idClaim.asLong();
 		
-		if(idLong == null)
+		if(idLong == null) {
+			System.out.println("Id in JWT was null!");
 			return null;
-		
+		}
 		
 		
 		return accountService.getAccountById(idLong);
@@ -343,6 +346,7 @@ public class JwtTokenService {
 		return JWT.create()
 				.withIssuedAt(Calendar.getInstance().getTime())
 				.withClaim("account", account.getAccountId())
+				.withClaim("ID", account.getAccountId())
 				.withClaim("client", client.getClientId())
 				.withClaim("clients", client.getClientSecret())
 				.withIssuer("Trec-Apps-User-Service")

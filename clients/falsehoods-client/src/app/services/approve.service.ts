@@ -26,7 +26,7 @@ export class ApproveService {
   }
 
   async approvePublicFalsehood(app:boolean, id: number, reason: string) {
-    await this.httpClient.put(environment.FALSEHOOD_WRITE + `Update/Falsehood/${app ? 'Approve' : 'Reject'}`,
+    await this.httpClient.put(environment.FALSEHOOD_WRITE + `Update/PublicFalsehood/${app ? 'Approve' : 'Reject'}`,
      {falsehood: id, comment: reason}).toPromise().catch((reason)=>{
       alert(reason.message || reason.error.message);
      });

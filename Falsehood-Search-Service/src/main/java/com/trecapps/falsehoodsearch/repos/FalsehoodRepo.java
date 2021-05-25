@@ -19,7 +19,7 @@ public interface FalsehoodRepo extends JpaRepository<Falsehood, BigInteger> {
 	
 	//// Queries where Falsehoods are merely submitted
 	
-	@Query("select f from Falsehood f where f.status = 10 or f.status = 11 or f.status < 2")
+	@Query("select f from Falsehood f where f.status < 2")
 	List<Falsehood> getSubmittedFalsehood(Pageable p);
 	
 	//// Queries where Falsehoods are considered confirmed and active

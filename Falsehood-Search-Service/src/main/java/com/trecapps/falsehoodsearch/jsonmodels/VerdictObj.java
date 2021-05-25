@@ -53,8 +53,13 @@ public class VerdictObj extends JsonMarker implements FalsehoodJsonObj
         {
             userId = (Long)o;
         }
+        else if(o instanceof Integer)
+        {
+            int to = (Integer)o;
+            userId = to;
+        }
         else
-            throw new JSONException("'User' field needed to be a number castable to 'Long'");
+            throw new JSONException("'User' field needed to be a number castable to 'Long': was type: " + o.getClass());
 
         o = obj.get("IpAddress");
 
