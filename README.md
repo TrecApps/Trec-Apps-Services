@@ -161,7 +161,7 @@ Environment Variables Used:
 
 ## Clients
 
-Right now, there are 2 Clients available in this repository. Both are Angular clients. Both Run on localhost Port 4200 (so one at a time) and are automatically
+Right now, there are 3 Clients available in this repository. All are currently Angular clients. Both Run on localhost Port 4200 (so one at a time) and are automatically
 proxied to localhosts 8080 port to address CRSF issues. Running
 
 ```
@@ -187,8 +187,14 @@ This Client Serves as the Front-End for the User Service. Features offered inclu
 
 #### Falsehood-Client
 
-This Client Serves as the Front-End for the Falsehood Services. While the Falsehood-backend has been split up, the Front-end is still monolithic and based on this
+This Client Serves as the Front-End for the Falsehood Services. While the Falsehood-backend has been split up, the Front-end is still mostly monolithic and based on this
 [Repository](https://github.com/TrecApps/falsehood_client).
+
+Features it contains is the ability to browse, view, submit, and approve/reject falsehoods. It can also browse Resources, relevent to the Falsehoods
+
+#### Resource-Client
+
+This Client Serves as the front end for Trec-Apps "Employees" managing the Resource articles available and which the Falsehoods app can draw upon for info. It only manages these reoucres but gives employees the option of Adding and updating them.
 
 ## Generate Keys
 
