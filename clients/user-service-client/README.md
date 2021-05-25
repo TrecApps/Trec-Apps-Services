@@ -2,6 +2,14 @@
 
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 11.0.1.
 
+## Prep For Running
+
+Compile via gradle the
+1. Discover-Service
+2. Gateway-Service
+3. User-Service
+and Run them before exploring this Project. Otherwise, Requests made by the Angular App will fail.
+
 ## Development server
 
 Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
