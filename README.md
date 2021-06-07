@@ -8,7 +8,7 @@ Every other folder in the root directory holds a single Server-Side Project.
 
 **Note: These services are currently written and configured to run on local machines (i.e. localhost)**
 
-**Note: The Gateway and Discovery service needs work before they can be used in a production environment but are currently usable in a local environment. The User Service can create and manage accounts, as well as create an OAuth2 Client, but OAuth2 support needs to be tested. All other services need to be tested (and one of them doesn't even compile!**
+**Note: The Gateway and Discovery service needs work before they can be used in a production environment but are currently usable in a local environment. The User Service can create and manage accounts, as well as create an OAuth2 Client. Link and Picture Services are still in development and will need to be tested!**
 
 ## Services
 
@@ -18,7 +18,9 @@ these services are:
 1. Discover-Service (All other services expect this service to be running)
 2. Gateway-Service (Clients send request to this service, which then Routes it to Other services)
 3. User-Service (Manages Users and acts as the Authentication/Resource Server for OAuth2 Authentication)
-4. Any Other service you deem worth Running
+4. Resource-Service (Allows Trec-Apps "employees" to add and update various resources such as Public Figures, outlets, Regions, and Institutions)
+5. Falsehood-Auth-Service (Allows users to submit Falsehoods and Review them)
+6. Falsehood-Search-Service (Allows anyone to Browse various falsehoods)
 
 Note: Angular Servers can theoretically begin running at any point as long as the Relevent Back-End Services are Running before a Front-End Request is made.
 
@@ -153,13 +155,13 @@ Environment Variables Used:
 
 #### Other Services Being considered
 
-* Picture Service - Service Managing all images in Trec-Apps, allowing for access control anc content advisory
+* Picture Service - Service Managing all images in Trec-Apps, allowing for access control and content advisory
 * Linking Service - Enables links in entries to websites deemed safe by Trec-Apps
 * More to Come
 
 ## Clients
 
-Right now, there are 2 Clients available in this repository. Both are Angular clients. Both Run on localhost Port 4200 (so one at a time) and are automatically
+Right now, there are 3 Clients available in this repository. All are currently Angular clients. Both Run on localhost Port 4200 (so one at a time) and are automatically
 proxied to localhosts 8080 port to address CRSF issues. Running
 
 ```
@@ -185,8 +187,14 @@ This Client Serves as the Front-End for the User Service. Features offered inclu
 
 #### Falsehood-Client
 
-This Client Serves as the Front-End for the Falsehood Services. While the Falsehood-backend has been split up, the Front-end is still monolithic and based on this
+This Client Serves as the Front-End for the Falsehood Services. While the Falsehood-backend has been split up, the Front-end is still mostly monolithic and based on this
 [Repository](https://github.com/TrecApps/falsehood_client).
+
+Features it contains is the ability to browse, view, submit, and approve/reject falsehoods. It can also browse Resources, relevent to the Falsehoods
+
+#### Resource-Client
+
+This Client Serves as the front end for Trec-Apps "Employees" managing the Resource articles available and which the Falsehoods app can draw upon for info. It only manages these reoucres but gives employees the option of Adding and updating them.
 
 ## Generate Keys
 
