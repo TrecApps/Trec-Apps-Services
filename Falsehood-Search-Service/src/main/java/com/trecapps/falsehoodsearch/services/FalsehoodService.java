@@ -489,7 +489,6 @@ public class FalsehoodService {
 		List<EventObj> events = null;
 		String objectId = id + "-Falsehood";
 		try {
-			System.out.println("key attempted was " + objectId);
 			contents = s3BucketManager.retrieveContents(objectId);
 			JSONObject jObj = s3BucketManager.getJSONObj(objectId);
 			
@@ -510,7 +509,6 @@ public class FalsehoodService {
 			
 		} catch (IOException e) {
 			e.printStackTrace();
-			System.out.println("key attempted was " + objectId);
 			return null;
 		}
 		

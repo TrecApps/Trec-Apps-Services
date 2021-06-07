@@ -81,7 +81,6 @@ public class TrecOauthClientRepository  implements SecurityContextRepository {
         Cookie[] cookies = request.getCookies();
         SecurityContext context = SecurityContextHolder.createEmptyContext();
         if (cookies == null) {
-            System.out.println("Null cookies detected!");
             return context;
         }
         for (Cookie c : cookies) {
@@ -118,7 +117,6 @@ public class TrecOauthClientRepository  implements SecurityContextRepository {
 
                 }catch(RestClientResponseException ex)
                 {
-                    System.out.println("Detected Error in Authenticating with user service!");
                     System.out.println(ex.getRawStatusCode() + " " + ex.getMessage());
                 }
             }

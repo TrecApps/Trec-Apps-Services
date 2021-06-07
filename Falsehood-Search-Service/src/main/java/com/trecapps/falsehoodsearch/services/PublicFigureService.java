@@ -32,7 +32,6 @@ public class PublicFigureService
 	public List<PublicFigure> getPublicFigures(int page, int pageSize)
 	{
 		var pRequest = PageRequest.of(page, pageSize);
-		System.out.println("PareRequest is " + pRequest);
 		return figureRepo.findAll(pRequest).toList();
 	}
 	

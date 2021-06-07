@@ -325,7 +325,6 @@ public class JwtTokenService {
 		DecodedJWT decodedJwt = decodeJWT(token);
 
 		if(decodedJwt == null) {
-			System.out.println("decodedJwt was null!");
 			return null;
 		}
 		Claim idClaim = decodedJwt.getClaim("ID");
@@ -333,7 +332,6 @@ public class JwtTokenService {
 		Long idLong = idClaim.asLong();
 		
 		if(idLong == null) {
-			System.out.println("Id in JWT was null!");
 			return null;
 		}
 		

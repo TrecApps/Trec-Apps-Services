@@ -76,7 +76,6 @@ public class FalsehoodController
     @GetMapping("/Media/id/{id}")
     public FullFalsehood GetFalsehood(@PathVariable("id") BigInteger id)
     {
-        System.out.println("id endpoint hit! id = " + id);
         return mfService.getFalsehoodById(id);
     }
 

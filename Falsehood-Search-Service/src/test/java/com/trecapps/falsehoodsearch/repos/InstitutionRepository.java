@@ -83,7 +83,7 @@ public class InstitutionRepository implements InstitutionRepo
     public <S extends Institution> S save(S entity) {
     	if(entity == null)
             throw new IllegalArgumentException("Entity passed to Save Method must not be null");
-    	System.out.println("SAVING WITH THE TEST OBJECT!");
+
         boolean add = entity.getId() == null;
         if(add)
         {

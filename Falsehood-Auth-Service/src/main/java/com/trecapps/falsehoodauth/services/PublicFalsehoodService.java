@@ -79,8 +79,6 @@ public class PublicFalsehoodService {
 
 		if(creator != null && user.getUserId().equals(creator.getUserId()))
 			return "Submitter of the Falsehood cannot be the same one to Add a verdict!";
-		if(creator != null && user != null)
-			System.out.println("Creator ID: " + creator.getUserId() + " User ID: " + user.getUserId());
 		verdicts.setApproversAvailable(uServe.getUsersAboveCredit(MIN_CREDIT_APPROVE_REJECT));
 
 		VerdictObj newVerdict = new VerdictObj(approve, user.getUserId(),
@@ -115,7 +113,6 @@ public class PublicFalsehoodService {
 		}
 		else if(verdicts.isRejected())
 		{
-			System.out.println("Rejecting Public Falsehood!");
 			f.setStatus(FalsehoodStatus.REJECTED.GetValue());
 			pfRepo.save(f);
 			
@@ -160,7 +157,6 @@ public class PublicFalsehoodService {
 		if(eventList == null)
 		{
 			eventList = new LinkedList<>();
-			System.out.println("Detected Null EventList Somehow!");
 		}
 		eventList.add(event);
 		verdicts.setEvents(eventList);

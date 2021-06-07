@@ -42,7 +42,6 @@ public class PublicAttributeService {
 	{
 		if(!iRepo.existsById(id))
 		{
-			System.out.println("Repository " + id + " Doesn't Exist!");
 			return null;
 		}
 		Institution i = iRepo.getOne(id);

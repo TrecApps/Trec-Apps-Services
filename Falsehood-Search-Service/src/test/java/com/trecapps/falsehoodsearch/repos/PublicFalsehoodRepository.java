@@ -269,12 +269,9 @@ public class PublicFalsehoodRepository implements PublicFalsehoodRepo
 			if ((offType > 15 || offType == pf.getOfficialType()) && ((status > 1 && status < 5) || status > 11) && d.getTime() >= begin.getTime()
 					&& d.getTime() <= end.getTime())
 				ret.add(pf);
-			System.out.println("Ststus is " + status + " Date of Public Falsehood is " + d + " with begin " + begin + " and end " + end);
 		}
-		System.out.println("Before Public Cull, size is " + ret.size());
 		ret = cullList(p, ret);
 
-		System.out.println("After Public Cull, size is " + ret.size());
 		return ret;
 	}
 
@@ -801,13 +798,10 @@ public class PublicFalsehoodRepository implements PublicFalsehoodRepo
 			if ((offType > 15 || offType == pf.getOfficialType()) && status > 4 && d.getTime() >= begin.getTime()
 					&& d.getTime() <= end.getTime())
 				ret.add(pf);
-			System.out.println("With status " + status + " and date " + d + " before= " +end+ " after= " + begin);
+
 		}
-		System.out.println("R-Before Public Cull, size is " + ret.size());
 		ret = cullList(p, ret);
 
-		System.out.println("R-After Public Cull, size is " + ret.size());
-		
 		return ret;
 	}
 
@@ -1334,12 +1328,9 @@ public class PublicFalsehoodRepository implements PublicFalsehoodRepo
 			if (foundTerm(pf.getTags(), terms) && (offType > 15 || offType == pf.getOfficialType()) && ((status > 1 && status < 5) || status > 11) && d.getTime() >= begin.getTime()
 					&& d.getTime() <= end.getTime())
 				ret.add(pf);
-			System.out.println("Ststus is " + status + " Date of Public Falsehood is " + d + " with begin " + begin + " and end " + end);
 		}
-		System.out.println("Before Public Cull, size is " + ret.size());
 		ret = cullList(p, ret);
 
-		System.out.println("After Public Cull, size is " + ret.size());
 		return ret;
 	}
 
@@ -1826,12 +1817,8 @@ public class PublicFalsehoodRepository implements PublicFalsehoodRepo
 			if (foundTerm(pf.getTags(), terms) && (offType > 15 || offType == pf.getOfficialType()) && status > 4 && d.getTime() >= begin.getTime()
 					&& d.getTime() <= end.getTime())
 				ret.add(pf);
-			System.out.println("With status " + status + " and date " + d + " before= " +end+ " after= " + begin + " Terms (obj) = " + pf.getTags());
 		}
-		System.out.println("Terms = "+ terms + "R-Before Public Cull, size is " + ret.size());
 		ret = cullList(p, ret);
-
-		System.out.println("R-After Public Cull, size is " + ret.size());
 
 		return ret;
 	}

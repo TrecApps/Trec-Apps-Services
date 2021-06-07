@@ -87,7 +87,6 @@ public class PublicFalsehoodTest {
 		f = fController.searchRFalsehoodByParams(search);
 		assertEquals(2, f.size());
 		search.setTerms("Vader");
-		System.out.println("Search By Dates Called!");
 		f = fController.searchFalsehoodByParams(search);
 		assertEquals(1, f.size());
 		f = fController.searchRFalsehoodByParams(search);

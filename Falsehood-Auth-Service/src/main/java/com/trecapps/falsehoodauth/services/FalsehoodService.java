@@ -72,8 +72,7 @@ public class FalsehoodService {
 	public boolean insertEntryToStorage(String contents, Falsehood f, FalsehoodUser user, HttpServletRequest ip)
 	{
 		String objectId = f.getId() + "-Falsehood";
-		
-		System.out.println("Object ID inserting is " + objectId);
+
 
 		JSONObject insertJson = null;
 		VerdictListObj verdicts = new VerdictListObj();
@@ -108,7 +107,6 @@ public class FalsehoodService {
 		if(eventList == null)
 		{
 			eventList = new LinkedList<>();
-			System.out.println("Detected Null EventList Somehow!");
 		}
 		eventList.add(event);
 		verdicts.setEvents(eventList);
@@ -212,7 +210,6 @@ public class FalsehoodService {
 	public boolean appendEntryToStorage(String contents, Falsehood f, FalsehoodUser user, HttpServletRequest ip)
 	{
 		String objectId = f.getId() + "-Falsehood";
-		System.out.println("Object ID inserting is " + objectId);
 
 		JSONObject insertJson = null;
 		VerdictListObj verdicts = new VerdictListObj();

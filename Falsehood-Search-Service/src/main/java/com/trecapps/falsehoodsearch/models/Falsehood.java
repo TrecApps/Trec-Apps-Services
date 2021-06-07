@@ -104,7 +104,6 @@ public class Falsehood implements Comparable<Falsehood>{
 		this.dateMade = dateMade;
 		this.commonLie = commonLie;
 		this.tags = tags;
-		System.out.println("In Falsehood Constructor: tags are :" + tags);
 	}
 
 	
