@@ -180,7 +180,7 @@ public class FalsehoodService {
 
 
 
-		if(creator != null && id.equals(creator.getUserId()))
+		if(creator != null && user.getUserId().equals(creator.getUserId()))
 			return "Submitter cannot add a verdict!";
 
 		if(!"Success".equals(s3BucketManager.addJsonFile(objectId, verdictJson)))

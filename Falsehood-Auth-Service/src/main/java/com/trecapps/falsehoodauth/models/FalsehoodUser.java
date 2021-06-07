@@ -156,4 +156,15 @@ public class FalsehoodUser implements Comparable<FalsehoodUser>, UserDetails {
 	public boolean isEnabled() {
 		return true;
 	}
+
+	@Override
+	public String toString() {
+		return "FalsehoodUser{" +
+				"userId=" + userId +
+				", credit=" + credit +
+				", email='" + email + '\'' +
+				", username='" + username + '\'' +
+				", authorities=" + authorities +
+				'}';
+	}
 }
